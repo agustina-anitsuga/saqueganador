@@ -2,9 +2,7 @@ package com.anitsuga.robot;
 
 import com.anitsuga.fwk.utils.AppProperties;
 import com.anitsuga.robot.types.*;
-import com.anitsuga.robot.writer.PlayerJsonWriter;
-import com.anitsuga.robot.writer.RankingJsonWriter;
-import com.anitsuga.robot.writer.Writer;
+import com.anitsuga.robot.writer.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,8 +73,8 @@ public enum RobotType {
         public List<Writer> getWriters() {
             AppProperties config = AppProperties.getInstance();
             String localPath = config.getProperty("local.path");
-            Writer writer = new PlayerJsonWriter(localPath);
-            return Arrays.asList(writer);
+            Writer jsonWriter = new PlayerJsonWriter(localPath);
+            return Arrays.asList(jsonWriter);
         }
 
         @Override
@@ -97,8 +95,9 @@ public enum RobotType {
         public List<Writer> getWriters() {
             AppProperties config = AppProperties.getInstance();
             String localPath = config.getProperty("local.path");
-            Writer writer = new PlayerJsonWriter(localPath);
-            return Arrays.asList(writer);
+            Writer jsonWriter = new PlayerJsonWriter(localPath);
+            Writer excelWriter = new PlayerExcelWriter(localPath+"/atp/");
+            return Arrays.asList(jsonWriter,excelWriter);
         }
 
         @Override
@@ -143,8 +142,93 @@ public enum RobotType {
         public List<Writer> getWriters() {
             AppProperties config = AppProperties.getInstance();
             String localPath = config.getProperty("local.path");
-            Writer writer = new PlayerJsonWriter(localPath);
-            return Arrays.asList(writer);
+            Writer jsonWriter = new PlayerJsonWriter(localPath);
+            Writer excelWriter = new PlayerExcelWriter(localPath+"/wta/");
+            return Arrays.asList(jsonWriter,excelWriter);
+        }
+
+        @Override
+        public RobotURLProvider getURLProviders() {
+            return new RankedPlayerURLProvider("");
+        }
+
+    },
+    WTA_TENNIS_EXPLORER_RANKING_SCRAPER {
+
+        @Override
+        public String getContentTypeName() { return "ranking"; }
+
+        @Override
+        public Robot getInstance( Object... parameters ) { return new TennisExplorerRankingRobot(this, parameters); }
+
+        @Override
+        public List<Writer> getWriters() {
+            return Arrays.asList();
+        }
+
+        @Override
+        public RobotURLProvider getURLProviders() {
+            AppProperties config = AppProperties.getInstance();
+            String url = config.getProperty("tennisExplorer.wta.url");
+            return new SameURLProvider(url);
+        }
+    },
+    WTA_TENNIS_EXPLORER_PLAYERS_SCRAPER {
+
+        @Override
+        public String getContentTypeName() { return "stats"; }
+
+        @Override
+        public Robot getInstance( Object... parameters ) { return new TennisExplorerPlayerRobot(this, parameters ); }
+
+        @Override
+        public List<Writer> getWriters() {
+            AppProperties config = AppProperties.getInstance();
+            String localPath = config.getProperty("local.path");
+            Writer excelWriter = new StatsExcelWriter(localPath+"/"+config.getProperty("wta.league")+"/");
+            return Arrays.asList(excelWriter);
+        }
+
+        @Override
+        public RobotURLProvider getURLProviders() {
+            return new RankedPlayerURLProvider("");
+        }
+
+    },
+    ATP_TENNIS_EXPLORER_RANKING_SCRAPER {
+
+        @Override
+        public String getContentTypeName() { return "ranking"; }
+
+        @Override
+        public Robot getInstance( Object... parameters ) { return new TennisExplorerRankingRobot(this, parameters); }
+
+        @Override
+        public List<Writer> getWriters() {
+            return Arrays.asList();
+        }
+
+        @Override
+        public RobotURLProvider getURLProviders() {
+            AppProperties config = AppProperties.getInstance();
+            String url = config.getProperty("tennisExplorer.atp.url");
+            return new SameURLProvider(url);
+        }
+    },
+    ATP_TENNIS_EXPLORER_PLAYERS_SCRAPER {
+
+        @Override
+        public String getContentTypeName() { return "stats"; }
+
+        @Override
+        public Robot getInstance( Object... parameters ) { return new TennisExplorerPlayerRobot(this, parameters ); }
+
+        @Override
+        public List<Writer> getWriters() {
+            AppProperties config = AppProperties.getInstance();
+            String localPath = config.getProperty("local.path");
+            Writer excelWriter = new StatsExcelWriter(localPath+"/"+config.getProperty("atp.league")+"/");
+            return Arrays.asList(excelWriter);
         }
 
         @Override

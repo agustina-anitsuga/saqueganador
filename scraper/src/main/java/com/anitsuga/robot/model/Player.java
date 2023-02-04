@@ -43,6 +43,8 @@ public class Player extends Content {
 
     private String leagueProfileUrl;
 
+    private Stats stats;
+
     public String getKey(){
         String key = null;
         if( !isEmpty(this.getFirstName()) && !isEmpty(this.getLastName())) {
