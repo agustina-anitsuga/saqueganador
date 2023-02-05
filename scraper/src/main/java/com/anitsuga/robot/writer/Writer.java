@@ -7,12 +7,12 @@ import java.util.List;
  * Writer
  * @author agustina.dagnino
  */
-public abstract class Writer {
+public interface Writer {
 
     /**
      * write
      * @param content
      */
-    public abstract void write(List<Content> content) ;
+    public void write(List<Content> content) ;
 
 }

@@ -14,7 +14,7 @@ import java.util.List;
  * ExcelWriter
  * @author agustina.dagnino
  */
-public abstract class ExcelWriter extends Writer {
+public abstract class ExcelWriter implements Writer {
 
     /**
      * logger

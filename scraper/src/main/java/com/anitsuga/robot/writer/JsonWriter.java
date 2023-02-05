@@ -14,7 +14,7 @@ import java.util.List;
  * JsonWriter
  * @author agustina.dagnino
  */
-public abstract class JsonWriter extends Writer {
+public abstract class JsonWriter implements Writer {
 
     /**
      * write
