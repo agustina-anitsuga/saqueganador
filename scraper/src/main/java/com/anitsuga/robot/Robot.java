@@ -1,7 +1,5 @@
 package com.anitsuga.robot;
 
-import com.anitsuga.fwk.utils.Browser;
-import com.anitsuga.fwk.utils.SeleniumUtils;
 import com.anitsuga.robot.model.Content;
 import org.openqa.selenium.WebDriver;
 

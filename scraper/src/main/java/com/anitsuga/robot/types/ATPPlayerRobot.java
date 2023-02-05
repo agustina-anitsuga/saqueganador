@@ -6,10 +6,7 @@ import com.anitsuga.robot.AbstractRobot;
 import com.anitsuga.robot.RobotType;
 import com.anitsuga.robot.model.Content;
 import com.anitsuga.robot.model.Player;
-import com.anitsuga.robot.model.RankedPlayer;
-import com.anitsuga.robot.model.Ranking;
 import com.anitsuga.robot.page.ATPPlayerPage;
-import com.anitsuga.robot.page.ATPRankingPage;
 import org.openqa.selenium.WebDriver;
 
 /**

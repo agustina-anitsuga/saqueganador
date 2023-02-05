@@ -8,7 +8,6 @@ import com.anitsuga.robot.model.Content;
 import com.anitsuga.robot.model.Player;
 import com.anitsuga.robot.model.Stats;
 import com.anitsuga.robot.page.TennisExplorerPlayerPage;
-import com.anitsuga.robot.page.WTAPlayerPage;
 import org.openqa.selenium.WebDriver;
 
 /**

@@ -93,16 +93,17 @@ public class SeleniumUtils {
      * @param driver
      */
     public static void captureScreenshot(WebDriver driver) {
-        if( isScreenshotEnabled() )
-        try {
-            // take screenshot and save it to file
-            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            String filename = getScreenshotFilename(System.currentTimeMillis());
-            File file = new File(filename);
-            FileUtils.copyFile(screenshot, file);
-            LOGGER.info("Screenshot generated in: {}", file.getAbsolutePath());
-        } catch (Exception ioe) {
-            LOGGER.info("Could not generate screenshot. ",ioe);
+        if( isScreenshotEnabled() ){
+            try {
+                // take screenshot and save it to file
+                File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+                String filename = getScreenshotFilename(System.currentTimeMillis());
+                File file = new File(filename);
+                FileUtils.copyFile(screenshot, file);
+                LOGGER.info("Screenshot generated in: {}", file.getAbsolutePath());
+            } catch (Exception ioe) {
+                LOGGER.info("Could not generate screenshot. ",ioe);
+            }
         }
     }
 

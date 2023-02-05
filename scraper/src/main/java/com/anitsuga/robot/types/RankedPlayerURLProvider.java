@@ -2,7 +2,6 @@ package com.anitsuga.robot.types;
 
 import com.anitsuga.robot.RobotURLProvider;
 import com.anitsuga.robot.model.RankedPlayer;
-import org.openqa.selenium.WebDriver;
 
 import java.util.List;
 import java.util.stream.Collectors;

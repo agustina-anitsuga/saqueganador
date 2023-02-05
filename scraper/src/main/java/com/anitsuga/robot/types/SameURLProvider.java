@@ -1,7 +1,6 @@
 package com.anitsuga.robot.types;
 
 import com.anitsuga.robot.RobotURLProvider;
-import org.openqa.selenium.WebDriver;
 
 import java.util.Collections;
 import java.util.List;

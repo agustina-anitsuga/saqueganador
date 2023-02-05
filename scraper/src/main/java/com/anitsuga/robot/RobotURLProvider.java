@@ -2,8 +2,6 @@ package com.anitsuga.robot;
 
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
-
 /**
  * RobotURLProvider
  * @author agustina

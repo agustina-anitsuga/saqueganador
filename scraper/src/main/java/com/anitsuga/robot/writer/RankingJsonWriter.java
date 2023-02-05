@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * RankingJsonWriter
  */
-public class RankingJsonWriter extends Writer {
+public class RankingJsonWriter extends JsonWriter {
 
     private String outputFileName;
 

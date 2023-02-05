@@ -5,9 +5,7 @@ import com.anitsuga.fwk.utils.AppProperties;
 import com.anitsuga.robot.AbstractRobot;
 import com.anitsuga.robot.RobotType;
 import com.anitsuga.robot.model.Content;
-import com.anitsuga.robot.model.RankedPlayer;
 import com.anitsuga.robot.model.Ranking;
-import com.anitsuga.robot.page.ATPRankingPage;
 import com.anitsuga.robot.page.WTARankingPage;
 import org.openqa.selenium.WebDriver;
 

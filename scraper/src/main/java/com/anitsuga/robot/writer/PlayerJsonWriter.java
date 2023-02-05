@@ -2,7 +2,6 @@ package com.anitsuga.robot.writer;
 
 import com.anitsuga.robot.model.Content;
 import com.anitsuga.robot.model.Player;
-import com.anitsuga.robot.model.Ranking;
 
 import java.util.List;
 
@@ -10,7 +9,7 @@ import java.util.List;
  * PlayerJsonWriter
  * @author agustina.dagnino
  */
-public class PlayerJsonWriter extends Writer {
+public class PlayerJsonWriter extends JsonWriter {
 
     private String outputFileName;
 

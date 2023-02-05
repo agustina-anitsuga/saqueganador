@@ -6,5 +6,5 @@ package com.anitsuga.fwk.utils;
  *
  */
 public enum Browser {
-    CHROME, FIREFOX, IEXPLORE, HTML_UNIT;
+    CHROME, FIREFOX, IEXPLORE, HTML_UNIT
 }

@@ -4,7 +4,6 @@ import com.anitsuga.fwk.utils.Browser;
 import com.anitsuga.fwk.utils.SeleniumUtils;
 import com.anitsuga.robot.model.Content;
 import com.anitsuga.robot.model.RankedPlayer;
-import com.anitsuga.robot.model.Ranking;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

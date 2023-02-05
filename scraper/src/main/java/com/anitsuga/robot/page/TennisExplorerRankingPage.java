@@ -3,7 +3,6 @@ package com.anitsuga.robot.page;
 import com.anitsuga.fwk.page.Page;
 import com.anitsuga.fwk.utils.AppProperties;
 import com.anitsuga.robot.model.RankedPlayer;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

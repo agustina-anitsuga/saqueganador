@@ -1,19 +1,11 @@
 package com.anitsuga.robot.page;
 
 import com.anitsuga.fwk.page.Page;
-import com.anitsuga.fwk.utils.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-
-import static com.anitsuga.fwk.utils.MeasurementUtils.convertFeetAndInchestoCm;
 
 
 /**
