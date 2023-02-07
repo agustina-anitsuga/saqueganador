@@ -23,6 +23,15 @@ public abstract class JsonWriter implements Writer {
     public abstract void write(List<Content> content) ;
 
     /**
+     * setParameters
+     * @param parameters
+     */
+    @Override
+    public void setParameters(Object... parameters) {
+
+    }
+
+    /**
      * getJson
      * @param object
      * @return

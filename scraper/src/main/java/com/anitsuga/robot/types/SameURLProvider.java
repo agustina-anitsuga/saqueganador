@@ -35,7 +35,7 @@ public class SameURLProvider implements RobotURLProvider {
      * @param parameters
      */
     @Override
-    public void setParameters(Object parameters) {
+    public void setParameters(Object[] parameters) {
 
     }
 }

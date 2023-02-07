@@ -10,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.anitsuga.robot.AbstractRobot.runRobot;
 
@@ -42,29 +45,37 @@ public class AllPlayersStatsScraper {
      */
     private void scrapeContent() {
         WebDriver driver = SeleniumUtils.buildDriver(Browser.CHROME);
-        this.scrapeWTAPlayers(driver);
-        this.scrapeATPPlayers(driver);
+
+        List<Integer> years = IntStream.range(1998, 2023).boxed().collect(Collectors.toList());
+        Collections.reverse(years);
+
+        for (Integer year : years) {
+            this.scrapeWTAPlayers(driver, year);
+            this.scrapeATPPlayers(driver, year);
+        }
     }
 
     /**
      * scrapeWTAPlayers
      * @param driver
      */
-    private void scrapeWTAPlayers(WebDriver driver) {
+    private void scrapeWTAPlayers(WebDriver driver, Integer year) {
+
         // scrape wta ranking
-        List<Content> ranking = runRobot(driver, RobotType.WTA_TENNIS_EXPLORER_RANKING_SCRAPER, "wta");
+        List<Content> ranking = runRobot(driver, RobotType.WTA_TENNIS_EXPLORER_RANKING_SCRAPER, "wta", year );
 
         // scrape wta player data
         List<Content> payers = runRobot(driver, RobotType.WTA_TENNIS_EXPLORER_PLAYERS_SCRAPER,
                 getRankedPlayerList(ranking),
-                "wta");
+                "wta",
+                year);
     }
 
     /**
      * scrapeATPPlayers
      * @param driver
      */
-    private void scrapeATPPlayers(WebDriver driver) {
+    private void scrapeATPPlayers(WebDriver driver, Integer year) {
         // scrape atp ranking
         List<Content> ranking = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_RANKING_SCRAPER, "atp");
 

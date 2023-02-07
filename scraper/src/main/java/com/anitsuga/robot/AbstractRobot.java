@@ -25,7 +25,7 @@ public abstract class AbstractRobot implements Robot {
 
     protected RobotType robotType;
 
-    protected Object parameters;
+    protected Object[] parameters;
 
     /**
      * AbstractRobot
@@ -34,7 +34,7 @@ public abstract class AbstractRobot implements Robot {
      */
     public AbstractRobot( RobotType robotType, Object... parameters ){
         this.robotType = robotType;
-        this.parameters = (parameters!=null)? parameters[0] : null ;
+        this.parameters = parameters;
     }
 
     /**
@@ -97,6 +97,7 @@ public abstract class AbstractRobot implements Robot {
      */
     public void storeContent( List<Content> content ){
         for (Writer writer:robotType.getWriters()) {
+            writer.setParameters(this.parameters);
             writer.write(content);
         }
     }

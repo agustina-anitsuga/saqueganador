@@ -137,4 +137,13 @@ public abstract class ExcelWriter implements Writer {
      * @return
      */
     protected abstract String getOutputFileName() ;
+
+    /**
+     * setParameters
+     * @param parameters
+     */
+    @Override
+    public void setParameters(Object... parameters) {
+
+    }
 }

@@ -37,7 +37,7 @@ public class RankedPlayerURLProvider implements RobotURLProvider {
      * @param parameters
      */
     @Override
-    public void setParameters(Object parameters) {
-        this.players = (List<RankedPlayer>) parameters;
+    public void setParameters(Object[] parameters) {
+        this.players = (List<RankedPlayer>) (parameters[0]);
     }
 }

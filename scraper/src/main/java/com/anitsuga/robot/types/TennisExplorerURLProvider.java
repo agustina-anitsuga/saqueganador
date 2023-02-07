@@ -17,6 +17,9 @@ public class TennisExplorerURLProvider implements RobotURLProvider {
 
     private String url;
 
+    private Integer year;
+
+
     /**
      * SameURLProvider
      * @param url
@@ -32,7 +35,7 @@ public class TennisExplorerURLProvider implements RobotURLProvider {
     @Override
     public List<String> getURLs() {
         int max = AppProperties.getInstance().intValue("tennisExplorer.maxPage");
-        Function<Integer,String> func = x -> url + "?page=" + x;
+        Function<Integer,String> func = x -> String.format("%s/%d/?page=%d", url, this.year, x );
         return  IntStream.range(1, max + 1).boxed().map( func ).collect(Collectors.toList());
     }
 
@@ -41,8 +44,8 @@ public class TennisExplorerURLProvider implements RobotURLProvider {
      * @param parameters
      */
     @Override
-    public void setParameters(Object parameters) {
-
+    public void setParameters(Object[] parameters) {
+        this.year = (Integer) parameters[1];
     }
 
 }

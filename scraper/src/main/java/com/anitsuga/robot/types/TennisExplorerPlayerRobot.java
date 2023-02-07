@@ -17,15 +17,17 @@ import org.openqa.selenium.WebDriver;
 public class TennisExplorerPlayerRobot extends AbstractRobot {
 
     private String league;
+    private Integer year;
 
     /**
-     * WTAPlayerRobot
+     * TennisExplorerPlayerRobot
      * @param robotType
      * @param parameters
      */
     public TennisExplorerPlayerRobot(RobotType robotType, Object... parameters) {
-        super(robotType, parameters[0]);
+        super(robotType, parameters);
         this.league = (String) parameters[1];
+        this.year = (Integer) parameters[2];
     }
 
     /**
@@ -56,6 +58,7 @@ public class TennisExplorerPlayerRobot extends AbstractRobot {
                 .highestSinglesRanking(page.getHighestSinglesRanking())
                 .currentDoublesRanking(page.getCurrentDoublesRanking())
                 .highestDoublesRanking(page.getHighestDoublesRanking())
+                .year(this.year)
                 .summary(page.getSummary())
                 .clay(page.getClay())
                 .hard(page.getHard())

@@ -19,6 +19,6 @@ public interface RobotURLProvider {
       * setParameters
       * @param parameters
       */
-     public void setParameters( Object parameters );
+     public void setParameters( Object[] parameters );
 
 }

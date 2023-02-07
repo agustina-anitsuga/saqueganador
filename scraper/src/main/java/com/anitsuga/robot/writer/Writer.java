@@ -15,4 +15,9 @@ public interface Writer {
      */
     public void write(List<Content> content) ;
 
+    /**
+     * setParameters
+     * @param parameters
+     */
+    void setParameters(Object... parameters);
 }

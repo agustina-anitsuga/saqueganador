@@ -16,6 +16,7 @@ import org.openqa.selenium.WebDriver;
 public class TennisExplorerRankingRobot extends AbstractRobot {
 
     private String league;
+    private Integer year;
 
     /**
      * TennisExplorerRankingRobot
@@ -23,8 +24,9 @@ public class TennisExplorerRankingRobot extends AbstractRobot {
      * @param parameters
      */
     public TennisExplorerRankingRobot(RobotType robotType, Object... parameters) {
-        super(robotType, null);
+        super(robotType, parameters);
         this.league = (String) parameters[0];
+        this.year = (Integer) parameters[1];
     }
 
     /**

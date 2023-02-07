@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Stats extends Content {
 
+    private Integer year;
     private String currentSinglesRanking;
     private String highestSinglesRanking;
     private String currentDoublesRanking;

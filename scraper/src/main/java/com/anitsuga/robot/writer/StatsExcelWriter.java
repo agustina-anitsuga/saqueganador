@@ -18,8 +18,11 @@ public class StatsExcelWriter extends ExcelWriter {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(StatsExcelWriter.class.getName());
 
+    private Integer year = null;
+
     private final String[] fields = new String[] {
             "League",
+            "Year",
             "Full Name",
             "Country",
             "Birth date",
@@ -54,6 +57,7 @@ public class StatsExcelWriter extends ExcelWriter {
         int columnCount = 0;
         Player result = (Player) player;
         writeField(row,result.getLeague(),columnCount++);
+        writeField(row,result.getStats().getYear().toString(),columnCount++);
         writeField(row,result.getFullName(),columnCount++);
         writeField(row,result.getNationality(),columnCount++);
         writeField(row,result.getBirthDate()==null?null:result.getBirthDate().toString(),columnCount++);
@@ -84,6 +88,15 @@ public class StatsExcelWriter extends ExcelWriter {
      * @return
      */
     protected String getOutputFileName() {
-        return String.format("%s/players-stats.xlsx",outputFileName);
+        return String.format("%s/players-stats-%d.xlsx",outputFileName,this.year);
+    }
+
+    /**
+     * setParameters
+     * @param parameters
+     */
+    @Override
+    public void setParameters(Object... parameters) {
+        this.year = (Integer) parameters[2];
     }
 }
