@@ -50,7 +50,12 @@ public class TennisExplorerPlayerRobot extends AbstractRobot {
     @Override
     protected Content scrapeContent(String url, WebDriver driver, Page contentPage) {
         TennisExplorerPlayerPage page = (TennisExplorerPlayerPage) contentPage;
+
         Stats stats = Stats.builder()
+                .currentSinglesRanking(page.getCurrentSinglesRanking())
+                .highestSinglesRanking(page.getHighestSinglesRanking())
+                .currentDoublesRanking(page.getCurrentDoublesRanking())
+                .highestDoublesRanking(page.getHighestDoublesRanking())
                 .summary(page.getSummary())
                 .clay(page.getClay())
                 .hard(page.getHard())
@@ -60,6 +65,9 @@ public class TennisExplorerPlayerRobot extends AbstractRobot {
                 .build();
         Player player = Player.builder()
                 .fullName(page.getFullName())
+                .nationality(page.getCountry())
+                .birthDate(page.getBirthDate())
+                .gameStyle(page.getGameStyle())
                 .league(league)
                 .stats(stats)
                 .build();

@@ -21,6 +21,13 @@ public class StatsExcelWriter extends ExcelWriter {
     private final String[] fields = new String[] {
             "League",
             "Full Name",
+            "Country",
+            "Birth date",
+            "Game Style",
+            "Current Singles Ranking",
+            "Highest Singles Ranking",
+            "Current Doubles Ranking",
+            "Highest Doubles Ranking",
             "Summary",
             "Clay",
             "Hard",
@@ -48,6 +55,13 @@ public class StatsExcelWriter extends ExcelWriter {
         Player result = (Player) player;
         writeField(row,result.getLeague(),columnCount++);
         writeField(row,result.getFullName(),columnCount++);
+        writeField(row,result.getNationality(),columnCount++);
+        writeField(row,result.getBirthDate()==null?null:result.getBirthDate().toString(),columnCount++);
+        writeField(row,result.getGameStyle(),columnCount++);
+        writeField(row,result.getStats().getCurrentSinglesRanking(),columnCount++);
+        writeField(row,result.getStats().getHighestSinglesRanking(),columnCount++);
+        writeField(row,result.getStats().getCurrentDoublesRanking(),columnCount++);
+        writeField(row,result.getStats().getHighestDoublesRanking(),columnCount++);
         writeField(row,result.getStats().getSummary(),columnCount++);
         writeField(row,result.getStats().getClay(),columnCount++);
         writeField(row,result.getStats().getHard(),columnCount++);

@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Stats extends Content {
 
+    private String currentSinglesRanking;
+    private String highestSinglesRanking;
+    private String currentDoublesRanking;
+    private String highestDoublesRanking;
     private String summary;
     private String clay;
     private String hard;

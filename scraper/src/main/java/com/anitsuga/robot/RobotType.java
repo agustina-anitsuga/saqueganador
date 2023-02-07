@@ -170,7 +170,7 @@ public enum RobotType {
         public RobotURLProvider getURLProviders() {
             AppProperties config = AppProperties.getInstance();
             String url = config.getProperty("tennisExplorer.wta.url");
-            return new SameURLProvider(url);
+            return new TennisExplorerURLProvider(url);
         }
     },
     WTA_TENNIS_EXPLORER_PLAYERS_SCRAPER {
@@ -212,7 +212,7 @@ public enum RobotType {
         public RobotURLProvider getURLProviders() {
             AppProperties config = AppProperties.getInstance();
             String url = config.getProperty("tennisExplorer.atp.url");
-            return new SameURLProvider(url);
+            return new TennisExplorerURLProvider(url);
         }
     },
     ATP_TENNIS_EXPLORER_PLAYERS_SCRAPER {

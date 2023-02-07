@@ -7,6 +7,10 @@ import org.openqa.selenium.support.FindBy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 
 /**
  * TennisExplorerPlayerPage
@@ -41,6 +45,10 @@ public class TennisExplorerPlayerPage extends Page {
     @FindBy(xpath = "//*[@id=\"balMenu-1-data\"]/table/tfoot/tr/td[7]")
     private WebElement notset;
 
+    @FindBy(xpath = "//*[@id=\"center\"]/div[1]/table/tbody/tr/td[2]/div")
+    private List<WebElement> data;
+
+    private Map<String,String> map;
 
 
     /**
@@ -136,4 +144,101 @@ public class TennisExplorerPlayerPage extends Page {
         return ret;
     }
 
+    private Map<String,String> getDataMap(){
+        Map<String,String> map = new HashMap<String,String>();
+        for ( WebElement element: data ) {
+            String text = element.getText();
+            String[] parts = text.split(":");
+            map.put(parts[0],parts[1]);
+        }
+        return map;
+    }
+
+    public Map<String,String> getData(){
+        if( this.map == null ){
+            this.map = this.getDataMap();
+        }
+        return this.map;
+    }
+
+    public String getCountry() {
+        String ret = null;
+        try {
+            ret = this.getData().get("Country");
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain country for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public Date getBirthDate() {
+        Date ret = null;
+        try {
+            String d = this.getData().get("Age");
+            d = d.substring(d.indexOf("(")+1,d.indexOf(")"));
+            DateFormat format = new SimpleDateFormat("d. MM. yyyy", Locale.ENGLISH);
+            ret = format.parse(d);
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain birthDate for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public String getGameStyle() {
+        String ret = null;
+        try {
+            ret = this.getData().get("Plays");
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain gameStyle for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public String getCurrentSinglesRanking() {
+        String ret = null;
+        try {
+            ret = this.getData().get("Current/Highest rank - singles");
+            ret = ret.substring(1, ret.indexOf("/") );
+            ret = ret.replace(".","");
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain current singles ranking for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public String getHighestSinglesRanking() {
+        String ret = null;
+        try {
+            ret = this.getData().get("Current/Highest rank - singles");
+            ret = ret.substring(ret.indexOf("/") + 1);
+            ret = ret.replace(".","");
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain highest singles ranking for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public String getCurrentDoublesRanking() {
+        String ret = null;
+        try {
+            ret = this.getData().get("Current/Highest rank - doubles");
+            ret = ret.substring(1, ret.indexOf("/") );
+            ret = ret.replace(".","");
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain current doubles ranking for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public String getHighestDoublesRanking() {
+        String ret = null;
+        try {
+            ret = this.getData().get("Current/Highest rank - doubles");
+            ret = ret.substring(ret.indexOf("/") +1 );
+            ret = ret.replace(".","");
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain highest doubles ranking for {}", this.getFullName());
+        }
+        return ret;
+    }
 }

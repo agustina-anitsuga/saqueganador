@@ -67,6 +67,7 @@ public class TennisExplorerRankingRobot extends AbstractRobot {
                 !AppProperties.getInstance().isPropertyEmpty("wta.league") &&
                 !AppProperties.getInstance().isPropertyEmpty("atp.league") &&
                 !AppProperties.getInstance().isPropertyEmpty("tennisExplorer.atp.url") &&
-                !AppProperties.getInstance().isPropertyEmpty("tennisExplorer.wta.url") ;
+                !AppProperties.getInstance().isPropertyEmpty("tennisExplorer.wta.url") &&
+                !AppProperties.getInstance().isPropertyEmpty("tennisExplorer.maxPage");
     }
 }

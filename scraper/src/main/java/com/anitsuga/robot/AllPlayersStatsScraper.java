@@ -9,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.anitsuga.robot.AbstractRobot.runRobot;
@@ -64,13 +65,13 @@ public class AllPlayersStatsScraper {
      * @param driver
      */
     private void scrapeATPPlayers(WebDriver driver) {
-        // scrape wta ranking
-        List<Content> ranking = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_RANKING_SCRAPER, "wta");
+        // scrape atp ranking
+        List<Content> ranking = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_RANKING_SCRAPER, "atp");
 
-        // scrape wta player data
+        // scrape atp player data
         List<Content> players = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_PLAYERS_SCRAPER,
                 getRankedPlayerList(ranking),
-                "wta");
+                "atp");
     }
 
     /**
@@ -79,7 +80,11 @@ public class AllPlayersStatsScraper {
      * @return
      */
     private List<RankedPlayer> getRankedPlayerList(List<Content> ranking) {
-        return ((Ranking) ranking.get(0)).getPlayers();
+        List<RankedPlayer> ret = new ArrayList<>();
+        for (Content r: ranking) {
+            ret.addAll(((Ranking)r).getPlayers());
+        }
+        return ret;
     }
 
 }
