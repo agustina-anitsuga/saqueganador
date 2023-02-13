@@ -46,11 +46,11 @@ public class AllPlayersStatsScraper {
     private void scrapeContent() {
         WebDriver driver = SeleniumUtils.buildDriver(Browser.CHROME);
 
-        List<Integer> years = IntStream.range(1998, 2023).boxed().collect(Collectors.toList());
+        List<Integer> years = IntStream.range(1998, 2004).boxed().collect(Collectors.toList());
         Collections.reverse(years);
 
         for (Integer year : years) {
-            this.scrapeWTAPlayers(driver, year);
+            //this.scrapeWTAPlayers(driver, year);
             this.scrapeATPPlayers(driver, year);
         }
     }
@@ -77,12 +77,13 @@ public class AllPlayersStatsScraper {
      */
     private void scrapeATPPlayers(WebDriver driver, Integer year) {
         // scrape atp ranking
-        List<Content> ranking = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_RANKING_SCRAPER, "atp");
+        List<Content> ranking = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_RANKING_SCRAPER, "atp", year);
 
         // scrape atp player data
         List<Content> players = runRobot(driver, RobotType.ATP_TENNIS_EXPLORER_PLAYERS_SCRAPER,
                 getRankedPlayerList(ranking),
-                "atp");
+                "atp",
+                year);
     }
 
     /**
@@ -93,7 +94,9 @@ public class AllPlayersStatsScraper {
     private List<RankedPlayer> getRankedPlayerList(List<Content> ranking) {
         List<RankedPlayer> ret = new ArrayList<>();
         for (Content r: ranking) {
-            ret.addAll(((Ranking)r).getPlayers());
+            if( r!=null ){
+                ret.addAll(((Ranking) r).getPlayers());
+            }
         }
         return ret;
     }
