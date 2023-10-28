@@ -1,0 +1,61 @@
+<div class='card'>
+    <div class='card-header'>
+      {{pageTitle}} {{filteredTeam.user.userName}}
+    </div>
+    <div class='card-body'>
+      <div class='row'>
+        <div class='col-md-1'>Ronda:</div>
+        <div class='col-md-2'>
+          <select [(ngModel)]="selectedRound">
+            <option *ngFor="let r of rounds" [ngValue]="r">{{r.roundName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        &nbsp;
+      </div>
+      <div class='container'>
+            <div class="row">
+            <div class="col-sm" *ngFor='let selectedPlayer of filteredTeam.selection'>
+              <div class="card">
+                  
+                  <table class="table" style="border:1px;border-color: black;">
+                    <tr><td>
+                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+                        <table class="table">
+                            <tr><td>{{ selectedPlayer.position }}</td></tr>
+                            <tr><td><img src="{{selectedPlayer.playerStats.player.playerProfilePic}}" style="width:80%"/></td></tr>
+                            <tr><td>{{ selectedPlayer.playerStats.player.playerName }}</td></tr>
+                        </table>
+                        </a>
+                    </td></tr>
+                    <tr><td>Puntos en juego {{ selectedPlayer.playerStats.pointsToAward }}</td></tr>           
+                    <tr><td>
+                      <pm-multiplier [multiplier]='selectedPlayer.playerMultiplier' (multiplierClicked)='onMultiplierClicked($event)'>
+                      </pm-multiplier>
+                    </td></tr>
+                    <tr><td>
+                        <ng-container *ngIf = 'selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
+                        <ng-container *ngIf = '!selectedPlayer.played'>Pendiente</ng-container>
+                    </td></tr>
+                  </table>
+                </div>  
+            </div>
+            </div>
+      </div>
+    </div>
+</div>
+<div class='card'>
+  <div class='card-body'>
+    <div class='row'>
+      <div class='col-md-2'>Puntos en la ronda:</div>
+      <div class='col-md-1'>
+        {{filteredTeam.score}}
+      </div>
+    </div>
+  </div>
+</div> 
+  <div *ngIf='errorMessage'
+       class='alert alert-danger'>
+    Error: {{ errorMessage }}
+  </div>

@@ -1,0 +1,20 @@
+.crop {
+    overflow: hidden;
+  }
+  div {
+    cursor: pointer;
+  }
+
+.scaleB {
+    width: 30px;
+    height: 30px;
+    border: 0px ;
+  }
+
+.scale { object-fit: scale-down; }
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

@@ -2,12 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StarComponent } from './star.component';
 import { FormsModule } from '@angular/forms';
+import { MultiplierComponent } from './multiplier.component';
 
 
 
 @NgModule({
   declarations: [
-    StarComponent
+    StarComponent,
+    MultiplierComponent
   ],
   imports: [
     CommonModule,
@@ -15,7 +17,8 @@ import { FormsModule } from '@angular/forms';
   exports: [
     StarComponent,
     CommonModule,
-    FormsModule
+    FormsModule,
+    MultiplierComponent
   ]
 })
 export class SharedModule { }

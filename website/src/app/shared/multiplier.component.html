@@ -1,0 +1,11 @@
+<div class="card-body center"
+     [title]="multiplier"
+     (click)='onClick()'>
+  <div style="width: 75px" class="center">
+    <div class="row center" >
+        <div *ngFor="let i of [].constructor(multiplier)" class="col-sm-1 center"> 
+            <img src="./assets/images/favicon.png" class="scaleB scale"/>
+        </div> 
+    </div>
+  </div>
+</div>
