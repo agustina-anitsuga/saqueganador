@@ -1,0 +1,87 @@
+<div class='card'>
+    <div class='card-header'>
+      {{pageTitle}} {{filteredTeam.user.userName}}
+    </div>
+    <div class='card-body'>
+      <ng-container *ngIf = 'shouldAllowTeamSelection()'>
+      <div class='row' >
+        <div class='col-md-1 text-left'>Equipo:</div>
+        <div class='col-md-2'>
+          <select [(ngModel)]="selectedUser" class="h-100 w-100">
+            <option *ngFor="let u of users" [ngValue]="u">{{u.userName}}</option>
+          </select>
+        </div>
+      </div>
+      </ng-container>
+      <div class='row'>
+        <div class='col-md-1 text-left' >Ronda:</div>
+        <div class='col-md-2'>
+          <select [(ngModel)]="selectedRound" class="h-100 w-100">
+            <option *ngFor="let r of rounds" [ngValue]="r">{{r.roundName}}</option>
+          </select>
+        </div>
+      </div>
+      <div class='row'>
+        &nbsp;
+      </div>
+      <div>
+            <div class="row">
+            <div class="col-sm-3 mt-2"  *ngFor='let selectedPlayer of filteredTeam.selection'>
+              <div class="card h-100" >
+                  <table>
+                    <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+                        <tr><td>
+                            <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+                            <table>
+                                <tr><td>
+                                    <img src="{{selectedPlayer.playerStats.player.playerProfilePic}}" style="width:80%"/>
+                                </td></tr>  
+                                <tr><td>{{ selectedPlayer.playerStats.player.playerName }}</td></tr>
+                                <tr><td>Puntos en juego {{ selectedPlayer.playerStats.pointsToAward }}</td></tr> 
+                            </table>
+                            </a>
+                        </td></tr>
+                    </ng-container>
+                    <ng-container *ngIf = 'shouldDisplayPendingSelection(selectedPlayer)'>
+                        <tr><td>
+                          <img src="assets/images/yellow-question-mark.png">
+                        </td></tr>
+                    </ng-container>
+                    <ng-container *ngIf = 'shouldDisplayPendingResult(selectedPlayer)'>
+                      <tr><td>
+                        <img src="assets/images/yellow-question-mark.png">
+                      </td></tr>
+                    </ng-container>
+                    <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+                        <tr><td>
+                          <pm-multiplier [multiplier]='selectedPlayer.playerMultiplier' (multiplierClicked)='onMultiplierClicked($event)'>
+                          </pm-multiplier>
+                        </td></tr>
+                    </ng-container>
+                    <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+                        <tr><td>
+                            <ng-container *ngIf = 'selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
+                            <ng-container *ngIf = '!selectedPlayer.played'>Resultado Pendiente</ng-container>
+                        </td></tr>
+                    </ng-container>
+                  </table>
+                </div>  
+            </div>
+            </div>
+      </div>
+    </div>
+</div>
+<div class='card'>
+  <div class='card-body'>
+    <div class='row'>
+      <div class='col-md-2'>Puntos en la ronda:</div>
+      <div class='col-md-1'>
+        {{filteredTeam.score}}
+      </div>
+    </div>
+  </div>
+</div> 
+  <div *ngIf='errorMessage'
+       class='alert alert-danger'>
+    Error: {{ errorMessage }}
+  </div>

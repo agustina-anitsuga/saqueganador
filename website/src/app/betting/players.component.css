@@ -1,0 +1,28 @@
+thead {
+    color: #096A2E;
+  }
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #096A2E; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #e4f7e3; 
+}  
+
+.divScroll {
+  overflow:scroll;
+  height:600px;
+}

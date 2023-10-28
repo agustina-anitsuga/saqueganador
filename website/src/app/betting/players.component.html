@@ -1,0 +1,29 @@
+<div class="card">
+    <div class='card-header'>
+      {{pageTitle}}
+    </div>
+    <div class='card-body'>
+      <div class="row">
+          Liga
+          <select [(ngModel)]="selectedLeague" style="width:90%">
+            <option *ngFor="let league of leagues" [ngValue]="league">{{league.leagueName}}</option>
+          </select>
+      </div>
+      <div class="row">
+          Jugador
+          <input type='text'
+              [(ngModel)]='listFilter' style="width:90%"/>    
+      </div>  
+    </div>
+    <div class='card-body divScroll'>
+      <div class="row" *ngFor='let player of filteredPlayers'>
+        <div class="card">
+            <table class="table">
+                <tr><td><img src="{{player.player.playerProfilePic}}" style="width:80%"/></td></tr>
+                <tr><td>{{ player.player.playerName }}</td></tr>
+                <tr><td>Puntos en juego {{ player.pointsToAward }}</td></tr>   
+            </table>  
+        </div>
+      </div>
+    </div>
+</div>

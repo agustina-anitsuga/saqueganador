@@ -2,22 +2,40 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, tap, throwError, map } from "rxjs";
 
+import { IUser } from "../shared/model";
 import { ITeam } from "../shared/model";
+import { IPlayerStatsPerRound } from "../shared/model";
 
 @Injectable({
   providedIn: 'root'
 })
 export class BettingService {
 
-    private teamUrl = 'api/betting/myteam.json';
-    
+    private teamUrl = 'api/betting/teams.json';
+    private playersUrl = 'api/betting/players.json';
+    private usersUrl = 'api/betting/users.json';
+
     constructor( private http : HttpClient ) {}
 
-    getTeam(): Observable<ITeam[]> {
+    getTeams(): Observable<ITeam[]> {
         return this.http.get<ITeam[]>(this.teamUrl).pipe(
             tap( data => console.log('All:', JSON.stringify(data)) ),
             catchError( this.handleError ) 
         );
+    }
+
+    getPlayers(): Observable<IPlayerStatsPerRound[]> {
+      return this.http.get<IPlayerStatsPerRound[]>(this.playersUrl).pipe(
+          tap( data => console.log('All:', JSON.stringify(data)) ),
+          catchError( this.handleError ) 
+      );
+    }
+
+    getGroupUsers(): Observable<IUser[]> {
+      return this.http.get<IUser[]>(this.usersUrl).pipe(
+          tap( data => console.log('All:', JSON.stringify(data)) ),
+          catchError( this.handleError ) 
+      );
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {

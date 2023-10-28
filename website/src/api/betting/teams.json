@@ -182,8 +182,47 @@
                 "playerMultiplier" : 1,
                 "playerScore": 0,
                 "played": true
+            },
+            {
+                "position" : 5,
+                "playerStats" : {
+                    "player": {},
+                    "pointsToAward": null
+                },
+                "playerMultiplier" : 0,
+                "playerScore": 0,
+                "played": false
+            },
+            {
+                "position" : 6,
+                "playerStats" : {
+                    "player": {},
+                    "pointsToAward": null
+                },
+                "playerMultiplier" : 0,
+                "playerScore": 0,
+                "played": false
+            },
+            {
+                "position" : 7,
+                "playerStats" : {
+                    "player": {},
+                    "pointsToAward": null
+                },
+                "playerMultiplier" : 0,
+                "playerScore": 0,
+                "played": false
+            },
+            {
+                "position" : 8,
+                "playerStats" : {
+                    "player": {},
+                    "pointsToAward": null
+                },
+                "playerMultiplier" : 0,
+                "playerScore": 0,
+                "played": false
             }
-
         ],
         "score": 0
     }
