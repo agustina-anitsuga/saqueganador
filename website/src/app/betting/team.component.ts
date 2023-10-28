@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ISelectedPlayer, ITeam, IUser } from "../shared/model";
 import { IRound } from "../shared/model";
@@ -13,7 +13,7 @@ export class TeamComponent implements OnInit, OnDestroy {
 
   public pageTitle :string = 'Team';
 
-  public mode : string = 'OTHER'; // OWN, OTHER, EDIT  
+  @Input() mode : string = 'OTHER' ; // 'EDIT'; // OWN, OTHER, EDIT  
 
   team : ITeam[] = [] ;
   filteredTeam: ITeam = { 
