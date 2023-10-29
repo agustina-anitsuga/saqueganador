@@ -1,13 +1,13 @@
 <div class='card'>
     <div class='card-header'>
-      {{pageTitle}} {{filteredTeam.user.userName}} {{mode}}
+      {{pageTitle}} {{ currentTeamName() }} 
     </div>
     <div class='card-body'>
       <ng-container *ngIf = 'shouldAllowTeamSelection()'>
       <div class='row' >
         <div class='col-md-1 text-left'>Equipo:</div>
-        <div class='col-md-2'>
-          <select [(ngModel)]="selectedUser" class="h-100 w-100">
+        <div class='col-md-3'>
+          <select [(ngModel)]="selectedUser" class="h-100 w-100" [compareWith]="compareUsers">
             <option *ngFor="let u of users" [ngValue]="u">{{u.userName}}</option>
           </select>
         </div>
@@ -15,16 +15,27 @@
       </ng-container>
       <div class='row'>
         <div class='col-md-1 text-left' >Ronda:</div>
-        <div class='col-md-2'>
-          <select [(ngModel)]="selectedRound" class="h-100 w-100">
+        <div class='col-md-3'>
+          <select [(ngModel)]="selectedRound" class="h-100 w-100" >
             <option *ngFor="let r of rounds" [ngValue]="r">{{r.roundName}}</option>
           </select>
         </div>
+        <ng-container *ngIf = 'shouldDisplayAvailableMultipliers()'>
+        <div class='col-md-3 text-left'>Multiplicadores disponibles:</div>
+        <div class="col-md-5">
+              <div class="row" >
+                  <div *ngFor="let i of [].constructor(availableMultipliers())" class="col-sm-1 left"> 
+                      <img src="./assets/images/favicon.png" class="scaleB scale"/>
+                  </div> 
+              </div>
+        </div>
+      </ng-container>
       </div>
       <div class='row'>
         &nbsp;
       </div>
       <div>
+        <ng-container *ngIf = 'filteredTeam' >
             <div class="row">
             <div class="col-sm-3 mt-2"  *ngFor='let selectedPlayer of filteredTeam.selection'>
               <div class="card h-100" >
@@ -68,16 +79,19 @@
                 </div>  
             </div>
             </div>
+          </ng-container>
       </div>
     </div>
 </div>
 <div class='card'>
   <div class='card-body'>
     <div class='row'>
+      <ng-container *ngIf = 'shouldDisplayTotalScore()'>
       <div class='col-md-2'>Puntos en la ronda:</div>
       <div class='col-md-1'>
         {{filteredTeam.score}}
       </div>
+      </ng-container>
     </div>
   </div>
 </div> 

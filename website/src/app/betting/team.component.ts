@@ -13,21 +13,16 @@ export class TeamComponent implements OnInit, OnDestroy {
 
   public pageTitle :string = 'Team';
 
-  @Input() mode : string = 'OTHER' ; // 'EDIT'; // OWN, OTHER, EDIT  
+  @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
 
-  team : ITeam[] = [] ;
-  filteredTeam: ITeam = { 
-          user: { userId: NaN, userName: ''},
-          tournament: { tournamentId: NaN, tournamentName: ''}, 
-          round: { roundId: NaN, roundName: ''}, 
-          selection: [],
-          score: NaN } ;
+  teams : ITeam[] = [] ;
+  filteredTeam: ITeam = this.emptyTeam();
 
   rounds : IRound[] = [];
   private _selectedRound : IRound = { roundId : NaN, roundName : '' };
 
   users : IUser[] = [];
-  private _selectedUser : IUser = { userId: NaN, userName: ''};
+  private _selectedUser : IUser = { userId : NaN, userName: '' };
   
   errorMessage = '';
 
@@ -38,72 +33,143 @@ export class TeamComponent implements OnInit, OnDestroy {
   
   set selectedUser( user: IUser ) {
     this._selectedUser = user;
-    console.log('redirect to page for team '+user.userName);
+    this.filteredTeam = this.performFilter(this._selectedUser,this._selectedRound);
+  }
+
+  get selectedUser() : IUser {
+    return this._selectedUser;
   }
 
   set selectedRound( round: IRound ) {
-    this.filteredTeam = this.performFilter(+round.roundId);
+    this._selectedRound = round;
+    this.filteredTeam = this.performFilter(this._selectedUser,this._selectedRound);
   }
 
-  performFilter(roundId: number): ITeam {
-    const ret = this.getTeamByRound(this.team,roundId);
+  get selectedRound() : IRound {
+    return this._selectedRound;
+  }
+
+  emptyTeam() : ITeam {
+    return { 
+      user: { userId: NaN, userName: ''},
+      tournament: { tournamentId: NaN, tournamentName: '', currentRound: { roundId: NaN, roundName: ''} }, 
+      round: { roundId: NaN, roundName: ''}, 
+      selection: [],
+      score: NaN } ;
+  }
+
+  currentTeamName() : string {
+      return (this.filteredTeam && this.filteredTeam.user)? this.filteredTeam.user.userName : '' ;
+  }
+
+  allMatchesPlayed() {
+      return this.filteredTeam.selection.every( player => player.played );
+  }
+
+  maximumMultipliers() : number {
+      return 10;
+  }
+
+  availableMultipliers() : number {
+      return this.allMatchesPlayed()? 0 : ( this.maximumMultipliers() - this.consumedMultipliers() );
+  }
+
+  consumedMultipliers() : number {
+      return this.filteredTeam.selection.reduce((partialSum, selection) => partialSum + selection.playerMultiplier, 0);
+  }
+
+  performFilter(user: IUser, round: IRound): ITeam {
+    console.log('perform filter');
+    let ret = this.getTeamsByRound(this.getTeamsByUser(this.teams,user),round)[0];
+    if(ret && ret.user && ret.round){
+      console.log('filtered user:'+ret.user.userId+' round:'+ret.round.roundId);
+    }
     return ret;
   }
 
   ngOnInit(): void {
     console.log('In OnInit');
-    this.subTeam = this.bettingService.getTeams().subscribe({
-      next: t => {
-        this.team = t;
-        this.rounds = this.getRounds(t);
-        this._selectedRound = this.getCurrentRound();
-        this.selectedRound = this._selectedRound;
-      },
-      error: err => this.errorMessage = err
-    });
+
     this.subUsers = this.bettingService.getGroupUsers().subscribe({
       next: u => {
         this.users = u;
+        this.initializeSelections();
       },
       error: err => this.errorMessage = err
     });
+
+    this.subTeam = this.bettingService.getTeams().subscribe({
+      next: t => {
+        this.teams = t;
+        this.rounds = this.getRounds(t);
+        this.initializeSelections();
+      },
+      error: err => this.errorMessage = err
+    });
+  }
+
+  initializeSelections(){
+      console.log('initializeSelections');
+
+      this._selectedRound = this.getCurrentRound();
+      this.selectedRound = this._selectedRound;
+      
+      this._selectedUser = this.getCurrentUser();
+      this.selectedUser = this._selectedUser ;
+
+      this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
 
   shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {
     return  selectedPlayer.playerStats.player.playerId && (
-            this.mode == 'OWN' ||
             this.mode === 'EDIT' ||
-            (this.mode === 'OTHER' && selectedPlayer.played));
+            (this.mode === 'VIEW' && selectedPlayer.played));
   }
 
   shouldDisplayPendingSelection( selectedPlayer : ISelectedPlayer ) {
-    return  !selectedPlayer.playerStats.player.playerId && (
-            this.mode == 'OWN' ||
-            this.mode === 'EDIT' );
+    return  !selectedPlayer.playerStats.player.playerId && 
+            this.mode === 'EDIT' ;
+  }
+
+  shouldDisplayAvailableMultipliers(){
+    return this.mode === 'EDIT' && this.availableMultipliers() > 0;
   }
 
   shouldDisplayPendingResult( selectedPlayer : ISelectedPlayer ) {
-    return  this.mode == 'OTHER' && !selectedPlayer.played;
+    return  this.mode == 'VIEW' && !selectedPlayer.played;
+  }
+
+  shouldDisplayTotalScore(){
+    return this.filteredTeam && this.filteredTeam.score>=0;
   }
 
   shouldAllowTeamSelection(){
-    return this.mode === 'OTHER' 
+    return this.mode === 'VIEW'; 
   }
 
-  getCurrentRound(){
-      return this.rounds[this.rounds.length - 1];
+  getCurrentRound() : IRound {
+      return this.rounds? this.rounds[this.rounds.length - 1] : { roundId: NaN, roundName: ''} ;
   }
 
-  getTeamByRound( ranking: ITeam[], roundId : number ) {
-    const ret = this.team.filter((t: ITeam) => t.round.roundId === roundId )[0];
+  getCurrentUser() : IUser {
+      return { "userId": 1, "userName": "anitsuga" } ; // TODO
+  }
+
+  getTeamsByUser( teams : ITeam[], user : IUser ) :ITeam[] {
+    const ret = user? teams.filter((t: ITeam) => t.user.userId === user.userId ) : [];
     return ret;
   }
 
-  getRounds( team : ITeam[] ) {
+  getTeamsByRound( teams : ITeam[], round : IRound ) : ITeam[] {
+    const ret = round? teams.filter((t: ITeam) => t.round.roundId === round.roundId ) : [];
+    return ret;
+  }
+
+  getRounds( team : ITeam[] ) : IRound[] {
     return this.deDuplicate( team.map((t: ITeam) => t.round) );
   }
 
-  deDuplicate( rounds : IRound[] ){
+  deDuplicate( rounds : IRound[] ) : IRound[] {
     const ids = rounds.map(({ roundId }) => roundId );
     const filtered = rounds.filter(({ roundId }, index) => !ids.includes(roundId, index + 1));
     return filtered;
@@ -116,5 +182,9 @@ export class TeamComponent implements OnInit, OnDestroy {
 
   onMultiplierClicked(message: string): void {
     this.pageTitle = 'Team: ' + message;
+  }
+
+  compareUsers( user1:IUser, user2:IUser ){
+    return user1 && user2 && user1.userId === user2.userId;
   }
 }

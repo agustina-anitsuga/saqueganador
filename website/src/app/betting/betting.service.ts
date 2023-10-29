@@ -4,6 +4,7 @@ import { Observable, catchError, tap, throwError, map } from "rxjs";
 
 import { IUser } from "../shared/model";
 import { ITeam } from "../shared/model";
+import { ITournament } from "../shared/model";
 import { IPlayerStatsPerRound } from "../shared/model";
 
 @Injectable({
@@ -14,8 +15,16 @@ export class BettingService {
     private teamUrl = 'api/betting/teams.json';
     private playersUrl = 'api/betting/players.json';
     private usersUrl = 'api/betting/users.json';
-
+    private tournamentUrl = 'api/betting/tournament.json';
+    
     constructor( private http : HttpClient ) {}
+
+    getCurrentTournament() : Observable<ITournament> {
+        return this.http.get<ITournament>(this.tournamentUrl).pipe(
+            tap( data => console.log('All:', JSON.stringify(data)) ),
+            catchError( this.handleError ) 
+        );
+    }
 
     getTeams(): Observable<ITeam[]> {
         return this.http.get<ITeam[]>(this.teamUrl).pipe(

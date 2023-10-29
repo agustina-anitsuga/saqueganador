@@ -1,6 +1,7 @@
 export interface ITournament {
   tournamentId: number;
   tournamentName: string;
+  currentRound: IRound;
 }
 
 export interface IRound {
