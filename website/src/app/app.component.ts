@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit, Input } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IRound, ITournament } from "./shared/model";
+import { ITournament } from "./shared/model";
 import { BettingService } from "./betting/betting.service";
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+
 
 @Component({
   selector: 'pm-root',
@@ -16,7 +18,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
   tournament : ITournament = { tournamentId : NaN, tournamentName: '', currentRound : { roundId: NaN, roundName: ''}};
   
-  constructor(private bettingService: BettingService) {}
+  constructor(private modalService: NgbModal, private bettingService: BettingService) {}
+ 
+  public open(modal: any): void {
+    this.modalService.open(modal);
+  }
 
   ngOnInit(): void {
     console.log('In OnInit');

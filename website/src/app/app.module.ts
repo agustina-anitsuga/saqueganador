@@ -8,6 +8,7 @@ import { WelcomeComponent } from './home/welcome.component';
 import { ProductModule } from './products/product.module';
 import { RankingModule } from './ranking/ranking.module';
 import { BettingModule } from './betting/betting.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { BettingModule } from './betting/betting.module';
     ]),
     ProductModule,
     RankingModule,
-    BettingModule
+    BettingModule,
+    NgbModule
   ],
   bootstrap: [AppComponent]
 })
