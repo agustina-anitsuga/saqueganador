@@ -185,7 +185,7 @@ export class TeamComponent implements OnInit, OnDestroy {
   }
 
   onMultiplierClicked(message: string): void {
-    this.pageTitle = 'Team: ' + message;
+    alert(message);
   }
 
   compareUsers( user1:IUser, user2:IUser ){

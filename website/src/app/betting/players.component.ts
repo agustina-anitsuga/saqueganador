@@ -1,7 +1,6 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IPlayerStatsPerRound } from "../shared/model";
-import { ILeague } from "../shared/model";
+import { IPlayerStatsPerRound, ILeague, ITeam } from "../shared/model";
 import { BettingService } from "./betting.service";
 
 @Component({
@@ -12,6 +11,9 @@ import { BettingService } from "./betting.service";
 export class PlayersComponent implements OnInit, OnDestroy {
 
   public pageTitle = 'Jugadores';
+
+  @Input() 
+  team : ITeam = this.emptyTeam();
 
   players : IPlayerStatsPerRound[] = [] ;
   filteredPlayers: IPlayerStatsPerRound[] = [] ;
@@ -42,6 +44,15 @@ export class PlayersComponent implements OnInit, OnDestroy {
       this._selectedLeague = value;
       this.filteredPlayers = this.filterPlayers();      
   } 
+
+  emptyTeam() : ITeam {
+    return { 
+      user: { userId: NaN, userName: ''},
+      tournament: { tournamentId: NaN, tournamentName: '', currentRound: { roundId: NaN, roundName: ''} }, 
+      round: { roundId: NaN, roundName: ''}, 
+      selection: [],
+      score: NaN } ;
+  }
 
   filterPlayers() : IPlayerStatsPerRound[] {
       return this.players.filter(({ player }, index) => 
@@ -78,4 +89,7 @@ export class PlayersComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  onClick( player : IPlayerStatsPerRound ){
+      alert('Clicked on player '+player.player.playerId+' '+player.player.playerName);
+  }
 }

@@ -11,7 +11,7 @@ import { BettingService } from "./betting.service";
 })
 export class BettingComponent implements OnInit, OnDestroy {
 
-  public pageTitle = 'Jugadores';
+  public pageTitle = 'Apuestas';
 
   errorMessage = '';
   sub!: Subscription;

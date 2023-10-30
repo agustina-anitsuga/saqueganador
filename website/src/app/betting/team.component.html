@@ -65,7 +65,10 @@
                     </ng-container>
                     <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
                         <div>
-                          <pm-multiplier [multiplier]='selectedPlayer.playerMultiplier' [mode]='mode' (multiplierClicked)='onMultiplierClicked($event)'>
+                          <pm-multiplier [multiplier]='selectedPlayer.playerMultiplier' 
+                                        [mode]='mode' 
+                                        [player]='selectedPlayer'
+                                        (multiplierClicked)='onMultiplierClicked($event)'>
                           </pm-multiplier>
                         </div>
                     </ng-container>
