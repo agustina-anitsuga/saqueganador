@@ -2,7 +2,6 @@ thead {
     color: #096A2E;
 }
 
-
 .scaleB {
     width: 30px;
     height: 30px;
@@ -15,4 +14,10 @@ thead {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.crop-container {
+  width: 95%;
+  height: 200px;
+  overflow: hidden;
 }

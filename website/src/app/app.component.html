@@ -89,51 +89,36 @@
 -->
 
 <div style="text-align:center">
-
   <nav class="navbar navbar-expand-sm header">
-  <div class="container-fluid">
-    <a class="navbar-brand" routerLink='/welcome'>
-      <img src="./assets/images/logo.png"
-            class="img-responsive center-block"
-            style="max-height:50px;padding-bottom:5px;padding-left:10px;padding-right:10px" />
-    </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item tournament">{{tournament.tournamentName}}</li>  
-        <li class="nav-item"><a class="navlink" routerLink='/ranking'>Ranking</a></li>  
-        <li class="nav-item"><a class="navlink" routerLink='/teams'>Equipos</a></li>  
-        <li class="nav-item"><a class="navlink" routerLink='/bet'>Armar mi equipo</a></li>          
-      </ul>
+    <div class="container-fluid">
+      <a class="navbar-brand" routerLink='/welcome'>
+        <img src="./assets/images/logo.png"
+              class="img-responsive center-block"
+              style="max-height:50px;padding-bottom:5px;padding-left:5px;padding-right:5px" />
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item tournament">{{tournament.tournamentName}}</li>  
+          <li class="nav-item"><a class="navlink" routerLink='/ranking'>Ranking</a></li>  
+          <li class="nav-item"><a class="navlink" routerLink='/teams'>Equipos</a></li>  
+          <li class="nav-item"><a class="navlink" routerLink='/bet'>Armar mi equipo</a></li>          
+        </ul>
+      </div>
     </div>
-  </div>
-</nav>
-
-<!--
-  <nav class='navbar navbar-expand-sm' style='background-color:#096A2E;background: #096A2E;'>
-    <a class="navbar-brand" routerLink='/welcome'>
-      <img src="./assets/images/logo.png"
-            class="img-responsive center-block"
-            style="max-height:50px;padding-bottom:5px;padding-left:10px;padding-right:10px" />
-    </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon">
-      </span>
-    </button> 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item tournament">{{tournament.tournamentName}}</li>  
-        <li class="nav-item"><a class="navlink" routerLink='/ranking'>Ranking</a></li>  
-        <li class="nav-item"><a class="navlink" routerLink='/teams'>Equipos</a></li>  
-        <li class="nav-item"><a class="navlink" routerLink='/bet'>Armar mi equipo</a></li>          
-      </ul>
-    </div>
-  </nav>  
-  -->
+  </nav>
 
   <div style="padding-right:2%;padding-left:2%;padding-top:2%">
       <router-outlet></router-outlet>
   </div>
+
+  <footer class="bg-light text-center text-lg-start" style="margin-top:2%">
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+      © 2023 Copyright:
+      <a class="text-dark" href="http://saqueganador.com.ar">saqueganador.com.ar</a>
+    </div>
+  </footer>
+  
 </div>

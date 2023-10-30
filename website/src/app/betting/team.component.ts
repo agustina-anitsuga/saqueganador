@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, Input } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ISelectedPlayer, ITeam, IUser } from "../shared/model";
+import { ActivatedRoute, Router } from '@angular/router';
 import { IRound } from "../shared/model";
 import { BettingService } from "./betting.service";
 
@@ -11,9 +12,10 @@ import { BettingService } from "./betting.service";
 })
 export class TeamComponent implements OnInit, OnDestroy {
 
-  public pageTitle :string = 'Team';
+  public pageTitle :string = 'Equipo de';
 
   @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
+  private _currentUserId = NaN;
 
   teams : ITeam[] = [] ;
   filteredTeam: ITeam = this.emptyTeam();
@@ -29,7 +31,7 @@ export class TeamComponent implements OnInit, OnDestroy {
   subTeam!: Subscription;
   subUsers!: Subscription;
 
-  constructor(private bettingService: BettingService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private bettingService: BettingService) {}
   
   set selectedUser( user: IUser ) {
     this._selectedUser = user;
@@ -89,6 +91,8 @@ export class TeamComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('In OnInit');
+
+    this._currentUserId = Number(this.route.snapshot.paramMap.get("id"));
 
     this.subUsers = this.bettingService.getGroupUsers().subscribe({
       next: u => {
@@ -152,7 +156,7 @@ export class TeamComponent implements OnInit, OnDestroy {
   }
 
   getCurrentUser() : IUser {
-      return { "userId": 1, "userName": "anitsuga" } ; // TODO
+      return { "userId": (this._currentUserId?this._currentUserId:1), "userName": "anitsuga" } ; // TODO
   }
 
   getTeamsByUser( teams : ITeam[], user : IUser ) :ITeam[] {

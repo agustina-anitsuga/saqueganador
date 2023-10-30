@@ -7,6 +7,8 @@ import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core
 })
 export class MultiplierComponent implements OnChanges {
 
+  @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
+
   @Input() 
   multiplier = 0;
   
@@ -20,7 +22,9 @@ export class MultiplierComponent implements OnChanges {
   }
 
   onClick(): void {
-    console.log(`The multiplier ${this.multiplier} was clicked!`);
-    this.multiplierClicked.emit(`The multiplier ${this.multiplier} was clicked!`);
+    if( this.mode ==='EDIT' ){
+      console.log(`The multiplier ${this.multiplier} was clicked!`);
+      this.multiplierClicked.emit(`The multiplier ${this.multiplier} was clicked!`);
+    }
   }
 }
