@@ -1,32 +1,23 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Subscription } from "rxjs";
-import { ITeam } from "../shared/model";
-import { IRound } from "../shared/model";
-import { BettingService } from "./betting.service";
+import { Component } from "@angular/core";
+import { ISelectedPlayer, IPlayerStatsPerRound } from "../shared/model";
 
 @Component({
   selector: 'pm-betting',
   templateUrl: './betting.component.html',
   styleUrls: ['./betting.component.css']
 })
-export class BettingComponent implements OnInit, OnDestroy {
+export class BettingComponent {
 
   public pageTitle = 'Apuestas';
 
-  errorMessage = '';
-  sub!: Subscription;
-
-  constructor(private bettingService: BettingService) {}
   
-
-  ngOnInit(): void {
-    console.log('In OnInit');
-    
+  onPlayerSelected( message : IPlayerStatsPerRound ){
+      console.log('Player selected '+JSON.stringify(message));
+      alert('Player selected '+JSON.stringify(message));
   }
 
-
-  ngOnDestroy(): void {
-    //this.sub.unsubscribe();
+  onMultiplierAdded( message: ISelectedPlayer ){
+      console.log('Multiplier added'+JSON.stringify(message));
   }
 
 }

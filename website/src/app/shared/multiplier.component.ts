@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { ISelectedPlayer } from "../shared/model";
+import { ISelectedPlayer, emptySelectedPlayer } from "../shared/model";
 
 @Component({
   selector: 'pm-multiplier',
@@ -15,27 +15,12 @@ export class MultiplierComponent implements OnChanges {
   multiplier : number = 0;
   
   @Input() 
-  player : ISelectedPlayer = { 
-        position : NaN,
-        playerStats : {
-          player : {
-            playerId: NaN, 
-            playerName:'', 
-            playerProfilePic:'', 
-            playerProfileUrl:'', 
-            league: { leagueId: NaN, leagueName: ''} 
-          },
-          pointsToAward: NaN ,
-        },
-        playerMultiplier: NaN,
-        playerScore: 0,
-        played: false
-        };
+  player : ISelectedPlayer = emptySelectedPlayer();
 
   cropWidth = 75;
   
   @Output() 
-  multiplierClicked: EventEmitter<string> = new EventEmitter<string>();
+  multiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
 
   ngOnChanges(): void {
     this.cropWidth = this.multiplier * 75 / 5;
@@ -43,10 +28,8 @@ export class MultiplierComponent implements OnChanges {
 
   onClick(): void {
     if( this.mode ==='EDIT' ){
-      console.log(`The multiplier ${this.multiplier} was clicked!`);
-      this.multiplierClicked.emit(`Add a multiplier to `+
-                (this.player&&this.player.playerStats && this.player.playerStats.player?this.player.playerStats.player.playerName:'Unknown player')+
-                ' who already has '+this.multiplier+' yellow balls');
+      this.multiplier= this.multiplier + 1;
+      this.multiplierClicked.emit(this.player);
     }
   }
 }

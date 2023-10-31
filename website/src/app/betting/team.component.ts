@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit, Input } from "@angular/core";
+import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ISelectedPlayer, ITeam, IUser } from "../shared/model";
+import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser } from "../shared/model";
 import { ActivatedRoute, Router } from '@angular/router';
-import { IRound } from "../shared/model";
 import { BettingService } from "./betting.service";
 
 @Component({
@@ -18,13 +17,13 @@ export class TeamComponent implements OnInit, OnDestroy {
   private _currentUserId = NaN;
 
   teams : ITeam[] = [] ;
-  filteredTeam: ITeam = this.emptyTeam();
+  filteredTeam: ITeam = emptyTeam();
 
   rounds : IRound[] = [];
-  private _selectedRound : IRound = { roundId : NaN, roundName : '' };
+  private _selectedRound : IRound = emptyRound();
 
   users : IUser[] = [];
-  private _selectedUser : IUser = { userId : NaN, userName: '' };
+  private _selectedUser : IUser = emptyUser();
   
   errorMessage = '';
 
@@ -49,15 +48,6 @@ export class TeamComponent implements OnInit, OnDestroy {
 
   get selectedRound() : IRound {
     return this._selectedRound;
-  }
-
-  emptyTeam() : ITeam {
-    return { 
-      user: { userId: NaN, userName: ''},
-      tournament: { tournamentId: NaN, tournamentName: '', currentRound: { roundId: NaN, roundName: ''} }, 
-      round: { roundId: NaN, roundName: ''}, 
-      selection: [],
-      score: NaN } ;
   }
 
   currentTeamName() : string {
@@ -184,11 +174,16 @@ export class TeamComponent implements OnInit, OnDestroy {
     this.subUsers.unsubscribe();
   }
 
-  onMultiplierClicked(message: string): void {
-    alert(message);
+  onMultiplierClicked(message: ISelectedPlayer): void {
+    
+    this.playerMultiplierClicked.emit( message );
   }
 
   compareUsers( user1:IUser, user2:IUser ){
     return user1 && user2 && user1.userId === user2.userId;
   }
+
+  @Output() 
+  playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+  
 }

@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IRanking } from "../shared/model";
-import { IRound } from "../shared/model";
+import { IRanking, IRound, emptyRound } from "../shared/model";
 import { RankingService } from "./ranking.service";
 
 @Component({
@@ -15,7 +14,7 @@ export class RankingComponent implements OnInit, OnDestroy {
   ranking : IRanking[] = [] ;
   filteredRanking: IRanking[] = [];
   rounds : IRound[] = [];
-  private _selectedRound : IRound = { roundId : NaN, roundName : '' };
+  private _selectedRound : IRound = emptyRound();
   errorMessage = '';
   sub!: Subscription;
 

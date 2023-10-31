@@ -60,3 +60,43 @@ export interface ITeam {
     selection: ISelectedPlayer[];
     score: number;
   }
+
+export function emptyTeam() : ITeam {
+    return { 
+      user: { userId: NaN, userName: ''},
+      tournament: { tournamentId: NaN, tournamentName: '', currentRound: { roundId: NaN, roundName: ''} }, 
+      round: { roundId: NaN, roundName: ''}, 
+      selection: [],
+      score: NaN } ;
+  }  
+
+export function emptyRound() : IRound {
+    return { roundId : NaN, roundName : '' };
+  }
+
+export function emptyUser() : IUser {
+    return { userId : NaN, userName: '' };
+  }
+
+export function emptyLeague() : ILeague {
+    return { leagueId: NaN, leagueName: '' };
+  }
+
+export function emptySelectedPlayer() : ISelectedPlayer {
+    return { 
+      position : NaN,
+      playerStats : {
+        player : {
+          playerId: NaN, 
+          playerName:'', 
+          playerProfilePic:'', 
+          playerProfileUrl:'', 
+          league: { leagueId: NaN, leagueName: ''} 
+        },
+        pointsToAward: NaN ,
+      },
+      playerMultiplier: NaN,
+      playerScore: 0,
+      played: false
+      };
+  }
