@@ -29,3 +29,7 @@ li {
 a.navlink {
   color: #e4f7e3;
 }
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {  
+  background-color:#096A2E !important;
+}
