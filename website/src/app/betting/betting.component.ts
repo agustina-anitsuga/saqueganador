@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { ISelectedPlayer, IPlayerStatsPerRound } from "../shared/model";
+import { ISelectedPlayer, IPlayerStatsPerRound, ITeam, emptySelectedPlayer, emptyTeam } from "../shared/model";
 
 @Component({
   selector: 'pm-betting',
@@ -10,10 +10,24 @@ export class BettingComponent {
 
   public pageTitle = 'Apuestas';
 
+  playerToAdd : ISelectedPlayer = emptySelectedPlayer();
+
+  filteredTeam: ITeam = emptyTeam();
+
   
   onPlayerSelected( message : IPlayerStatsPerRound ){
       console.log('Player selected '+JSON.stringify(message));
-      alert('Player selected '+JSON.stringify(message));
+      this.playerToAdd = {
+        position : NaN,
+        playerStats : message,
+        playerMultiplier: 1,
+        playerScore: 0,
+        played: false
+      };
+  }
+
+  onTeamSelected( message : ITeam ){
+      this.filteredTeam = message;
   }
 
   onMultiplierAdded( message: ISelectedPlayer ){

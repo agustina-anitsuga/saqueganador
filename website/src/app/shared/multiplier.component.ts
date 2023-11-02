@@ -28,7 +28,6 @@ export class MultiplierComponent implements OnChanges {
 
   onClick(): void {
     if( this.mode ==='EDIT' ){
-      this.multiplier= this.multiplier + 1;
       this.multiplierClicked.emit(this.player);
     }
   }

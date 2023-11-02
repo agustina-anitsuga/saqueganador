@@ -22,8 +22,10 @@
                 <tr><td><img src="{{player.player.playerProfilePic}}" style="width:80%"/></td></tr>
                 <tr><td>{{ player.player.playerName }}</td></tr>
                 <tr><td>Puntos en juego {{ player.pointsToAward }}</td></tr>
-                <tr><td><img src="assets/images/plus-sign.svg" style="width:25%" (click)='onPlayerClicked(player)'/></td></tr>   
-            </table>  
+                <ng-container *ngIf = 'shouldAllowPlayerAddition(player.player)'>
+                    <tr><td><img src="assets/images/plus-sign.svg" style="width:25%" (click)='onPlayerClicked(player)'/></td></tr>   
+                </ng-container>  
+              </table>  
         </div>
       </div>
     </div>

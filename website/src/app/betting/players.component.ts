@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IPlayerStatsPerRound, ILeague, ITeam, emptyLeague, emptyTeam } from "../shared/model";
+import { IPlayerStatsPerRound, ILeague, ITeam, IPlayer, emptyLeague, emptyTeam } from "../shared/model";
 import { BettingService } from "./betting.service";
 
 @Component({
@@ -81,7 +81,28 @@ export class PlayersComponent implements OnInit, OnDestroy {
   }
 
   onPlayerClicked( player : IPlayerStatsPerRound ){
-      this.playerClicked.emit( player );
+    this.playerClicked.emit( player );
+  }
+
+  teamContainsPlayer( player : IPlayer ){
+    return this.team.selection.find( elem => elem.playerStats.player.playerId === player.playerId );
+  }
+
+  leagueQuotaFull( player : IPlayer ){
+    let result = false;
+    if( player.league.leagueId >= 0  ){
+        let quota = this.team.selection.length / 2 ;
+        let selectedPlayers = this.team.selection.filter( elem => elem.playerStats.player.playerId ); 
+        let leaguePlayers = selectedPlayers.filter( elem => 
+                      elem.playerStats.player.league.leagueId === player.league.leagueId );
+        result = ( leaguePlayers.length >= quota );
+    }
+    return result;
+  }
+
+  shouldAllowPlayerAddition( player : IPlayer ){
+    return ! this.teamContainsPlayer( player )
+            && ! this.leagueQuotaFull( player )
   }
 
   @Output() 

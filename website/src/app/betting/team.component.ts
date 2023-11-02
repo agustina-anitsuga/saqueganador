@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser } from "../shared/model";
+import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer } from "../shared/model";
 import { ActivatedRoute, Router } from '@angular/router';
 import { BettingService } from "./betting.service";
 
@@ -9,12 +9,14 @@ import { BettingService } from "./betting.service";
   templateUrl: './team.component.html',
   styleUrls: ['./team.component.css']
 })
-export class TeamComponent implements OnInit, OnDestroy {
+export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   public pageTitle :string = 'Equipo de';
 
   @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
   private _currentUserId = NaN;
+
+  @Input() playerToAdd : ISelectedPlayer = emptySelectedPlayer();
 
   teams : ITeam[] = [] ;
   filteredTeam: ITeam = emptyTeam();
@@ -58,12 +60,26 @@ export class TeamComponent implements OnInit, OnDestroy {
       return this.filteredTeam.selection.every( player => player.played );
   }
 
+  allPlayersSelected() {
+    return this.filteredTeam.selection.every( player => player.playerStats.player.playerId );
+  }
+
+  selectedPlayerCount() {
+    return this.filteredTeam.selection.reduce((partialSum, selection) => 
+              partialSum + (selection.playerStats.player.playerId? 1:0), 0)
+  }
+
   maximumMultipliers() : number {
       return 10;
   }
 
+  maximumMultipliersPerPlayer() : number {
+    return 3;
+}
+
   availableMultipliers() : number {
-      return this.allMatchesPlayed()? 0 : ( this.maximumMultipliers() - this.consumedMultipliers() );
+      return (this.allPlayersSelected() && this.allMatchesPlayed())? 
+              0 : ( this.maximumMultipliers() + this.selectedPlayerCount() - this.consumedMultipliers() );
   }
 
   consumedMultipliers() : number {
@@ -76,6 +92,7 @@ export class TeamComponent implements OnInit, OnDestroy {
     if(ret && ret.user && ret.round){
       console.log('filtered user:'+ret.user.userId+' round:'+ret.round.roundId);
     }
+    this.teamFiltered.emit( ret );
     return ret;
   }
 
@@ -175,7 +192,11 @@ export class TeamComponent implements OnInit, OnDestroy {
   }
 
   onMultiplierClicked(message: ISelectedPlayer): void {
-    
+    if( (message.playerMultiplier < this.maximumMultipliersPerPlayer()) 
+          && (this.availableMultipliers() > 0) 
+          && !message.played ){
+      message.playerMultiplier = message.playerMultiplier + 1;
+    }
     this.playerMultiplierClicked.emit( message );
   }
 
@@ -183,7 +204,22 @@ export class TeamComponent implements OnInit, OnDestroy {
     return user1 && user2 && user1.userId === user2.userId;
   }
 
+  ngOnChanges(): void {
+    if( this.playerToAdd.playerStats.player.playerId ){
+      let players = this.filteredTeam.selection;
+      for (let i = 0; i < players.length; i++) {
+          if( !players[i].playerStats.player.playerId ){
+            this.filteredTeam.selection[i] = this.playerToAdd;
+            break;
+          }
+      }
+    } 
+  }
+
   @Output() 
   playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+
+  @Output() 
+  teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();
   
 }
