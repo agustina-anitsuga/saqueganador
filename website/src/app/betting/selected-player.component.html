@@ -1,0 +1,60 @@
+<div class="card h-100" >
+    <div>
+      <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+          <div class="row center">
+              <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+              <div>
+                  <div class="crop-container">
+                      <img src="{{selectedPlayer.playerStats.player.playerProfilePic}}" style="width:100%"/>
+                  </div>  
+                  <div>{{ selectedPlayer.playerStats.player.playerName }}</div>
+                  <div>Puntos en juego {{ selectedPlayer.playerStats.pointsToAward }}</div> 
+              </div>
+              </a>
+          </div>
+      </ng-container>
+      <ng-container *ngIf = 'shouldDisplayPendingSelection(selectedPlayer)'>
+          <div>
+            <img src="assets/images/yellow-question-mark.png" >
+          </div>
+      </ng-container>
+      <ng-container *ngIf = 'shouldDisplayPendingResult(selectedPlayer)'>
+        <div >
+          <img src="assets/images/yellow-question-mark.png" >
+        </div>
+      </ng-container>
+      <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+          <div>
+            <pm-multiplier 
+                [multiplier]='selectedPlayer.playerMultiplier' 
+                [mode]='mode' 
+                [player]='selectedPlayer'
+                (multiplierClicked)='confirmSelection(content)'>
+            </pm-multiplier>
+          </div>
+      </ng-container>
+      <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+          <div>
+              <ng-container *ngIf = 'selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
+              <ng-container *ngIf = '!selectedPlayer.played'>Resultado Pendiente</ng-container>
+          </div>
+      </ng-container>
+    </div> 
+</div>
+
+<ng-template #content let-modal>
+  <div style="text-align:center">
+<div class="modal-header">
+  <div>Agregar una pelotita multiplicadora a {{selectedPlayer.playerStats.player.playerName}} ?</div>
+  </div>
+  <div class="modal-body">
+      <div class="crop-container">
+          <img src="{{selectedPlayer.playerStats.player.playerProfilePic}}" style="width:50%"/>
+      </div>
+</div>
+<div class="modal-footer" style="text-align:center">
+  <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel')">No</button>
+  <button type="button" class="btn btn-primary"   (click)="modal.close('Accept')">Si</button>
+</div>
+  </div>
+</ng-template>

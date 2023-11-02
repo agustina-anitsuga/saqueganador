@@ -100,3 +100,20 @@ export function emptySelectedPlayer() : ISelectedPlayer {
       played: false
       };
   }
+
+  export function emptyPlayer(){
+    return {
+      league: { leagueId: NaN, leagueName: '' },
+      playerId: NaN,
+      playerName: '',
+      playerProfilePic: '',
+      playerProfileUrl: ''
+    };
+  }
+
+  export function emptyPlayerStatsPerRound() : IPlayerStatsPerRound {
+    return  {
+              player : emptyPlayer(),
+              pointsToAward: NaN ,
+            };
+  }

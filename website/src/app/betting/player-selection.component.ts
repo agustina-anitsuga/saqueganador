@@ -4,11 +4,11 @@ import { IPlayerStatsPerRound, ILeague, ITeam, IPlayer, emptyLeague, emptyTeam }
 import { BettingService } from "./betting.service";
 
 @Component({
-  selector: 'pm-players',
-  templateUrl: './players.component.html',
-  styleUrls: ['./players.component.css']
+  selector: 'pm-player-selection', 
+  templateUrl: './player-selection.component.html',
+  styleUrls: ['./player-selection.component.css']
 })
-export class PlayersComponent implements OnInit, OnDestroy {
+export class PlayerSelectionComponent implements OnInit, OnDestroy {
 
   public pageTitle = 'Jugadores';
 
@@ -84,26 +84,6 @@ export class PlayersComponent implements OnInit, OnDestroy {
     this.playerClicked.emit( player );
   }
 
-  teamContainsPlayer( player : IPlayer ){
-    return this.team.selection.find( elem => elem.playerStats.player.playerId === player.playerId );
-  }
-
-  leagueQuotaFull( player : IPlayer ){
-    let result = false;
-    if( player.league.leagueId >= 0  ){
-        let quota = this.team.selection.length / 2 ;
-        let selectedPlayers = this.team.selection.filter( elem => elem.playerStats.player.playerId ); 
-        let leaguePlayers = selectedPlayers.filter( elem => 
-                      elem.playerStats.player.league.leagueId === player.league.leagueId );
-        result = ( leaguePlayers.length >= quota );
-    }
-    return result;
-  }
-
-  shouldAllowPlayerAddition( player : IPlayer ){
-    return ! this.teamContainsPlayer( player )
-            && ! this.leagueQuotaFull( player )
-  }
 
   @Output() 
   playerClicked: EventEmitter<IPlayerStatsPerRound> = new EventEmitter<IPlayerStatsPerRound>();

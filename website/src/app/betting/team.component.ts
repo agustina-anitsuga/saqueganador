@@ -11,7 +11,7 @@ import { BettingService } from "./betting.service";
 })
 export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
-  public pageTitle :string = 'Equipo de';
+  pageTitle : string = "Equipo de"
 
   @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
   private _currentUserId = NaN;
@@ -54,36 +54,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   currentTeamName() : string {
       return (this.filteredTeam && this.filteredTeam.user)? this.filteredTeam.user.userName : '' ;
-  }
-
-  allMatchesPlayed() {
-      return this.filteredTeam.selection.every( player => player.played );
-  }
-
-  allPlayersSelected() {
-    return this.filteredTeam.selection.every( player => player.playerStats.player.playerId );
-  }
-
-  selectedPlayerCount() {
-    return this.filteredTeam.selection.reduce((partialSum, selection) => 
-              partialSum + (selection.playerStats.player.playerId? 1:0), 0)
-  }
-
-  maximumMultipliers() : number {
-      return 10;
-  }
-
-  maximumMultipliersPerPlayer() : number {
-    return 3;
-}
-
-  availableMultipliers() : number {
-      return (this.allPlayersSelected() && this.allMatchesPlayed())? 
-              0 : ( this.maximumMultipliers() + this.selectedPlayerCount() - this.consumedMultipliers() );
-  }
-
-  consumedMultipliers() : number {
-      return this.filteredTeam.selection.reduce((partialSum, selection) => partialSum + selection.playerMultiplier, 0);
   }
 
   performFilter(user: IUser, round: IRound): ITeam {
@@ -131,24 +101,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
 
-  shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {
-    return  selectedPlayer.playerStats.player.playerId && (
-            this.mode === 'EDIT' ||
-            (this.mode === 'VIEW' && selectedPlayer.played));
-  }
-
-  shouldDisplayPendingSelection( selectedPlayer : ISelectedPlayer ) {
-    return  !selectedPlayer.playerStats.player.playerId && 
-            this.mode === 'EDIT' ;
-  }
-
-  shouldDisplayAvailableMultipliers(){
-    return this.mode === 'EDIT' && this.availableMultipliers() > 0;
-  }
-
-  shouldDisplayPendingResult( selectedPlayer : ISelectedPlayer ) {
-    return  this.mode == 'VIEW' && !selectedPlayer.played;
-  }
 
   shouldDisplayTotalScore(){
     return this.filteredTeam && this.filteredTeam.score>=0;
@@ -191,35 +143,56 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
     this.subUsers.unsubscribe();
   }
 
-  onMultiplierClicked(message: ISelectedPlayer): void {
-    if( (message.playerMultiplier < this.maximumMultipliersPerPlayer()) 
-          && (this.availableMultipliers() > 0) 
-          && !message.played ){
-      message.playerMultiplier = message.playerMultiplier + 1;
-    }
-    this.playerMultiplierClicked.emit( message );
-  }
-
   compareUsers( user1:IUser, user2:IUser ){
     return user1 && user2 && user1.userId === user2.userId;
   }
 
-  ngOnChanges(): void {
-    if( this.playerToAdd.playerStats.player.playerId ){
-      let players = this.filteredTeam.selection;
-      for (let i = 0; i < players.length; i++) {
-          if( !players[i].playerStats.player.playerId ){
-            this.filteredTeam.selection[i] = this.playerToAdd;
-            break;
-          }
-      }
-    } 
+  shouldDisplayAvailableMultipliers(){
+    return this.mode === 'EDIT' && this.availableMultipliers() > 0;
   }
 
-  @Output() 
-  playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+  availableMultipliers() : number {
+    return (this.allPlayersSelected() && this.allMatchesPlayed())? 
+            0 : ( this.maximumMultipliers() + this.selectedPlayerCount() - this.consumedMultipliers() );
+  }
 
-  @Output() 
-  teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();
+  allMatchesPlayed() {
+    return this.filteredTeam.selection.every( player => player.played );
+  }
+
+  allPlayersSelected() {
+    return this.filteredTeam.selection.every( player => player.playerStats.player.playerId );
+  }
+
+  selectedPlayerCount() {
+    return this.filteredTeam.selection.reduce((partialSum, selection) => 
+              partialSum + (selection.playerStats.player.playerId? 1:0), 0)
+  }
+
+  maximumMultipliers() : number {
+      return 10;
+  }
+
+  consumedMultipliers() : number {
+      return this.filteredTeam.selection.reduce((partialSum, selection) => partialSum + selection.playerMultiplier, 0);
+  }
+
+  ngOnChanges(): void {
+      if( this.playerToAdd.playerStats.player.playerId ){
+        let players = this.filteredTeam.selection;
+        for (let i = 0; i < players.length; i++) {
+            if( !players[i].playerStats.player.playerId ){
+              this.filteredTeam.selection[i] = this.playerToAdd;
+              break;
+            }
+        }
+      } 
+    }
+
+    @Output() 
+    playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+
+    @Output() 
+    teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();
   
 }

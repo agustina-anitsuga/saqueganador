@@ -1,0 +1,28 @@
+<div class="card">
+    <table class="table">
+        <tr><td><img src="{{player.player.playerProfilePic}}" style="width:80%"/></td></tr>
+        <tr><td>{{ player.player.playerName }}</td></tr>
+        <tr><td>Puntos en juego {{ player.pointsToAward }}</td></tr>
+        <ng-container *ngIf = 'shouldAllowPlayerAddition(player.player)'>
+            <tr><td><img src="assets/images/plus-sign.svg" style="width:25%"
+                (click)="confirmSelection(content)"/></td></tr>   
+        </ng-container>  
+    </table>  
+</div>
+
+<ng-template #content let-modal>
+    <div style="text-align:center">
+	<div class="modal-header">
+		<div>Agregar a {{player.player.playerName}} a mi equipo?</div>
+    </div>
+    <div class="modal-body">
+        <div class="crop-container">
+            <img src="{{player.player.playerProfilePic}}" style="width:50%"/>
+        </div>
+	</div>
+	<div class="modal-footer" style="text-align:center">
+		<button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel')">No</button>
+		<button type="button" class="btn btn-primary"   (click)="modal.close('Accept')">Si</button>
+	</div>
+    </div>
+</ng-template>

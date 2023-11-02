@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { MultiplierComponent } from './multiplier.component';
 
 
-
 @NgModule({
   declarations: [
     StarComponent,

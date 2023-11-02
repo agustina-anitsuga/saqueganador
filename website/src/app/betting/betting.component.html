@@ -1,8 +1,8 @@
 <div class='row'>
     <div class='col-sm-2'>
-        <pm-players [team]="filteredTeam"
+        <pm-player-selection [team]="filteredTeam"
             (playerClicked)='onPlayerSelected($event)'>
-        </pm-players>
+        </pm-player-selection>
     </div>
     <div class="col-sm-10">
         <pm-team [mode]="'EDIT'" [playerToAdd]="playerToAdd" 
