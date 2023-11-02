@@ -40,22 +40,22 @@ export class SelectedPlayerComponent {
   }
 
   onMultiplierAdded(message: ISelectedPlayer): void {
-    if( (message.playerMultiplier < this.maximumMultipliersPerPlayer()) 
-          && (this.availableMultipliers > 0) 
-          && !message.played ){
-      message.playerMultiplier = message.playerMultiplier + 1;
-    }
+    message.playerMultiplier = message.playerMultiplier + 1;
     this.playerMultiplierClicked.emit( message );
   }
 
   confirmSelection(content:any) {
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-        (result) => {
-            if( result === "Accept" ){
-                this.onMultiplierAdded(this.selectedPlayer);
+    if( (this.selectedPlayer.playerMultiplier < this.maximumMultipliersPerPlayer()) 
+          && (this.availableMultipliers > 0) 
+          && !this.selectedPlayer.played ){
+        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+            (result) => {
+                if( result === "Accept" ){
+                    this.onMultiplierAdded(this.selectedPlayer);
+                }
             }
-        }
-    );
+        );
+    }
   }
 
   @Output() 
