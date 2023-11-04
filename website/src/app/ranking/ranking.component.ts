@@ -15,13 +15,18 @@ export class RankingComponent implements OnInit, OnDestroy {
   filteredRanking: IRanking[] = [];
   rounds : IRound[] = [];
   private _selectedRound : IRound = emptyRound();
-  errorMessage = '';
+  errorMessage = ''; 
   sub!: Subscription;
 
   constructor(private rankingService: RankingService) {}
   
   set selectedRound( round: IRound ) {
+    this._selectedRound = round;
     this.filteredRanking = this.performFilter(+round.roundId);
+  }
+
+  get selectedRound() : IRound {
+    return this._selectedRound;
   }
 
   performFilter(filterBy: number): IRanking[] {

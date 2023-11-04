@@ -9,6 +9,7 @@ import { AvailablePlayerComponent } from './available-player.component';
 import { SelectedPlayerComponent } from './selected-player.component';
 import { PlayerModalComponent } from './player-modal.component';
 import { AuthGuard } from '../account/auth.guard';
+import { MultiplierComponent } from './multiplier.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { AuthGuard } from '../account/auth.guard';
     PlayerSelectionComponent,
     AvailablePlayerComponent,
     SelectedPlayerComponent,
-    PlayerModalComponent
+    PlayerModalComponent,
+    MultiplierComponent 
   ], 
   imports: [
     RouterModule.forChild([
@@ -29,7 +31,7 @@ import { AuthGuard } from '../account/auth.guard';
             canActivate: [AuthGuard],
             component: BettingComponent },
     ]),
-    SharedModule,    
-  ]
+    SharedModule 
+  ],
 })
 export class BettingModule { }

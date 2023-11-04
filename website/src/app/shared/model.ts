@@ -7,6 +7,8 @@ export interface ITournament {
 export interface IRound {
     roundId: number;
     roundName: string;
+    playersToSelect: number;
+    multipliersToAdd: number;
   }
 
 export interface IUser {
@@ -61,17 +63,26 @@ export interface ITeam {
     score: number;
   }
 
+export function emptyTournament() : ITournament{
+  return {
+    tournamentId: NaN,
+    tournamentName: '',
+    currentRound: emptyRound()
+  };
+}
+
 export function emptyTeam() : ITeam {
     return { 
       user: { userId: NaN, userName: ''},
-      tournament: { tournamentId: NaN, tournamentName: '', currentRound: { roundId: NaN, roundName: ''} }, 
-      round: { roundId: NaN, roundName: ''}, 
+      tournament: { tournamentId: NaN, tournamentName: '', 
+            currentRound: emptyRound() }, 
+      round: emptyRound(), 
       selection: [],
       score: NaN } ;
   }  
 
 export function emptyRound() : IRound {
-    return { roundId : NaN, roundName : '' };
+    return { roundId : NaN, roundName : '', playersToSelect: NaN, multipliersToAdd:NaN };
   }
 
 export function emptyUser() : IUser {

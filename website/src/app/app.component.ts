@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ITournament } from "./shared/model";
+import { ITournament, emptyTournament } from "./shared/model";
 import { BettingService } from "./betting/betting.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AccountService } from "./account/account.service";
 
 
-@Component({
+@Component({ 
   selector: 'pm-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   sub!: Subscription;
   errorMessage : string = ''; 
 
-  tournament : ITournament = { tournamentId : NaN, tournamentName: '', currentRound : { roundId: NaN, roundName: ''}};
+  tournament : ITournament = emptyTournament();
   
   constructor(private modalService: NgbModal, private bettingService: BettingService, private accountService: AccountService) {}
  

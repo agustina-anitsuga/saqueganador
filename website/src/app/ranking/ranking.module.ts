@@ -11,7 +11,7 @@ import { RankingComponent } from './ranking.component';
     RouterModule.forChild([
         { path: 'ranking', component: RankingComponent },
     ]),
-    SharedModule,    
+    SharedModule
   ]
 })
 export class RankingModule { }

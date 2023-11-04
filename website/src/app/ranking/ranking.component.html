@@ -6,7 +6,7 @@
       <div class='row'>
         <div class='col-md-1'>Ronda:</div>
         <div class='col-md-2'>
-          <select [(ngModel)]="selectedRound">
+          <select [(ngModel)]="selectedRound"> 
             <option *ngFor="let r of rounds" [ngValue]="r">{{r.roundName}}</option>
           </select>
         </div>

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IPlayerStatsPerRound, ILeague, ITeam, IPlayer, emptyLeague, emptyTeam } from "../shared/model";
+import { IPlayerStatsPerRound, ILeague, ITeam, emptyLeague, emptyTeam } from "../shared/model";
 import { BettingService } from "./betting.service";
 
 @Component({

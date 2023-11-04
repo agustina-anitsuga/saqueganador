@@ -3,6 +3,8 @@
     "tournamentName": "Australian Open", 
     "currentRound": {
             "roundId": 2,
-            "roundName": "Segunda Ronda"
+            "roundName": "Segunda Ronda",
+            "playersToSelect": 8,
+            "multipliersToAdd": 10
     }
 }

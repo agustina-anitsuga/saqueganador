@@ -107,7 +107,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getCurrentRound() : IRound {
-      return this.rounds? this.rounds[this.rounds.length - 1] : { roundId: NaN, roundName: ''} ;
+      return this.rounds? this.rounds[this.rounds.length - 1] : emptyRound() ;
   }
 
   getCurrentUser() : IUser {
@@ -196,7 +196,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       } 
   }
 
-  playerRemoved( player:ISelectedPlayer ){
+  playerRemoved( player:ISelectedPlayer ){ 
     let index = this.filteredTeam.selection.findIndex( 
           elem => elem.playerStats.player.playerId === player.playerStats.player.playerId );
     this.filteredTeam.selection[index] = emptySelectedPlayer();
