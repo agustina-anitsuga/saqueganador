@@ -25,7 +25,6 @@ export class PlayerModalComponent implements OnChanges {
   display : boolean = false;
 
   @ViewChild('content') content : any ;
-  //@ViewChild('ChildDirective') child!: ChildDirective;
 
   constructor(private modalService: NgbModal) {}
 
@@ -38,13 +37,16 @@ export class PlayerModalComponent implements OnChanges {
   open(content:any) {
       this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
           (result) => {
-              if( result === "Accept" ){
-                  this.onModalAccepted.emit(this.player);
-              } else {
-                  this.onModalCancelled.emit(this.player);  
+                    if( result === "Accept" ){
+                        this.onModalAccepted.emit(this.player);
+                    } else {
+                        this.onModalCancelled.emit(this.player);  
+                    }
+              }, 
+           (reason) => {
+                    console.log('Dismissed');
+                    this.onModalCancelled.emit(this.player);  
               }
-              this.display = false;
-          }
       );
   }
 

@@ -1,6 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
 import { IPlayerStatsPerRound, emptyPlayerStatsPerRound, IPlayer, ITeam, emptyTeam } from "../shared/model";
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({ 
   selector: 'pm-available-player', 
@@ -16,9 +15,6 @@ export class AvailablePlayerComponent {
   team : ITeam = emptyTeam() ;  
 
   displayModal : boolean = false; 
-
-
-  constructor(private modalService: NgbModal) {}
 
 
   teamContainsPlayer( player : IPlayer ){
@@ -50,6 +46,7 @@ export class AvailablePlayerComponent {
   }
 
   modalClosed( player : IPlayerStatsPerRound ){
+    console.log('modalClosed');
     this.displayModal = false;
   }
 
