@@ -1,0 +1,17 @@
+
+<ng-template #content let-modal>
+    <div style="text-align:center !important">
+        <div class="modal-header">
+            <div>{{message}}</div>
+        </div>
+        <div class="modal-body">
+            <div class="crop-container">
+                <img src="{{playerProfilePic}}" style="width:80%"/>
+            </div>
+        </div>
+        <div class="modal-footer" style="text-align:center">
+            <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel')">No</button>
+            <button type="button" class="btn btn-primary"   (click)="modal.close('Accept')">Si</button>
+        </div>
+    </div>
+</ng-template>

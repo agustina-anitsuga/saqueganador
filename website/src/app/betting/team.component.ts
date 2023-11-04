@@ -53,11 +53,10 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   currentTeamName() : string {
-      return (this.filteredTeam && this.filteredTeam.user)? this.filteredTeam.user.userName : '' ;
+    return (this.filteredTeam && this.filteredTeam.user)? this.filteredTeam.user.userName : '' ;
   }
 
   performFilter(user: IUser, round: IRound): ITeam {
-    console.log('perform filter');
     let ret = this.getTeamsByRound(this.getTeamsByUser(this.teams,user),round)[0];
     if(ret && ret.user && ret.round){
       console.log('filtered user:'+ret.user.userId+' round:'+ret.round.roundId);
@@ -67,8 +66,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('In OnInit');
-
     this._currentUserId = Number(this.route.snapshot.paramMap.get("id"));
 
     this.subUsers = this.bettingService.getGroupUsers().subscribe({
@@ -90,8 +87,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   initializeSelections(){
-      console.log('initializeSelections');
-
+      
       this._selectedRound = this.getCurrentRound();
       this.selectedRound = this._selectedRound;
       
@@ -152,8 +148,9 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   availableMultipliers() : number {
-    return (this.allPlayersSelected() && this.allMatchesPlayed())? 
+    let ret = (this.allPlayersSelected() && this.allMatchesPlayed())? 
             0 : ( this.maximumMultipliers() + this.selectedPlayerCount() - this.consumedMultipliers() );
+    return ret;
   }
 
   allMatchesPlayed() {
@@ -161,12 +158,14 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   allPlayersSelected() {
-    return this.filteredTeam.selection.every( player => player.playerStats.player.playerId );
+    return this.filteredTeam && this.filteredTeam.selection &&
+            this.filteredTeam.selection.every( player => player.playerStats.player.playerId );
   }
 
   selectedPlayerCount() {
-    return this.filteredTeam.selection.reduce((partialSum, selection) => 
-              partialSum + (selection.playerStats.player.playerId? 1:0), 0)
+    return ( this.filteredTeam && this.filteredTeam.selection )? 
+             this.filteredTeam.selection.reduce( 
+              (partialSum, selection) => partialSum + (selection.playerStats.player.playerId? 1:0), 0) : 0;
   }
 
   maximumMultipliers() : number {
@@ -174,7 +173,14 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   consumedMultipliers() : number {
-      return this.filteredTeam.selection.reduce((partialSum, selection) => partialSum + selection.playerMultiplier, 0);
+      let rta = 0;
+      if( this.filteredTeam && this.filteredTeam.selection ){
+          for( let i=0; i<this.filteredTeam.selection.length; i++ ){
+              rta = rta + (this.filteredTeam.selection[i].playerMultiplier?
+                           this.filteredTeam.selection[i].playerMultiplier:0);
+          }
+      }
+      return rta;
   }
 
   ngOnChanges(): void {
@@ -183,16 +189,23 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
         for (let i = 0; i < players.length; i++) {
             if( !players[i].playerStats.player.playerId ){
               this.filteredTeam.selection[i] = this.playerToAdd;
+              this.playerToAdd = emptySelectedPlayer();
               break;
             }
         }
       } 
-    }
+  }
 
-    @Output() 
-    playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+  playerRemoved( player:ISelectedPlayer ){
+    let index = this.filteredTeam.selection.findIndex( 
+          elem => elem.playerStats.player.playerId === player.playerStats.player.playerId );
+    this.filteredTeam.selection[index] = emptySelectedPlayer();
+  }  
 
-    @Output() 
-    teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();
+  @Output() 
+  playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+
+  @Output() 
+  teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();
   
 }

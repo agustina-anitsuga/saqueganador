@@ -42,7 +42,8 @@
                     [selectedPlayer]="selectedPlayer" 
                     [mode]="mode" 
                     [filteredTeam]="filteredTeam" 
-                    [availableMultipliers]="availableMultipliers()">
+                    [availableMultipliers]="availableMultipliers()"
+                    (playerRemoved)="playerRemoved($event)">
                 </pm-selected-player>
             </div>
             </div>

@@ -7,6 +7,7 @@ import { TeamGuard } from './team.guard';
 import { PlayerSelectionComponent } from './player-selection.component';
 import { AvailablePlayerComponent } from './available-player.component';
 import { SelectedPlayerComponent } from './selected-player.component';
+import { PlayerModalComponent } from './player-modal.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { SelectedPlayerComponent } from './selected-player.component';
     TeamComponent,
     PlayerSelectionComponent,
     AvailablePlayerComponent,
-    SelectedPlayerComponent
+    SelectedPlayerComponent,
+    PlayerModalComponent
   ], 
   imports: [
     RouterModule.forChild([

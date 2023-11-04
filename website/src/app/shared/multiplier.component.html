@@ -1,11 +1,15 @@
 <div class="card-body center"
-     [title]="multiplier"
-     (click)='onClick()'>
+     [title]="multiplier">
   <div style="width: 75px" class="center">
     <div class="row center" >
-        <div *ngFor="let i of [].constructor(multiplier)" class="col-sm-1 center"> 
-            <img src="./assets/images/favicon.png" class="scaleB scale"/>
-        </div> 
+        <div class="col-sm-1 center">
+            <div *ngFor="let i of [].constructor(multiplier)" >
+                <img src="./assets/images/yellow-tennis-ball.png" size="80%" class="scaleA scale" (click)='removeMutiplier()'/>
+            </div> 
+            <div *ngFor="let i of [].constructor(possibleMutipliers())" (click)='addMutiplier()'>      
+                <img src="./assets/images/favicon.png" class="scaleB scale"/>
+            </div>  
+        </div>
     </div>
   </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component,  Input, Output, EventEmitter } from "@angular/core";
-import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer } from "../shared/model";
+import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer, emptyPlayerStatsPerRound } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -13,6 +13,10 @@ export class SelectedPlayerComponent {
   @Input() selectedPlayer : ISelectedPlayer = emptySelectedPlayer();
   @Input() filteredTeam : ITeam = emptyTeam();
   @Input() availableMultipliers : number = NaN;
+
+  displayAddMultiplierModal    : boolean = false;
+  displayRemoveMultiplierModal : boolean = false;
+  displayRemovePlayerModal     : boolean = false;
 
   constructor(private modalService: NgbModal) {}
 
@@ -39,26 +43,74 @@ export class SelectedPlayerComponent {
     return 3;
   }
 
-  onMultiplierAdded(message: ISelectedPlayer): void {
-    message.playerMultiplier = message.playerMultiplier + 1;
-    this.playerMultiplierClicked.emit( message );
+  onMultiplierAdded(message: any): void {
+    this.selectedPlayer.playerMultiplier = this.selectedPlayer.playerMultiplier + 1;
+    this.multiplierAdded.emit( message );
+    this.modalClosed(null);
   }
 
-  confirmSelection(content:any) {
-    if( (this.selectedPlayer.playerMultiplier < this.maximumMultipliersPerPlayer()) 
-          && (this.availableMultipliers > 0) 
+  onMultiplierRemoved(message: any): void {
+    this.selectedPlayer.playerMultiplier = this.selectedPlayer.playerMultiplier - 1;
+    this.multiplierRemoved.emit( message );
+    this.modalClosed(null);
+  }
+
+  playerCanBeRemoved( player: ISelectedPlayer ){
+    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) && !player.played;
+  }
+
+  playerCanNotBeRemoved( player: ISelectedPlayer ){
+    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) && player.played;
+  }
+
+  modalClosed( player: any ) {
+    this.displayAddMultiplierModal = false;
+    this.displayRemoveMultiplierModal = false;
+    this.displayRemovePlayerModal = false;
+  }
+
+  confirmMultiplierRemoved() {
+    if( (this.selectedPlayer.playerMultiplier > 1) 
           && !this.selectedPlayer.played ){
-        this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
-            (result) => {
-                if( result === "Accept" ){
-                    this.onMultiplierAdded(this.selectedPlayer);
-                }
-            }
-        );
+        this.displayRemoveMultiplierModal = true;
     }
   }
 
+  confirmMultiplierAdded() {
+    if( (this.selectedPlayer.playerMultiplier < this.maximumMultipliersPerPlayer()) 
+          && (this.availableMultipliers > 0) 
+          && !this.selectedPlayer.played ){
+        this.displayAddMultiplierModal = true;
+    }
+  }
+
+  confirmPlayerRemoval(){
+    this.displayRemovePlayerModal = true;
+  }
+
+  addMultiplierMessage(){
+    return 'Agregar una pelotita multiplicadora a ' + this.selectedPlayer.playerStats.player.playerName +' ?'
+  }
+
+  removeMultiplierMessage(){
+    return 'Quitar una pelotita multiplicadora a ' + this.selectedPlayer.playerStats.player.playerName +' ?'
+  }
+
+  removePlayerMessage(){
+    return 'Quitar a ' + this.selectedPlayer.playerStats.player.playerName +' de mi equipo?'
+  }
+
+  onPlayerRemoved( player : any ){
+    this.playerRemoved.emit(player);
+  }
+
   @Output() 
-  playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+  multiplierAdded: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+  
+  @Output() 
+  multiplierRemoved: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+
+  @Output() 
+  playerRemoved: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
   
 }

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ITournament } from "./shared/model";
 import { BettingService } from "./betting/betting.service";
@@ -14,7 +14,7 @@ export class AppComponent implements OnInit, OnDestroy {
   
   title = 'Saqueganador';
   sub!: Subscription;
-  errorMessage : string = '';
+  errorMessage : string = ''; 
 
   tournament : ITournament = { tournamentId : NaN, tournamentName: '', currentRound : { roundId: NaN, roundName: ''}};
   
@@ -25,8 +25,6 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('In OnInit');
-
     this.sub = this.bettingService.getCurrentTournament().subscribe({
       next: t => {
         this.tournament = t;

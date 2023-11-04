@@ -34,7 +34,6 @@ export class RankingComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('In OnInit');
     this.sub = this.rankingService.getRanking().subscribe({
       next: r => {
         this.ranking = r;

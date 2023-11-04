@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
-import { AppComponent } from './app.component';
+import { AppComponent } from './app.component'; 
 import { WelcomeComponent } from './home/welcome.component';
 import { RankingModule } from './ranking/ranking.module';
 import { BettingModule } from './betting/betting.module';

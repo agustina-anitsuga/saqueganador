@@ -53,7 +53,6 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log('In OnInit');
     this.sub = this.bettingService.getPlayers().subscribe({
       next: p => {
         this.players = p;

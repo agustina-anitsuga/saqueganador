@@ -16,7 +16,6 @@ export class BettingComponent {
 
   
   onPlayerSelected( message : IPlayerStatsPerRound ){
-      console.log('Player selected '+JSON.stringify(message));
       this.playerToAdd = {
         position : NaN,
         playerStats : message,
