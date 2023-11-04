@@ -14,23 +14,20 @@ export class BettingComponent {
 
   filteredTeam: ITeam = emptyTeam();
 
-  
   onPlayerSelected( message : IPlayerStatsPerRound ){
+      console.log('BettingComponent.onPlayerSelected '+message.player.playerName);
       this.playerToAdd = {
-        position : NaN,
+        position : 0,
         playerStats : message,
         playerMultiplier: 1,
         playerScore: 0,
         played: false
-      };
+      }
   }
 
   onTeamSelected( message : ITeam ){
+      console.log('BettingComponent.onTeamSelected');
       this.filteredTeam = message;
-  }
-
-  onMultiplierAdded( message: ISelectedPlayer ){
-      console.log('Multiplier added'+JSON.stringify(message));
   }
 
 }

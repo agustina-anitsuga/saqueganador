@@ -4,7 +4,6 @@
     "currentRound": {
             "roundId": 2,
             "roundName": "Segunda Ronda",
-            "playersToSelect": 8,
-            "multipliersToAdd": 10
+            "sortOrder": 2
     }
 }

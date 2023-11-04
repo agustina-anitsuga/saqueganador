@@ -131,7 +131,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   deDuplicate( rounds : IRound[] ) : IRound[] {
     const ids = rounds.map(({ roundId }) => roundId );
     const filtered = rounds.filter(({ roundId }, index) => !ids.includes(roundId, index + 1));
-    return filtered;
+    const sorted = filtered.sort( (elemA,elemB) => elemA.sortOrder - elemB.sortOrder );
+    return sorted;
   }
 
   ngOnDestroy(): void {
@@ -144,7 +145,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   shouldDisplayAvailableMultipliers(){
-    return this.mode === 'EDIT' && this.availableMultipliers() > 0;
+    return this.mode === 'EDIT';
   }
 
   availableMultipliers() : number {
@@ -169,7 +170,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   maximumMultipliers() : number {
-      return 10;
+      return this.filteredTeam.selection.length + ( (this.filteredTeam.selection.length>2)?  2 : 1 );
   }
 
   consumedMultipliers() : number {
@@ -201,9 +202,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
           elem => elem.playerStats.player.playerId === player.playerStats.player.playerId );
     this.filteredTeam.selection[index] = emptySelectedPlayer();
   }  
-
-  @Output() 
-  playerMultiplierClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
 
   @Output() 
   teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();

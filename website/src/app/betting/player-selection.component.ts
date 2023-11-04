@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, Input, Output, EventEmitter } from "@angular/core";
+import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
 import { IPlayerStatsPerRound, ILeague, ITeam, emptyLeague, emptyTeam } from "../shared/model";
 import { BettingService } from "./betting.service";
@@ -8,7 +8,7 @@ import { BettingService } from "./betting.service";
   templateUrl: './player-selection.component.html',
   styleUrls: ['./player-selection.component.css']
 })
-export class PlayerSelectionComponent implements OnInit, OnDestroy {
+export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
 
   public pageTitle = 'Jugadores';
 
@@ -83,6 +83,10 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy {
     this.playerClicked.emit( player );
   }
 
+  ngOnChanges(): void {
+    console.log('PlayerSelection onChanges')
+    this.filteredPlayers = this.filterPlayers();     
+  }
 
   @Output() 
   playerClicked: EventEmitter<IPlayerStatsPerRound> = new EventEmitter<IPlayerStatsPerRound>();

@@ -7,8 +7,7 @@ export interface ITournament {
 export interface IRound {
     roundId: number;
     roundName: string;
-    playersToSelect: number;
-    multipliersToAdd: number;
+    sortOrder: number;
   }
 
 export interface IUser {
@@ -82,7 +81,7 @@ export function emptyTeam() : ITeam {
   }  
 
 export function emptyRound() : IRound {
-    return { roundId : NaN, roundName : '', playersToSelect: NaN, multipliersToAdd:NaN };
+    return { roundId : NaN, roundName : '', sortOrder:NaN };
   }
 
 export function emptyUser() : IUser {

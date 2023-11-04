@@ -16,7 +16,6 @@ export class AvailablePlayerComponent {
 
   displayModal : boolean = false; 
 
-
   teamContainsPlayer( player : IPlayer ){
     return (player && this.team && this.team.selection)?  
             this.team.selection.find( elem => 
@@ -43,10 +42,10 @@ export class AvailablePlayerComponent {
 
   onPlayerSelected( player : IPlayerStatsPerRound ){
     this.playerClicked.emit( player );
+    this.modalClosed( player );
   }
 
   modalClosed( player : IPlayerStatsPerRound ){
-    console.log('modalClosed');
     this.displayModal = false;
   }
 

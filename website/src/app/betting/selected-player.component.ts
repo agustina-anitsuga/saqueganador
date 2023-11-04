@@ -1,5 +1,5 @@
 import { Component,  Input, Output, EventEmitter } from "@angular/core";
-import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer, emptyPlayerStatsPerRound } from "../shared/model";
+import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

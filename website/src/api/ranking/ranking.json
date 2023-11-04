@@ -6,7 +6,8 @@
         },
         "round" : { 
             "roundId": null,
-            "roundName": ""
+            "roundName": "",
+            "sortOrder": 0
         },
         "user": {
             "userId": 1,
@@ -22,7 +23,8 @@
         },
         "round" : { 
             "roundId": null,
-            "roundName": ""
+            "roundName": "",
+            "sortOrder": 0
         },
         "user" : {
             "userId": 2,
@@ -38,7 +40,8 @@
         },
         "round" : { 
             "roundId": null,
-            "roundName": ""
+            "roundName": "",
+            "sortOrder": 0
         },
         "user" : {
             "userId": 3,
@@ -54,7 +57,8 @@
         },
         "round" : { 
             "roundId": null,
-            "roundName": ""
+            "roundName": "",
+            "sortOrder": 0
         },
         "user" : {
             "userId": 4,
@@ -70,7 +74,8 @@
         },
         "round" : { 
             "roundId": null,
-            "roundName": ""
+            "roundName": "",
+            "sortOrder": 0
         },
         "user": {
             "userId": 5,
@@ -86,7 +91,8 @@
         },
         "round": {
             "roundId": 1,
-            "roundName": "Primera Ronda"
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
         },
         "user": {
             "userId": 1,
@@ -102,7 +108,8 @@
         },
         "round": {
             "roundId": 1,
-            "roundName": "Primera Ronda"
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
         },
         "user" : {
             "userId": 2,
@@ -118,7 +125,8 @@
         },
         "round": {
             "roundId": 1,
-            "roundName": "Primera Ronda"
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
         },
         "user" : {
             "userId": 3,
@@ -134,7 +142,8 @@
         },
         "round": {
             "roundId": 1,
-            "roundName": "Primera Ronda"
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
         },
         "user" : {
             "userId": 4,
@@ -150,7 +159,8 @@
         },
         "round": {
             "roundId": 1,
-            "roundName": "Primera Ronda"
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
         },
         "user": {
             "userId": 5,
@@ -166,7 +176,8 @@
         },
         "round": {
             "roundId": 2,
-            "roundName": "Segunda Ronda"
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
         },
         "user": {
             "userId": 1,
@@ -182,7 +193,8 @@
         },
         "round": {
             "roundId": 2,
-            "roundName": "Segunda Ronda"
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
         },
         "user" : {
             "userId": 2,
@@ -198,7 +210,8 @@
         },
         "round": {
             "roundId": 2,
-            "roundName": "Segunda Ronda"
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
         },
         "user" : {
             "userId": 3,
@@ -214,7 +227,8 @@
         },
         "round": {
             "roundId": 2,
-            "roundName": "Segunda Ronda"
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
         },
         "user" : {
             "userId": 4,
@@ -230,7 +244,8 @@
         },
         "round": {
             "roundId": 2,
-            "roundName": "Segunda Ronda"
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
         },
         "user": {
             "userId": 5,
