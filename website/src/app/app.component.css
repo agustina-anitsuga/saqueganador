@@ -22,3 +22,9 @@
 .card{
   font-size: large;
 }
+
+.logout {
+  color: #e4f7e3;
+  padding-top: 0;
+  padding-bottom: 0;
+}

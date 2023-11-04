@@ -3,6 +3,7 @@ import { Subscription } from "rxjs";
 import { ITournament } from "./shared/model";
 import { BettingService } from "./betting/betting.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { AccountService } from "./account/account.service";
 
 
 @Component({
@@ -18,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   tournament : ITournament = { tournamentId : NaN, tournamentName: '', currentRound : { roundId: NaN, roundName: ''}};
   
-  constructor(private modalService: NgbModal, private bettingService: BettingService) {}
+  constructor(private modalService: NgbModal, private bettingService: BettingService, private accountService: AccountService) {}
  
   public open(modal: any): void {
     this.modalService.open(modal);
@@ -36,5 +37,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+  }
+
+  isUserLoggedIn(){
+    return this.accountService.userValue;
+  }
+
+  logout() {
+    this.accountService.logout();
   }
 }

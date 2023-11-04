@@ -25,39 +25,40 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
     ngOnInit() {
         this.form = this.formBuilder.group({
-            email: ['', Validators.required, Validators.email],
-            password: ['', [Validators.required, Validators.minLength(6)]]
+            email: ['', [Validators.required, Validators.pattern("[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$")] ],
+            password: ['', [Validators.required, , Validators.minLength(6)]]
         });
     }
-// convenience getter for easy access to form fields
-get f() { return this.form.controls; }
+    
+    // convenience getter for easy access to form fields
+    get f() { return this.form.controls; }
 
-onSubmit() {
-    this.submitted = true;
+    onSubmit() {
+        this.submitted = true;
 
-    // reset alerts on submit
-    //this.alertService.clear();
+        // reset alerts on submit
+        //this.alertService.clear();
 
-    // stop here if form is invalid
-    if (this.form.invalid) {
-        return;
+        // stop here if form is invalid
+        if (this.form.invalid) {
+            return;
+        }
+
+        this.loading = true;
+
+        /*
+        this.accountService.register(this.form.value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    this.alertService.success('Registration successful', { keepAfterRouteChange: true });
+                    this.router.navigate(['../login'], { relativeTo: this.route });
+                },
+                error: error => {
+                    this.alertService.error(error);
+                    this.loading = false;
+                }
+            });
+        */
     }
-
-    this.loading = true;
-
-    /*
-    this.accountService.register(this.form.value)
-        .pipe(first())
-        .subscribe({
-            next: () => {
-                this.alertService.success('Registration successful', { keepAfterRouteChange: true });
-                this.router.navigate(['../login'], { relativeTo: this.route });
-            },
-            error: error => {
-                this.alertService.error(error);
-                this.loading = false;
-            }
-        });
-    */
-}
 }

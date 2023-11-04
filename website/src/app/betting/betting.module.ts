@@ -8,6 +8,7 @@ import { PlayerSelectionComponent } from './player-selection.component';
 import { AvailablePlayerComponent } from './available-player.component';
 import { SelectedPlayerComponent } from './selected-player.component';
 import { PlayerModalComponent } from './player-modal.component';
+import { AuthGuard } from '../account/auth.guard';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,9 @@ import { PlayerModalComponent } from './player-modal.component';
         { path: 'teams/:id', 
             canActivate: [TeamGuard],
             component: TeamComponent },
-        { path: 'bet', component: BettingComponent },
+        { path: 'bet', 
+            canActivate: [AuthGuard],
+            component: BettingComponent },
     ]),
     SharedModule,    
   ]

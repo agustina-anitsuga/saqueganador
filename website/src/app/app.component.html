@@ -15,7 +15,10 @@
           <li class="nav-item tournament">{{tournament.tournamentName}}</li>  
           <li class="nav-item"><a class="navlink" routerLink='/ranking'>Ranking</a></li>  
           <li class="nav-item"><a class="navlink" routerLink='/teams'>Equipos</a></li>  
-          <li class="nav-item"><a class="navlink" routerLink='/bet'>Armar mi equipo</a></li>          
+          <li class="nav-item"><a class="navlink" routerLink='/bet'>Armar mi equipo</a></li>
+          <ng-container *ngIf = 'isUserLoggedIn()' >
+            <button class="nav-item nav-link logout" (click)="logout()">Salir</button>
+          </ng-container>     
         </ul>
       </div>
     </div>

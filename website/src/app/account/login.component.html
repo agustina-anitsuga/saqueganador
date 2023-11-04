@@ -1,28 +1,35 @@
-<div class="card">
-    <h4 class="card-header">Login</h4>
-    <div class="card-body">
-        <form [formGroup]="form" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-                <label class="form-label">Username</label>
-                <input type="text" formControlName="username" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" />
-                <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                    <div *ngIf="f.username.errors.required">Username is required</div>
+<div class="d-flex justify-content-center">
+    <div class="card form">
+        <h4 class="card-header left">Ingresar</h4>
+        <div class="card-body left">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['email'].errors }" />
+                    <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+                        <div *ngIf="f['email'].errors['required']">Ingrese un email</div>
+                        <div *ngIf="f['email'].errors['pattern']">El email no es v&aacute;lido</div>
+                    </div>
                 </div>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Password</label>
-                <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }" />
-                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                    <div *ngIf="f.password.errors.required">Password is required</div>
+                <div class="mb-3">
+                    <label class="form-label">Contrase&ntilde;a</label>
+                    <input type="password" formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f['password'].errors }" />
+                    <div *ngIf="submitted && f['password'].errors" class="invalid-feedback">
+                        <div *ngIf="f['password'].errors['required']">Ingrese una contrase&ntilde;a</div>
+                        <div *ngIf="f['password'].errors['minlength']">Su contrase&ntilde;a debe tener al menos 6 caracteres</div>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <button [disabled]="loading" class="btn btn-primary">
-                    <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
-                    Login
-                </button>
-                <a routerLink="../register" class="btn btn-link">Register</a>
-            </div>
-        </form>
+                <div>
+                    <button [disabled]="loading" class="btn btn-primary">
+                        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1"></span>
+                        Ingresar
+                    </button>
+                    <a routerLink="welcome" class="btn btn-link">Cancelar</a>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <a routerLink="../registration" class="btn btn-link">No tengo usuario</a>
+        </div>
     </div>
 </div>
