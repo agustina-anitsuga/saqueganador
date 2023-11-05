@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-//import { first } from 'rxjs/operators';
-
-//import { AccountService, AlertService } from '@app/_services';
+import { first } from 'rxjs/operators';
+import { AccountService } from './account.service';
+import { AlertService } from '../shared/alert.service';
 
 
 @Component({ 
   selector: 'pm-registration', 
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
-})export class RegistrationComponent implements OnInit {
+})
+export class RegistrationComponent implements OnInit {
+
     form!: FormGroup;
     loading = false;
     submitted = false;
@@ -19,8 +21,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        //private accountService: AccountService,
-        //private alertService: AlertService
+        private accountService: AccountService,
+        private alertService: AlertService
     ) { }
 
     ngOnInit() {
@@ -37,7 +39,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
         this.submitted = true;
 
         // reset alerts on submit
-        //this.alertService.clear();
+        this.alertService.clear();
 
         // stop here if form is invalid
         if (this.form.invalid) {
@@ -46,19 +48,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
         this.loading = true;
 
-        /*
         this.accountService.register(this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
-                    this.alertService.success('Registration successful', { keepAfterRouteChange: true });
+                    this.alertService.success('Registro exitoso', { keepAfterRouteChange: true });
                     this.router.navigate(['../login'], { relativeTo: this.route });
                 },
                 error: error => {
-                    this.alertService.error(error);
+                    this.alertService.error('Error en la registraci&oacute;n.');
                     this.loading = false;
                 }
             });
-        */
     }
 }

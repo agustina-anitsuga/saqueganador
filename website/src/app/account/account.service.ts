@@ -44,6 +44,7 @@ export class AccountService {
     }
 
     register(user: IUser) {
+        //return this.http.get(`${this.apiUrl}/users/authenticate.json`);
         return this.http.post(`${this.apiUrl}/users/register`, user);
     }
 
