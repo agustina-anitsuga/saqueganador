@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, tap, throwError, map } from "rxjs";
+import { Observable, catchError, tap, throwError } from "rxjs";
 
 import { IUser } from "../shared/model";
 import { ITeam } from "../shared/model";
@@ -14,6 +14,7 @@ export class BettingService {
 
     private teamUrl = 'api/betting/teams.json';
     private playersUrl = 'api/betting/players.json';
+    private playersUrlFinal = 'api/betting/players-final.json';    
     private usersUrl = 'api/betting/users.json';
     private tournamentUrl = 'api/betting/tournament.json';
     
@@ -34,10 +35,17 @@ export class BettingService {
     }
 
     getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> {
-      return this.http.get<IPlayerStatsPerRound[]>(this.playersUrl).pipe(
+      if( roundId === 5 ){
+        return this.http.get<IPlayerStatsPerRound[]>(this.playersUrlFinal).pipe(
           tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 
       );
+      } else {
+          return this.http.get<IPlayerStatsPerRound[]>(this.playersUrl).pipe(
+              tap( data => console.log('All:', JSON.stringify(data)) ),
+              catchError( this.handleError ) 
+          );
+      }
     }
 
     getGroupUsers(): Observable<IUser[]> {

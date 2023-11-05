@@ -1,0 +1,54 @@
+[
+    {
+        "player" : {
+            "league": {
+                "leagueId": 1,
+                "leagueName": "ATP"
+            },
+            "playerId": 2,
+            "playerName" : "Rafael Nadal",
+            "playerProfilePic": "https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/261.png&w=350&h=254",
+            "playerProfileUrl": "https://www.atptour.com/en/players/rafael-nadal/n409/overview"
+        },
+        "pointsToAward": 150  
+    },
+    {
+        "player" : {
+            "league": {
+                "leagueId": 1,
+                "leagueName": "ATP"
+            },
+            "playerId": 3,
+            "playerName" : "Novak Djokovic",
+            "playerProfilePic": "https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/296.png&w=350&h=254",
+            "playerProfileUrl": "https://www.atptour.com/en/players/novak-djokovic/d643/overview"
+        },
+        "pointsToAward": 50  
+    },
+    {
+        "player" : {
+            "league": {
+                "leagueId": 2,
+                "leagueName": "WTA"
+            },
+            "playerId": 12,
+            "playerName" : "Iga Swiatek",
+            "playerProfilePic": "https://photoresources.wtatennis.com/photo-resources/2023/03/23/1688716e-271a-4fed-abc6-2dc026a5dd7f/Swiatek-Torso_326408.png?width=220",
+            "playerProfileUrl": "https://www.wtatennis.com/players/326408/iga-swiatek"
+        },
+        "pointsToAward": 80  
+    },
+    {
+        "player" : {
+            "league": {
+                "leagueId": 2,
+                "leagueName": "WTA"
+            },
+            "playerId": 13,
+            "playerName" : "Coco Gauff",
+            "playerProfilePic": "https://photoresources.wtatennis.com/photo-resources/2020/06/30/31c090b2-e38f-4ad2-8eee-9415aad508ee/Gauff_Hero-Smile.png?width=220",
+            "playerProfileUrl": "https://www.wtatennis.com/players/328560/coco-gauff"
+        },
+        "pointsToAward": 80  
+    }
+]
