@@ -33,7 +33,7 @@ export class BettingService {
         );
     }
 
-    getPlayers(): Observable<IPlayerStatsPerRound[]> {
+    getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> {
       return this.http.get<IPlayerStatsPerRound[]>(this.playersUrl).pipe(
           tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 

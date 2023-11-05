@@ -53,7 +53,14 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    this.sub = this.bettingService.getPlayers().subscribe({
+    this.loadPlayersInRound();
+  }
+
+  loadPlayersInRound(){
+    console.log('PlayerSelectionComponent.loadPlayersInRound')
+    let tournamentId = this.team.tournament.tournamentId;
+    let roundId = this.team.round.roundId;
+    this.sub = this.bettingService.getPlayers(tournamentId,roundId).subscribe({
       next: p => {
         this.players = p;
         this.filteredPlayers = this.players;
@@ -84,8 +91,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(): void {
-    console.log('PlayerSelection onChanges')
-    this.filteredPlayers = this.filterPlayers();     
+    this.loadPlayersInRound();
   }
 
   @Output() 
