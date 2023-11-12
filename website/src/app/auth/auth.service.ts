@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
 
 import { Amplify } from 'aws-amplify';
-import awsconfig from '../../aws-exports';
+import awsconfig from '../../aws-exports.js';
 Amplify.configure(awsconfig);
 
 @Injectable({ providedIn: 'root' })

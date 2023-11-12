@@ -4,7 +4,7 @@ import { AuthenticatorService } from '@aws-amplify/ui-angular';
 import { I18n } from 'aws-amplify';
 import { translations } from '@aws-amplify/ui-angular';
 
-import awsExports from '../../aws-exports';
+import awsExports from '../../aws-exports.js';
 
 I18n.putVocabularies(translations);
 const extraEsTranslations = {
