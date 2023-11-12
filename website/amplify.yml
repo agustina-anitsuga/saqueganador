@@ -1,0 +1,23 @@
+version: 1
+applications:
+  - appRoot: angular
+    backend:
+      phases:
+        build:
+          commands:
+            - amplifyPush --simple
+    frontend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+        build:
+          commands:
+            - npm run build
+      artifacts:
+        baseDirectory: dist/apm
+        files:
+          - '**/*'
+      cache:
+        paths:
+          - node_modules/**/*
