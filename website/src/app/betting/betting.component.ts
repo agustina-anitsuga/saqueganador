@@ -15,7 +15,6 @@ export class BettingComponent {
   filteredTeam: ITeam = emptyTeam();
 
   onPlayerSelected( message : IPlayerStatsPerRound ){
-      console.log('BettingComponent.onPlayerSelected '+message.player.playerName);
       this.playerToAdd = {
         position : 0,
         playerStats : message,
@@ -26,7 +25,6 @@ export class BettingComponent {
   }
 
   onTeamSelected( message : ITeam ){
-      console.log('BettingComponent.onTeamSelected');
       this.filteredTeam = message;
   }
 

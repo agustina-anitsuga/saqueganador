@@ -44,7 +44,6 @@ export class PlayerModalComponent implements OnChanges {
                     }
               }, 
            (reason) => {
-                    console.log('Dismissed');
                     this.onModalCancelled.emit(this.player);  
               }
       );

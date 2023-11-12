@@ -8,7 +8,7 @@ import { PlayerSelectionComponent } from './player-selection.component';
 import { AvailablePlayerComponent } from './available-player.component';
 import { SelectedPlayerComponent } from './selected-player.component';
 import { PlayerModalComponent } from './player-modal.component';
-import { AuthGuard } from '../account/auth.guard';
+import { AuthGuard } from '../auth/auth.guard';
 import { MultiplierComponent } from './multiplier.component';
 
 @NgModule({

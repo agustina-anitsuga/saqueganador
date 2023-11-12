@@ -58,9 +58,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   performFilter(user: IUser, round: IRound): ITeam {
     let ret = this.getTeamsByRound(this.getTeamsByUser(this.teams,user),round)[0];
-    if(ret && ret.user && ret.round){
-      console.log('filtered user:'+ret.user.userId+' round:'+ret.round.roundId);
-    }
     this.teamFiltered.emit( ret );
     return ret;
   }

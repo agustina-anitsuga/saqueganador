@@ -57,7 +57,6 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   loadPlayersInRound(){
-    console.log('PlayerSelectionComponent.loadPlayersInRound')
     let tournamentId = this.team.tournament.tournamentId;
     let roundId = this.team.round.roundId;
     this.sub = this.bettingService.getPlayers(tournamentId,roundId).subscribe({

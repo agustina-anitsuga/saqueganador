@@ -3,7 +3,7 @@ import { Subscription } from "rxjs";
 import { ITournament, emptyTournament } from "./shared/model";
 import { BettingService } from "./betting/betting.service";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AccountService } from "./account/account.service";
+import { AuthService } from "./auth/auth.service";
 
 
 @Component({ 
@@ -19,7 +19,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   tournament : ITournament = emptyTournament();
   
-  constructor(private modalService: NgbModal, private bettingService: BettingService, private accountService: AccountService) {}
+  constructor(private modalService: NgbModal, private bettingService: BettingService, private authService: AuthService) {}
  
   public open(modal: any): void {
     this.modalService.open(modal);
@@ -40,10 +40,10 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   isUserLoggedIn(){
-    return this.accountService.userValue;
+    return this.authService.currentUser();
   }
 
   logout() {
-    this.accountService.logout();
-  }
+    this.authService.logout();
+  } 
 }

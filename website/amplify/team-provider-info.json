@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-saqueganador-dev-15756-authRole",
+      "UnauthRoleArn": "arn:aws:iam::687400810619:role/amplify-saqueganador-dev-15756-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::687400810619:role/amplify-saqueganador-dev-15756-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-saqueganador-dev-15756-deployment",
+      "UnauthRoleName": "amplify-saqueganador-dev-15756-unauthRole",
+      "StackName": "amplify-saqueganador-dev-15756",
+      "StackId": "arn:aws:cloudformation:us-east-1:687400810619:stack/amplify-saqueganador-dev-15756/0dc7a510-8118-11ee-98e5-0e826feee6ef",
+      "AmplifyAppId": "d47lte68sa6n3"
+    },
+    "categories": {
+      "auth": {
+        "saqueganadorb39e68f3b39e68f3": {}
+      }
+    }
+  }
+}
