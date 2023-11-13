@@ -8,4 +8,10 @@
     <h2>Welcome, {{ username(user) }}!</h2>
     <button (click)="signOut()">Sign Out</button>
   </ng-template>
+  <ng-template amplifySlot="reset-password-header">
+    <h3
+      class="amplify-heading"
+    >Cambiar contrase&ntilde;a:
+    </h3>
+  </ng-template>
 </amplify-authenticator>

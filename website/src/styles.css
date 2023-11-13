@@ -41,3 +41,7 @@ a.navlink {
 .amplify-tabs-item[data-state='active'] {
   color:#096A2E;
 }
+
+.amplify-heading {
+  color:#096A2E;
+}
