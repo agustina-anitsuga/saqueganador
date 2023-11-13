@@ -1,6 +1,6 @@
 version: 1
 applications:
-  - appRoot: angular
+  - appRoot: website
     backend:
       phases:
         build:
