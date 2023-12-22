@@ -1,9 +1,4 @@
 {
     "tournamentId": 1,
-    "tournamentName": "Australian Open", 
-    "currentRound": {
-            "roundId": 2,
-            "roundName": "Segunda Ronda",
-            "sortOrder": 2
-    }
+    "tournamentName": "Australian Open"
 }

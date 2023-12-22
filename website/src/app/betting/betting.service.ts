@@ -13,8 +13,7 @@ import { IPlayerStatsPerRound } from "../shared/model";
 export class BettingService {
 
     private teamUrl = 'api/betting/teams.json';
-    private playersUrl = 'api/betting/players.json';
-    private playersUrlFinal = 'api/betting/players-final.json';    
+    private playersUrl = 'api/betting/players';
     private usersUrl = 'api/betting/users.json';
     private tournamentUrl = 'api/betting/tournament.json';
     
@@ -34,18 +33,13 @@ export class BettingService {
         );
     }
 
-    getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> {
-      if( roundId === 5 ){
-        return this.http.get<IPlayerStatsPerRound[]>(this.playersUrlFinal).pipe(
+    getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> { 
+      let url = this.playersUrl+"-"+(roundId?roundId:1)+".json";
+      console.log(url);
+      return this.http.get<IPlayerStatsPerRound[]>(url).pipe(
           tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 
       );
-      } else {
-          return this.http.get<IPlayerStatsPerRound[]>(this.playersUrl).pipe(
-              tap( data => console.log('All:', JSON.stringify(data)) ),
-              catchError( this.handleError ) 
-          );
-      }
     }
 
     getGroupUsers(): Observable<IUser[]> {

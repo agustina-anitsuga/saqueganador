@@ -59,10 +59,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   performFilter(user: IUser, round: IRound): ITeam {
-    console.log("performFilter ",JSON.stringify(user));
-    console.log(JSON.stringify((this.getTeamsByUser(this.teams,user))));
     let ret = this.getTeamsByRound(this.getTeamsByUser(this.teams,user),round)[0];
-    console.log(JSON.stringify(ret));
     this.teamFiltered.emit( ret );
     return ret;
   }
@@ -95,7 +92,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       
       this._selectedUser = this.getCurrentUser();
       this.selectedUser = this._selectedUser ;
-      console.log("initializeSelections "+this.selectedUser);
 
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
@@ -113,10 +109,15 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       return this.rounds? this.rounds[this.rounds.length - 1] : emptyRound() ;
   }
 
-  getCurrentUser() : IUser {
-      console.log("getCurrentUser:"+this.authenticator.user?this.authenticator.user.username:null);
-      //6f834b6b-84cd-4a39-a192-a1d91966f36f
-      let ret = { "userId": ((this._currentUserId && !(this._currentUserId==="null"))?this._currentUserId:"1"), "userName": "anitsuga" } ; // TODO
+  getCurrentUser() : IUser {   
+      let ret = emptyUser();
+      if(this._currentUserId && !(this._currentUserId==="null")){
+          // a user was selected using the url parameter
+          ret = { "userId": this._currentUserId, "userName": "" } ; 
+      } else if (this.authenticator.user) {
+          // a user is logged in       //6f834b6b-84cd-4a39-a192-a1d91966f36f
+          ret = { "userId": "1", "userName": "anitsuga" } ; // TODO
+      }
       return ret;
   }
 
