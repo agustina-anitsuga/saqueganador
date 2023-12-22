@@ -11,7 +11,7 @@ export interface IRound {
   }
 
 export interface IUser {
-    userId: number;
+    userId: string;
     userName: string;
   }
 
@@ -72,9 +72,8 @@ export function emptyTournament() : ITournament{
 
 export function emptyTeam() : ITeam {
     return { 
-      user: { userId: NaN, userName: ''},
-      tournament: { tournamentId: NaN, tournamentName: '', 
-            currentRound: emptyRound() }, 
+      user: emptyUser(),
+      tournament: emptyTournament(), 
       round: emptyRound(), 
       selection: [],
       score: NaN } ;
@@ -85,7 +84,7 @@ export function emptyRound() : IRound {
   }
 
 export function emptyUser() : IUser {
-    return { userId : NaN, userName: '' };
+    return { userId : '', userName: '' };
   }
 
 export function emptyLeague() : ILeague {

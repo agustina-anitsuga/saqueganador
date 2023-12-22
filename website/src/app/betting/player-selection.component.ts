@@ -57,16 +57,19 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   loadPlayersInRound(){
-    let tournamentId = this.team.tournament.tournamentId;
-    let roundId = this.team.round.roundId;
-    this.sub = this.bettingService.getPlayers(tournamentId,roundId).subscribe({
-      next: p => {
-        this.players = p;
-        this.filteredPlayers = this.players;
-        this.leagues = this.getLeagues( p );
-      },
-      error: err => this.errorMessage = err
-    });
+    console.log("loadPlayersInRound:"+JSON.stringify(this.team));
+    if( this.team ){
+        let tournamentId = this.team.tournament.tournamentId;
+        let roundId = this.team.round.roundId;
+        this.sub = this.bettingService.getPlayers(tournamentId,roundId).subscribe({
+          next: p => {
+            this.players = p;
+            this.filteredPlayers = this.players;
+            this.leagues = this.getLeagues( p );
+          },
+          error: err => this.errorMessage = err
+        });
+    }
   }
 
   getLeagues( players : IPlayerStatsPerRound[] ){

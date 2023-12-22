@@ -1,7 +1,7 @@
 [
     {
         "user": {
-            "userId": 1,
+            "userId": "1",
             "userName": "anitsuga"
         },
         "tournament": { 
@@ -171,7 +171,7 @@
     },
     {
         "user": {
-            "userId": 1,
+            "userId": "1",
             "userName": "anitsuga"
         },
         "tournament": { 
@@ -305,7 +305,7 @@
     },
     {
         "user": {
-            "userId": 1,
+            "userId": "1",
             "userName": "anitsuga"
         },
         "tournament": { 
@@ -381,7 +381,7 @@
     },
     {
         "user": {
-            "userId": 1,
+            "userId": "1",
             "userName": "anitsuga"
         },
         "tournament": { 
@@ -428,7 +428,7 @@
     },
     {
         "user": {
-            "userId": 2,
+            "userId": "2",
             "userName": "marce"
         },
         "tournament": { 
@@ -563,7 +563,7 @@
     },
     {
         "user": {
-            "userId": 2,
+            "userId": "2",
             "userName": "marce"
         },
         "tournament": { 

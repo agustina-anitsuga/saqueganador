@@ -1,22 +1,22 @@
 [
     {
-        "userId": 1,
+        "userId": "1",
         "userName": "anitsuga"
     },
     { 
-        "userId": 2,
+        "userId": "2",
         "userName": "marce"
     },
     {
-        "userId": 3,
+        "userId": "3",
         "userName": "debbie"
     },
     {
-        "userId": 4,
+        "userId": "4",
         "userName": "martin"
     },
     {
-        "userId": 5,
+        "userId": "5",
         "userName": "juli"
     }
 ]

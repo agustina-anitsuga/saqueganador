@@ -3,6 +3,8 @@ import { Subscription } from "rxjs";
 import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer } from "../shared/model";
 import { ActivatedRoute, Router } from '@angular/router';
 import { BettingService } from "./betting.service";
+import { AuthenticatorService } from '@aws-amplify/ui-angular'
+
 
 @Component({
   selector: 'pm-team',
@@ -14,7 +16,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   pageTitle : string = "Equipo de"
 
   @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
-  private _currentUserId = NaN;
+  private _currentUserId : string = '';
 
   @Input() playerToAdd : ISelectedPlayer = emptySelectedPlayer();
 
@@ -32,7 +34,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   subTeam!: Subscription;
   subUsers!: Subscription;
 
-  constructor(private route: ActivatedRoute, private router: Router, private bettingService: BettingService) {}
+  constructor(private route: ActivatedRoute, private router: Router, private bettingService: BettingService, private authenticator: AuthenticatorService) {}
   
   set selectedUser( user: IUser ) {
     this._selectedUser = user;
@@ -57,13 +59,16 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   performFilter(user: IUser, round: IRound): ITeam {
+    console.log("performFilter ",JSON.stringify(user));
+    console.log(JSON.stringify((this.getTeamsByUser(this.teams,user))));
     let ret = this.getTeamsByRound(this.getTeamsByUser(this.teams,user),round)[0];
+    console.log(JSON.stringify(ret));
     this.teamFiltered.emit( ret );
     return ret;
   }
 
   ngOnInit(): void {
-    this._currentUserId = Number(this.route.snapshot.paramMap.get("id"));
+    this._currentUserId = "" + this.route.snapshot.paramMap.get("id");
 
     this.subUsers = this.bettingService.getGroupUsers().subscribe({
       next: u => {
@@ -90,6 +95,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       
       this._selectedUser = this.getCurrentUser();
       this.selectedUser = this._selectedUser ;
+      console.log("initializeSelections "+this.selectedUser);
 
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
@@ -108,7 +114,10 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getCurrentUser() : IUser {
-      return { "userId": (this._currentUserId?this._currentUserId:1), "userName": "anitsuga" } ; // TODO
+      console.log("getCurrentUser:"+this.authenticator.user?this.authenticator.user.username:null);
+      //6f834b6b-84cd-4a39-a192-a1d91966f36f
+      let ret = { "userId": ((this._currentUserId && !(this._currentUserId==="null"))?this._currentUserId:"1"), "userName": "anitsuga" } ; // TODO
+      return ret;
   }
 
   getTeamsByUser( teams : ITeam[], user : IUser ) :ITeam[] {
@@ -167,6 +176,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   maximumMultipliers() : number {
+      if( !this.filteredTeam || !this.filteredTeam.selection )  return 1;
       return this.filteredTeam.selection.length + ( (this.filteredTeam.selection.length>2)?  2 : 1 );
   }
 
