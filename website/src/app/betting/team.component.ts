@@ -13,7 +13,7 @@ import { AuthenticatorService } from '@aws-amplify/ui-angular'
 })
 export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
-  pageTitle : string = "Equipo de"
+  pageTitle : string = "Equipo "
 
   @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
   private _currentUserId : string = '';
@@ -68,8 +68,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
     this._currentUserId = "" + this.route.snapshot.paramMap.get("id");
 
     this.subUsers = this.bettingService.getGroupUsers().subscribe({
-      next: u => {
-        this.users = u;
+      next: ur => {
+        this.users = this.sortUsers(ur.Items);
         this.initializeSelections();
       },
       error: err => this.errorMessage = err
@@ -77,8 +77,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
     this.subTeam = this.bettingService.getTeams().subscribe({
       next: t => {
-        this.teams = t;
-        this.rounds = this.getRounds(t);
+        this.teams = t.Items;
+        this.rounds = this.getRounds(this.teams);
         this.initializeSelections();
       },
       error: err => this.errorMessage = err
@@ -96,6 +96,11 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
 
+  sortUsers( users:IUser[] ){
+    return users.sort(function(a, b){
+      return a.userName.toLowerCase() < b.userName.toLowerCase() ? -1 : 
+        ( a.userName.toLowerCase() > b.userName.toLowerCase() ? 1 : 0 ) });
+  }
 
   shouldDisplayTotalScore(){
     return this.filteredTeam && this.filteredTeam.score>=0;
@@ -115,8 +120,9 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
           // a user was selected using the url parameter
           ret = { "userId": this._currentUserId, "userName": "" } ; 
       } else if (this.authenticator.user) {
-          // a user is logged in       //6f834b6b-84cd-4a39-a192-a1d91966f36f
-          ret = { "userId": "1", "userName": "anitsuga" } ; // TODO
+          // a user is logged in   
+          ret = { "userId": this.authenticator.user.getUsername(), 
+                  "userName": '' } ; 
       }
       return ret;
   }
@@ -202,6 +208,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
               break;
             }
         }
+        this.saveTeam();
       } 
   }
 
@@ -209,7 +216,21 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
     let index = this.filteredTeam.selection.findIndex( 
           elem => elem.playerStats.player.playerId === player.playerStats.player.playerId );
     this.filteredTeam.selection[index] = emptySelectedPlayer();
+
+    this.saveTeam();
   }  
+
+  multiplierAdded( player:ISelectedPlayer ){ 
+    this.saveTeam();
+  }  
+
+  multiplierRemoved( player:ISelectedPlayer ){ 
+    this.saveTeam();
+  }  
+
+  saveTeam(){
+    this.bettingService.saveTeam(this.filteredTeam);
+  }
 
   @Output() 
   teamFiltered: EventEmitter<ITeam> = new EventEmitter<ITeam>();

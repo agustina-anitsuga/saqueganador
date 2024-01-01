@@ -1,7 +1,6 @@
 export interface ITournament {
   tournamentId: number;
   tournamentName: string;
-  currentRound: IRound;
 }
 
 export interface IRound {
@@ -55,6 +54,7 @@ export interface ISelectedPlayer {
   }
 
 export interface ITeam {
+    teamId: string;
     user: IUser;
     tournament : ITournament;
     round : IRound;
@@ -65,13 +65,13 @@ export interface ITeam {
 export function emptyTournament() : ITournament{
   return {
     tournamentId: NaN,
-    tournamentName: '',
-    currentRound: emptyRound()
+    tournamentName: ''
   };
 }
 
 export function emptyTeam() : ITeam {
     return { 
+      teamId: '',
       user: emptyUser(),
       tournament: emptyTournament(), 
       round: emptyRound(), 

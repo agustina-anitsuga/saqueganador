@@ -1,0 +1,52 @@
+{
+    "version": "2.0",
+    "routeKey": "$default",
+    "rawPath": "/",
+    "rawQueryString": "",
+    "headers": {
+        "x-amzn-lambda-proxying-cell": "0",
+        "content-length": "0",
+        "x-amzn-tls-version": "TLSv1.2",
+        "sec-fetch-site": "none",
+        "x-forwarded-port": "443",
+        "sec-fetch-user": "?1",
+        "x-amzn-lambda-proxy-auth": "HmacSHA256, SignedHeaders=x-amzn-lambda-forwarded-client-ip;x-amzn-lambda-forwarded-host;x-amzn-lambda-proxying-cell, Signature=dVwBgYr26Q2mnN4PyWPEnTE+MQFwLdpVB2CfJ4srNTg=",
+        "x-amzn-tls-cipher-suite": "ECDHE-RSA-AES128-GCM-SHA256",
+        "sec-ch-ua-mobile": "?0",
+        "host": "odjpqrorkgq4tvy2puima2tcra0mpkfb.cell-1-lambda-url.us-east-1.on.aws",
+        "upgrade-insecure-requests": "1",
+        "x-amzn-lambda-forwarded-host": "odjpqrorkgq4tvy2puima2tcra0mpkfb.lambda-url.us-east-1.on.aws",
+        "cache-control": "max-age=0",
+        "sec-fetch-mode": "navigate",
+        "accept-language": "es-ES,es;q=0.9,en;q=0.8,it;q=0.7",
+        "x-forwarded-proto": "https",
+        "x-forwarded-for": "181.171.84.171",
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+        "x-amzn-lambda-forwarded-client-ip": "181.171.84.171",
+        "sec-ch-ua": "\"Google Chrome\";v=\"119\", \"Chromium\";v=\"119\", \"Not?A_Brand\";v=\"24\"",
+        "x-amzn-trace-id": "Self=1-65862f73-754494b212fcfa6d5d4e1ad2;Root=1-65862f73-09f9fc843714ac5f27d8c7af",
+        "sec-ch-ua-platform": "\"macOS\"",
+        "accept-encoding": "gzip, deflate, br",
+        "sec-fetch-dest": "document",
+        "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+    },
+    "requestContext": {
+        "accountId": "anonymous",
+        "apiId": "odjpqrorkgq4tvy2puima2tcra0mpkfb",
+        "domainName": "odjpqrorkgq4tvy2puima2tcra0mpkfb.cell-1-lambda-url.us-east-1.on.aws",
+        "domainPrefix": "odjpqrorkgq4tvy2puima2tcra0mpkfb",
+        "http": {
+            "method": "GET",
+            "path": "/",
+            "protocol": "HTTP/1.1",
+            "sourceIp": "181.171.84.171",
+            "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+        },
+        "requestId": "d329bf37-173a-43f3-9fbf-08288a80f80e",
+        "routeKey": "$default",
+        "stage": "$default",
+        "time": "23/Dec/2023:00:53:07 +0000",
+        "timeEpoch": 1703292787528
+    },
+    "isBase64Encoded": false
+}

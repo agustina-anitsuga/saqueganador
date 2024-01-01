@@ -12,9 +12,9 @@ export const handler = async (event) => {
             {
                 TableName: 'SaqueGanador-Users',
                 Item: {
-                    Id: event.request.userAttributes.sub,
-                    User: event.request.userAttributes.preferred_username,
-                    RequestTime: new Date().toISOString(),
+                    userId: event.request.userAttributes.sub,
+                    userName: event.request.userAttributes.preferred_username,
+                    creationTime: new Date().toISOString(),
                 },
             }
             );

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, tap, throwError } from "rxjs";
 
@@ -7,14 +7,29 @@ import { ITeam } from "../shared/model";
 import { ITournament } from "../shared/model";
 import { IPlayerStatsPerRound } from "../shared/model";
 
+import { environment } from '../../environments/environment';
+
+
+export interface IUserResponse {
+  $metadata: object;
+  Count: number;
+  Items: IUser[];
+}
+
+export interface ITeamResponse {
+  $metadata: object;
+  Count: number;
+  Items: ITeam[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class BettingService {
 
-    private teamUrl = 'api/betting/teams.json';
+    private teamUrl = environment.teamUrl;
     private playersUrl = 'api/betting/players';
-    private usersUrl = 'api/betting/users.json';
+    private usersUrl = environment.usersUrl;
     private tournamentUrl = 'api/betting/tournament.json';
     
     constructor( private http : HttpClient ) {}
@@ -26,9 +41,9 @@ export class BettingService {
         );
     }
 
-    getTeams(): Observable<ITeam[]> {
-        return this.http.get<ITeam[]>(this.teamUrl).pipe(
-            tap( data => console.log('All:', JSON.stringify(data)) ),
+    getTeams(): Observable<ITeamResponse> {
+        return this.http.get<ITeamResponse>(this.teamUrl).pipe(
+            //tap( data => console.log('All:', JSON.stringify(data)) ),
             catchError( this.handleError ) 
         );
     }
@@ -37,16 +52,34 @@ export class BettingService {
       let url = this.playersUrl+"-"+(roundId?roundId:1)+".json";
       console.log(url);
       return this.http.get<IPlayerStatsPerRound[]>(url).pipe(
-          tap( data => console.log('All:', JSON.stringify(data)) ),
+          //tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 
       );
     }
 
-    getGroupUsers(): Observable<IUser[]> {
-      return this.http.get<IUser[]>(this.usersUrl).pipe(
-          tap( data => console.log('All:', JSON.stringify(data)) ),
+    getGroupUsers(): Observable<IUserResponse> {
+      let ret = this.http.get<IUserResponse>(this.usersUrl).pipe(
+          //tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 
       );
+      return ret;
+    }
+
+    saveTeam( team : ITeam ) { //: Observable<ITeam> {
+      let saveTeamUrl = this.teamUrl + team.teamId;
+      //const headerHttp = new HttpHeaders();
+      //headerHttp.set('Content-Type', 'application/json');
+      console.log(saveTeamUrl)
+      // ret = this.http.post<ITeam>(saveTeamUrl, team, {  headers: headerHttp, withCredentials: true } )
+      //  .pipe(catchError(this.handleError));
+
+      let ret = this.http.post<ITeam>(saveTeamUrl, team)
+      .pipe(
+        //tap( data => console.log('All:', JSON.stringify(data)) ),
+        catchError( this.handleError )).subscribe(response => console.log('subscribe'));
+
+      console.log('savedTeam');
+      return ret;
     }
 
     private handleError(err: HttpErrorResponse): Observable<never> {

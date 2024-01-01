@@ -1,0 +1,145 @@
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+
+
+const client = new DynamoDBClient({
+  region: process.env.AWS_REGION,
+});
+const documentClient = DynamoDBDocument.from(client);
+
+
+export const handler = async (event) => {
+    console.log('Received event:', JSON.stringify(event, null, 2));
+
+    let body;
+    let users;
+    let statusCode = '200';
+    let ranking = [];
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    let minRound = 1;
+    let maxRound = 1;
+    let tournamentId = 1;
+
+    try {
+        console.log('Started ranking update');
+        users = await documentClient.scan({ TableName: 'SaqueGanador-Users' });
+        for (const user of users.Items) {
+            console.log('Started calculating ranking for user '+ JSON.stringify(user));
+            for( let roundId = minRound; roundId<=maxRound; roundId++ ){
+              let r = await createRanking( user, tournamentId, roundId);
+              ranking.push(r);
+            }
+            console.log('Finished calculating ranking for user '+user["userName"]);
+        };
+        console.log('Finished ranking update');
+    } catch (err) {
+        console.log('Error generating round '+err);
+        statusCode = '400';
+        body = err.message;
+    } finally {
+        body = JSON.stringify(ranking);
+    }
+
+    return {
+        statusCode,
+        body,
+        headers,
+    };
+};
+
+export const createRanking = async (pUser , pTournamentId, pRoundId) =>  {
+    console.log('begin createRanking '+ JSON.stringify(pUser) );
+    let ranking = null;
+    
+    try {
+        // create the key for the new instances
+        let key = pTournamentId + '-' + pRoundId + '-' + pUser.userId;
+        console.log('key createRanking '+ key);
+    
+        // fetch team from db if exists
+        let teamResult = await getTeam(key);
+        let team = teamResult.Item;
+        if( team ){
+            // updatescore in team
+            let score = 0; 
+            for (const selection of team.selection){
+                score += selection.playerScore;
+            }
+            team.score = score;
+            await saveTeam( team );
+            
+            // generate ranking entry
+            ranking = getRanking(key);
+            if(!ranking){
+                ranking = {
+                    tournament: team.tournament,
+                    round: team.round,
+                    user: pUser,
+                    score: 0,
+                    position: 0
+                };
+            };
+            ranking.score = team.score;
+            await saveRanking( ranking );
+        } 
+        
+    } catch ( err ){
+        console.log('error createRanking '+ err);
+    }
+    
+    console.log('end createRanking' );
+    return ranking;
+}
+
+export const saveTeam = async (team) =>  {
+    let ret = null;
+    console.log('begin saveTeam '+JSON.stringify(team));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Teams',
+          Item: team
+        };
+        ret = await documentClient.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveTeam '+JSON.stringify(ret));
+    return ret;
+}
+
+export const saveRanking = async (ranking) =>  {
+    let ret = null;
+    console.log('begin saveRanking '+JSON.stringify(ranking));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Ranking',
+          Item: ranking
+        };
+        ret = await documentClient.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveRanking '+JSON.stringify(ret));
+    return ret;
+}
+
+export const getTeam = async(key) => {
+    let team = await documentClient.get({
+              TableName: "SaqueGanador-Teams",
+              Key: {teamId: key},
+            });
+    return team;
+}
+
+export const getRanking = async(key) => {
+    let ranking = await documentClient.get({
+              TableName: "SaqueGanador-Ranking",
+              Key: {rankingId: key},
+            });
+    return ranking;
+}
+
+

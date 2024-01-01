@@ -41,9 +41,9 @@ export class RankingComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.rankingService.getRanking().subscribe({
       next: r => {
-        this.ranking = r;
-        this.filteredRanking = this.getGlobalRanking(r);
-        this.rounds = this.getRounds(r);
+        this.ranking = r.Items;
+        this.filteredRanking = this.getGlobalRanking(this.ranking);
+        this.rounds = this.getRounds(this.ranking);
       },
       error: err => this.errorMessage = err
     });
@@ -54,7 +54,7 @@ export class RankingComponent implements OnInit, OnDestroy {
   }
 
   getRounds( ranking : IRanking[] ) {
-    return this.deDuplicate( ranking.map((r: IRanking) => r.round) );
+    return this.sortRounds( this.deDuplicate( ranking.map((r: IRanking) => r.round) ) );
   }
 
   deDuplicate( rounds : IRound[] ){
@@ -69,6 +69,10 @@ export class RankingComponent implements OnInit, OnDestroy {
 
   sortRanking( ranking : IRanking[] ){
     return ranking.sort(function(a, b){return a.position - b.position });
+  }
+
+  sortRounds( rounds : IRound[] ){
+    return rounds.sort(function(a, b){return a.sortOrder - b.sortOrder });
   }
 
   ngOnDestroy(): void {

@@ -3,7 +3,7 @@
       {{pageTitle}}
     </div>
     <div class='card-body'>
-      <div class='row'>
+      <div class='row' *ngIf = 'ranking.length'>
         <div class='col-md-1'>Ronda:</div>
         <div class='col-md-2'>
           <select [(ngModel)]="selectedRound"> 

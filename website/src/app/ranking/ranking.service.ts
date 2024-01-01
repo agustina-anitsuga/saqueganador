@@ -3,21 +3,25 @@ import { Injectable } from "@angular/core";
 import { Observable, catchError, tap, throwError, map } from "rxjs";
 
 import { IRanking } from "../shared/model";
+import { environment } from '../../environments/environment';
+
+export interface IRankingResponse {
+  $metadata: object;
+  Count: number;
+  Items: IRanking[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class RankingService {
 
-    // If using Stackblitz, replace the url with this line
-    // because Stackblitz can't find the api folder.
-    // private productUrl = 'assets/products/products.json';
-    private productUrl = 'api/ranking/ranking.json';
+    private rankingUrl = environment.rankingUrl;
     
     constructor( private http : HttpClient ) {}
 
-    getRanking(): Observable<IRanking[]> {
-        return this.http.get<IRanking[]>(this.productUrl).pipe(
+    getRanking(): Observable<IRankingResponse> {
+        return this.http.get<IRankingResponse>(this.rankingUrl).pipe(
             tap( data => console.log('All:', JSON.stringify(data)) ),
             catchError( this.handleError ) 
         );
