@@ -68,7 +68,14 @@ export class RankingComponent implements OnInit, OnDestroy {
   }
 
   sortRanking( ranking : IRanking[] ){
-    return ranking.sort(function(a, b){return a.position - b.position });
+    return ranking.sort(function(a, b){
+        let adiff = a.position - b.position;
+        return (adiff === 0) ? 
+          (
+            ( a.user.userName.toLowerCase() < b.user.userName.toLowerCase() ? -0.1 : 
+            ( a.user.userName.toLowerCase() > b.user.userName.toLowerCase() ? 0.1 : 0 )) 
+          ): adiff;
+    });
   }
 
   sortRounds( rounds : IRound[] ){

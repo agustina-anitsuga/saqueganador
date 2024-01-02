@@ -24,17 +24,11 @@ export const handler = async (event) => {
     let tournamentId = 1;
 
     try {
-        console.log('Started ranking update');
-        users = await documentClient.scan({ TableName: 'SaqueGanador-Users' });
-        for (const user of users.Items) {
-            console.log('Started calculating ranking for user '+ JSON.stringify(user));
-            for( let roundId = minRound; roundId<=maxRound; roundId++ ){
-              let r = await createRanking( user, tournamentId, roundId);
-              ranking.push(r);
-            }
-            console.log('Finished calculating ranking for user '+user["userName"]);
-        };
-        console.log('Finished ranking update');
+        
+        ranking = await calculateScores( minRound, maxRound, tournamentId );
+        
+        ranking = await calculatePositions( minRound, maxRound, tournamentId );
+        
     } catch (err) {
         console.log('Error generating round '+err);
         statusCode = '400';
@@ -50,14 +44,149 @@ export const handler = async (event) => {
     };
 };
 
-export const createRanking = async (pUser , pTournamentId, pRoundId) =>  {
-    console.log('begin createRanking '+ JSON.stringify(pUser) );
+export const calculatePositions = async( minRound, maxRound, tournamentId ) => {
+    let ranking = [];
+    console.log('Begin Calculating ranking positions');
+    for( let roundId = minRound; roundId<=maxRound; roundId++ ){
+        let rankingsPerRound = await getRankingsPerRound( tournamentId, roundId );
+        let sortedRankingsPerRound = await sortRankings(rankingsPerRound.Items);
+        let position = 0;
+        let lastScore = -1;
+        for( let i=0; i<sortedRankingsPerRound.length; i++){
+            let r = sortedRankingsPerRound[i];
+            if( !(r.score === lastScore) ){
+                position = position +1;
+            }
+            r.position = position;
+            lastScore = r.score;
+            await saveRanking(r);
+            ranking.push(r);
+        }
+        console.log('calculated ranking positions in round '+roundId+'->'+JSON.stringify(ranking));
+    }
+    let globalRankings = await getGlobalRankings( tournamentId );
+    let sortedGlobalRankings = await sortRankings(globalRankings.Items);
+    let position = 0;
+    let lastScore = -1;
+    for( let i=0; i<sortedGlobalRankings.length; i++){
+        let r = sortedGlobalRankings[i];
+        if( !(r.score === lastScore) ){
+            position = position +1;
+        }
+        r.position = position;
+        lastScore = r.score;
+        await saveRanking(r);
+        ranking.push(r);
+    }
+    console.log('calculated global ranking positions ->'+JSON.stringify(ranking));
+    
+    console.log('End Calculating ranking positions');
+    return ranking;
+}
+
+export const sortRankings = ( rankings ) => {
+    console.log('to sort '+JSON.stringify(rankings));
+    return rankings.sort( function(a, b){ a.score - b.score } );
+}
+
+export const calculateScores = async( minRound, maxRound, tournamentId ) => {
+    console.log('Started calculateScores');
+    let ranking = [];
+    let users = await documentClient.scan({ TableName: 'SaqueGanador-Users' });
+    for (const user of users.Items) {
+        console.log('Started calculateScores for user '+ JSON.stringify(user));
+        let userGlobalScore = 0;
+        let r = null;
+        for( let roundId = minRound; roundId<=maxRound; roundId++ ){
+          r = await processRanking( user, tournamentId, roundId);
+          userGlobalScore += r.score;
+          ranking.push(r);
+        }
+        if( r ){
+            console.log('before processing global ranking r is '+JSON.stringify(r));
+            await processGlobalRanking( user, r.tournament, userGlobalScore );
+        }
+        console.log('Finished calculateScores for user '+user["userName"]);
+    };
+    console.log('Finished calculateScores');
+    return ranking;
+}
+
+export const getRankingsPerRound = async( pTournamentId, pRoundId ) => {
+    const partialKey = pTournamentId + '-' + pRoundId + '-';
+    console.log('begin getRankingsPerRound '+ partialKey );
+    const params = {
+        TableName: 'SaqueGanador-Ranking',
+        ScanFilter: {
+           "rankingId": {
+                ComparisonOperator: "BEGINS_WITH",
+                AttributeValueList: [partialKey]
+           }
+        }
+    };
+    let rankings = await documentClient.scan(params);
+    console.log('end getRankingsPerRound' );
+    return rankings;
+}
+
+export const getGlobalRankings = async( pTournamentId ) => {
+    const partialKey = pTournamentId + '--';
+    console.log('begin getGlobalRankings '+ partialKey );
+    const params = {
+        TableName: 'SaqueGanador-Ranking',
+        ScanFilter: {
+           "rankingId": {
+                ComparisonOperator: "BEGINS_WITH",
+                AttributeValueList: [partialKey]
+           }
+        }
+    };
+    let rankings = await documentClient.scan(params);
+    console.log('end getGlobalRankings' );
+    return rankings;
+}
+
+export const processGlobalRanking = async (pUser , pTournament, pUserGlobalScore) =>  {
+    console.log('begin processGlobalRanking '+ JSON.stringify(pUser) + ' ' + JSON.stringify(pTournament) + ' ' + pUserGlobalScore);
+
+    let ranking = null;
+    
+    try {
+        // create the key for the new instances
+        let key = pTournament.tournamentId + '--' + pUser.userId;
+        console.log('key processGlobalRanking '+ key);
+            
+        // generate ranking entry
+        ranking = getRanking(key).Item;
+        if(!ranking){
+            ranking = {
+                rankingId: key,
+                tournament: pTournament,
+                round: { roundId: null, roundName: '',  sortOrder: 0 },
+                user: pUser,
+                score: 0,
+                position: 0
+            };
+        };
+        ranking.score = pUserGlobalScore;
+        await saveRanking( ranking );
+        
+    } catch ( err ){
+        console.log('error processGlobalRanking '+ err);
+    }
+    
+    console.log('end processGlobalRanking' );
+    return ranking;
+}
+
+export const processRanking = async (pUser , pTournamentId, pRoundId) =>  {
+    console.log('begin processRanking '+ JSON.stringify(pUser) );
     let ranking = null;
     
     try {
         // create the key for the new instances
         let key = pTournamentId + '-' + pRoundId + '-' + pUser.userId;
-        console.log('key createRanking '+ key);
+        console.log('key processRanking '+ key);
     
         // fetch team from db if exists
         let teamResult = await getTeam(key);
@@ -72,9 +201,10 @@ export const createRanking = async (pUser , pTournamentId, pRoundId) =>  {
             await saveTeam( team );
             
             // generate ranking entry
-            ranking = getRanking(key);
+            ranking = getRanking(key).Item;
             if(!ranking){
                 ranking = {
+                    rankingId: key,
                     tournament: team.tournament,
                     round: team.round,
                     user: pUser,
@@ -87,10 +217,10 @@ export const createRanking = async (pUser , pTournamentId, pRoundId) =>  {
         } 
         
     } catch ( err ){
-        console.log('error createRanking '+ err);
+        console.log('error processRanking '+ err);
     }
     
-    console.log('end createRanking' );
+    console.log('end processRanking' );
     return ranking;
 }
 
