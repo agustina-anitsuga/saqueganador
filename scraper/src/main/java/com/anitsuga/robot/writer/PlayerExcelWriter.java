@@ -33,6 +33,8 @@ public class PlayerExcelWriter extends ExcelWriter {
             "Coach",
             "Profile Pic Url",
             "Biography",
+            "Ranking",
+            "Win Ratio",
             "League Profile Url",
             "Source"
     };
@@ -67,6 +69,8 @@ public class PlayerExcelWriter extends ExcelWriter {
         writeField(row,result.getCoach(),columnCount++);
         writeField(row,result.getProfilePicUrl(),columnCount++);
         writeField(row,result.getBiography(),columnCount++);
+        writeField(row,result.getRanking()==null?null:result.getRanking().toString(),columnCount++);
+        writeField(row,result.getWinRatio(),columnCount++);
         writeField(row,result.getLeagueProfileUrl(),columnCount++);
         writeField(row,result.getSource(),columnCount++);
     }

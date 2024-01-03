@@ -69,13 +69,14 @@ public class EspnATPPlayerRobot extends AbstractRobot {
                 .fullName(page.getFullName())
                 .firstName(page.getFirstName())
                 .lastName(page.getLastName())
-                .birthDate(page.getBirthDate())
+                //.birthDate(page.getBirthDate())
                 .gameStyle(page.getGameStyle())
                 .nationality(page.getNationality())
                 .yearTurnedPro(page.getYearTurnedPro())
                 .heightInCm(page.getHeightInCm())
                 .weightInKilos(page.getWeightInKilos())
                 .profilePicUrl(page.getProfilePicUrl())
+                .winRatio(page.getWinRatio())
                 .league(AppProperties.getInstance().getProperty("atp.league"))
                 .build();
         player.setLeagueProfileUrl(this.getLeagueProfileUrl(player));

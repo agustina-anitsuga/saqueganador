@@ -40,7 +40,7 @@ public class EspnATPPlayerPage extends Page {
     private WebElement gameStyle;
     @FindBy(xpath = "//*[@class=\"general-info\"]/li[3]")
     private WebElement yearTurnedPro;
-    @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"]/li[2]")
+    @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"]/li[1]")
     private WebElement birthDate;
     @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"]/li[4]")
     private WebElement heightInInches;
@@ -48,6 +48,9 @@ public class EspnATPPlayerPage extends Page {
     private WebElement heightInInchesV2;
     @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"][3]/li[1]")
     private WebElement heightInInchesV3;
+
+    @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"]/li[3]")
+    private WebElement heightInInchesV4;
     @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"]/li[5]")
     private WebElement weightInPounds;
     @FindBy(xpath = "//*[@class=\"player-metadata floatleft last\"]/li[1]")
@@ -56,8 +59,13 @@ public class EspnATPPlayerPage extends Page {
     private WebElement weightInPoundsV3;
     @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"][3]/li[2]")
     private WebElement weightInPoundsV4;
+    @FindBy(xpath = "//*[@class=\"player-metadata floatleft\"]/li[4]")
+    private WebElement weightInPoundsV5;
     @FindBy(xpath = "//*[@class=\"main-headshot\"]/img")
     private WebElement profilePicUrl;
+    @FindBy(xpath = "//*[@class=\"career\"]/td[3]")
+    private WebElement winRatio;
+
 
     /**
      * Default constructor
@@ -91,6 +99,16 @@ public class EspnATPPlayerPage extends Page {
             ret = this.nationality.getText();
         } catch(Exception e ){
             LOGGER.error("Cannot obtain nationality for {}", this.getFullName());
+        }
+        return ret;
+    }
+
+    public String getWinRatio(){
+        String ret = null;
+        try {
+            ret = this.winRatio.getText();
+        } catch(Exception e ){
+            LOGGER.error("Cannot obtain winRatio for {}", this.getFullName());
         }
         return ret;
     }
@@ -138,7 +156,7 @@ public class EspnATPPlayerPage extends Page {
 
     public Integer getHeightInCm() {
         Integer ret = null;
-        List<WebElement> elements = Arrays.asList(this.heightInInches,this.heightInInchesV2,this.heightInInchesV3);
+        List<WebElement> elements = Arrays.asList(this.heightInInches,this.heightInInchesV2,this.heightInInchesV3,this.heightInInchesV4);
         for (WebElement element: elements) {
             ret = this.parseHeightInCm(element);
             if (ret != null) break;
@@ -171,7 +189,8 @@ public class EspnATPPlayerPage extends Page {
                     this.weightInPounds,
                     this.weightInPoundsV2,
                     this.weightInPoundsV3,
-                    this.weightInPoundsV4);
+                    this.weightInPoundsV4,
+                    this.weightInPoundsV5);
         for (WebElement element: elements) {
             ret = this.parseWeightInCm(element);
             if (ret != null) break;

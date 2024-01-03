@@ -27,6 +27,9 @@ public class WTARankingPage extends Page {
     @FindBy(xpath = "//*[@class=\"rankings__row\"]/td/a[@class=\"rankings__player-link rankings__player-link--chrome\"]")
     private List<WebElement> players;
 
+    @FindBy(xpath = "//*[@class=\"btn rankings__show-more js-mobile-load-more\"]")
+    private WebElement loadMoreBtn;
+
     /**
      * Default constructor
      *
@@ -53,16 +56,21 @@ public class WTARankingPage extends Page {
      * forceLoadOnScroll
      */
     public void forceLoadOnScroll(){
-        int numScrolls = 20;
-        int sleepTime = 1500;
+        int numScrolls = 6;
+        int sleepTime = 3000;
 
         try {
             for( int i=1; i<=numScrolls; i++){
                 String command = String.format("window.scrollTo(0, %d*document.body.scrollHeight/%d);",i,numScrolls);
                 ((JavascriptExecutor) this.driver).executeScript(command);
+
+                if( loadMoreBtn.isDisplayed() ){
+                    loadMoreBtn.click();
+                }
+
                 Thread.sleep(sleepTime);
             }
-        } catch (InterruptedException e) {
+        } catch (Throwable e) {
             LOGGER.error("Error scrolling page down",e);
         }
     }

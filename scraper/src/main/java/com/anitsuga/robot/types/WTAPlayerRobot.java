@@ -56,9 +56,11 @@ public class WTAPlayerRobot extends AbstractRobot {
                 .heightInCm(page.getHeightInCm())
                 .birthDate(page.getBirthDate())
                 .profilePicUrl(page.getProfilePicUrl())
-                .biography(page.getBiography())
+                .ranking(page.getRanking())
+                .winRatio(page.getWinRatio())
                 .nationality(page.getNationality())
                 .leagueProfileUrl(url)
+                .biography(page.getBiography())
                 .league(AppProperties.getInstance().getProperty("wta.league"))
                 .build();
         player.setSource(url);
