@@ -1,0 +1,86 @@
+[
+    {
+        "matchId": "1-1-1-1.1.1",
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "a": {
+            "player" : {
+                "league": {
+                    "leagueId": 1,
+                    "leagueName": "ATP"
+                },
+                "playerId": 1,
+                "playerName" : "Carlos Alcaraz",
+                "playerProfilePic": "https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/3782.png&w=350&h=254",
+                "playerProfileUrl": "https://www.atptour.com/en/players/carlos-alcaraz/a0e2/overview",
+                "ranking":2,
+                "winRatio":78
+            },
+            "pointsToAward": 50  
+        },
+        "b": {
+            "player" : {
+                "league": {
+                    "leagueId": 1,
+                    "leagueName": "ATP"
+                },
+                "playerId": 2,
+                "playerName" : "Rafael Nadal",
+                "playerProfilePic": "https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/261.png&w=350&h=254",
+                "playerProfileUrl": "https://www.atptour.com/en/players/rafael-nadal/n409/overview",
+                "ranking":263,
+                "winRatio":78
+            },
+            "pointsToAward": 150  
+        }
+    },
+    {
+        "matchId": "1-1-1-1.1.2",
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "a" : {
+            "player" : {
+                "league": {
+                    "leagueId": 1,
+                    "leagueName": "ATP"
+                },
+                "playerId": 3,
+                "playerName" : "Novak Djokovic",
+                "playerProfilePic": "https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/296.png&w=350&h=254",
+                "playerProfileUrl": "https://www.atptour.com/en/players/novak-djokovic/d643/overview",
+                "ranking":1,
+                "winRatio":82
+            },
+            "pointsToAward": 50  
+        },
+        "b" : {
+            "player" : {
+                "league": {
+                    "leagueId": 1,
+                    "leagueName": "ATP"
+                },
+                "playerId": 4,
+                "playerName" : "Daniil Medvedev",
+                "playerProfilePic": "https://a.espncdn.com/combiner/i?img=/i/headshots/tennis/players/full/2383.png&w=350&h=254",
+                "playerProfileUrl": "https://www.atptour.com/en/players/daniil-medvedev/mm58/overview",
+                "ranking":4,
+                "winRatio":70
+            },
+            "pointsToAward": 80  
+        }
+    }
+]

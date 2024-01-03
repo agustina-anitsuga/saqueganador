@@ -1,0 +1,30 @@
+.nav-link {
+  font-size: large;
+}
+
+.header{
+  background-color:#096A2E;
+  background: #096A2E;
+}
+
+.tournament{
+  color: #ecd659;
+  padding-right:1%;
+  font-size: large;
+}
+
+.nav-item{
+  padding-left:5px;
+  padding-right:5px;
+  font-size: large;
+}
+
+.card{
+  font-size: large;
+}
+
+.logout {
+  color: #e4f7e3;
+  padding-top: 0;
+  padding-bottom: 0;
+}

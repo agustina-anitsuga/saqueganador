@@ -1,0 +1,94 @@
+<div class="card h-100" >
+    <ng-container *ngIf = 'playerCanBeRemoved(selectedPlayer)' >
+        <span class="pull-right clickable close-icon playnice" data-effect="fadeOut" 
+                  (click)='confirmPlayerRemoval()'>
+            <i class="fa fa-times"></i>
+        </span>
+    </ng-container>
+    <ng-container *ngIf = 'playerCanNotBeRemoved(selectedPlayer)' >
+      <span class="pull-right playnice" data-effect="fadeOut" >
+            <i class="fa fa-thumb-tack"></i> 
+      </span>
+    </ng-container>
+    <div class="card-block">
+        <div>
+          <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+              <div class="row center">
+                  <div>
+                      <div class="crop-container">
+                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+                          <img src="{{selectedPlayer.playerStats.player.playerProfilePic}}" style="width:100%"/>
+                        </a>
+                      </div>  
+                      <div>                  
+                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+                          {{ selectedPlayer.playerStats.player.playerName }}
+                        </a>
+                      </div>
+                      <div>Puntos en juego {{ selectedPlayer.playerStats.pointsToAward }}</div> 
+                  </div>
+              </div>
+          </ng-container>
+          <ng-container *ngIf = 'shouldDisplayPendingSelection(selectedPlayer)'>
+              <div>
+                <img src="assets/images/yellow-question-mark.png" >
+              </div>
+          </ng-container>
+          <ng-container *ngIf = 'shouldDisplayPendingResult(selectedPlayer)'>
+            <div >
+              <img src="assets/images/yellow-question-mark.png" >
+            </div>
+          </ng-container>
+          <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+              <div>
+                <pm-multiplier 
+                    [multiplier]='selectedPlayer.playerMultiplier' 
+                    [mode]='mode' 
+                    [player]='selectedPlayer'
+                    [maximumMultipliers]='maximumMultipliersPerPlayer()'
+                    (multiplierAdded)='confirmMultiplierAdded()'
+                    (multiplierRemoved)='confirmMultiplierRemoved()'>
+                </pm-multiplier>
+              </div>
+          </ng-container>
+          <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+              <div>
+                  <ng-container *ngIf = 'selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
+                  <ng-container *ngIf = '!selectedPlayer.played'>Resultado Pendiente</ng-container>
+              </div>
+          </ng-container>
+        </div> 
+    </div>
+</div>
+
+
+<pm-player-modal 
+        [player]="selectedPlayer" 
+        [playerName]="selectedPlayer.playerStats.player.playerName"
+        [playerProfilePic]="selectedPlayer.playerStats.player.playerProfilePic"         
+        [message]="addMultiplierMessage()"
+        [display]="displayAddMultiplierModal"
+        (onModalAccepted)="onMultiplierAdded($event)"
+        (onModalCancelled)="modalClosed($event)">
+</pm-player-modal>
+
+<pm-player-modal 
+        [player]="selectedPlayer" 
+        [playerName]="selectedPlayer.playerStats.player.playerName"
+        [playerProfilePic]="selectedPlayer.playerStats.player.playerProfilePic" 
+        [message]="removeMultiplierMessage()"
+        [display]="displayRemoveMultiplierModal"
+        (onModalAccepted)="onMultiplierRemoved($event)"
+        (onModalCancelled)="modalClosed($event)">
+</pm-player-modal>
+
+<pm-player-modal 
+        [player]="selectedPlayer" 
+        [playerName]="selectedPlayer.playerStats.player.playerName"
+        [playerProfilePic]="selectedPlayer.playerStats.player.playerProfilePic"  
+        [message]="removePlayerMessage()"
+        [display]="displayRemovePlayerModal"
+        (onModalAccepted)="onPlayerRemoved($event)"
+        (onModalCancelled)="modalClosed($event)">
+</pm-player-modal>
+

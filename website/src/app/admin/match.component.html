@@ -1,0 +1,27 @@
+<div class='card'>
+    <div class='card-body'>
+      <div class='row'>
+        <div class="col-sm-1"></div>
+        <div class="card col-sm-4" (click)="onItemSelection(match.a)" >
+          <div  [ngClass]="{'winner': match.a.won}">
+          <div>{{ match.a.player.playerName }} </div>
+          <div>Ranking: {{match.a.player.ranking}} </div>          
+          <div>Win %: {{match.a.player.winRatio}} </div>                    
+          <div>Points to award: {{match.a.pointsToAward}} </div>
+          </div>
+        </div>
+        <div class="col-sm-2">
+          vs
+        </div>
+        <div class="card col-sm-4" (click)="onItemSelection(match.b)" >
+          <div  [ngClass]="{'winner': match.b.won}">
+          <div>{{ match.b.player.playerName }} </div>
+          <div>Ranking: {{match.b.player.ranking}} </div>          
+          <div>Win %: {{match.b.player.winRatio}} </div>                    
+          <div>Points to award: {{match.b.pointsToAward}} </div>
+          </div>
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+    </div>
+</div>

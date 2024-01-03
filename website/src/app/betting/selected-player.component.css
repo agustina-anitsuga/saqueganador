@@ -1,0 +1,14 @@
+.crop-container {
+    width: 95%;
+    height: 200px;
+    overflow: hidden;
+  }
+  
+.close-icon {
+    cursor: pointer;
+  }
+
+.playnice {
+  text-align: right !important; 
+  margin-right:2% !important;
+}

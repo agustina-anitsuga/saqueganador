@@ -1,0 +1,12 @@
+<div class='row'>
+    <div class='col-sm-2'>
+        <pm-player-selection [team]="filteredTeam"
+            (playerClicked)='onPlayerSelected($event)'>
+        </pm-player-selection>
+    </div>
+    <div class="col-sm-10">
+        <pm-team [mode]="'EDIT'" [playerToAdd]="playerToAdd" 
+            (teamFiltered)='onTeamSelected($event)'>
+        </pm-team>
+    </div>
+</div>

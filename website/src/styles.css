@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.min.css";
+@import "~font-awesome/css/font-awesome.min.css";
+
+
+div.card-header {
+ font-size: large;
+}
+
+div.card {
+  margin-top: 5px
+}
+
+.table {
+  margin-top: 5px
+}
+
+a {
+  text-decoration: none; 
+}
+a:hover {
+  text-decoration: underline;
+}
+
+li {
+  color: #ecd659;
+}
+
+a.navlink {
+  color: #e4f7e3;
+}
+
+.btn-primary, .btn-primary:hover, .btn-primary:active, .btn-primary:visited {  
+  background-color:#096A2E !important;
+}
+
+.amplify-button[data-variation='primary'] {
+  background:#096A2E;
+}
+
+.amplify-tabs-item[data-state='active'] {
+  color:#096A2E;
+}
+
+.amplify-heading {
+  color:#096A2E;
+}

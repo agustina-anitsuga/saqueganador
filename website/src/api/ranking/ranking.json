@@ -1,0 +1,257 @@
+[
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": null,
+            "roundName": "",
+            "sortOrder": 0
+        },
+        "user": {
+            "userId": "1",
+            "userName": "anitsuga"
+        },
+        "score": 120,
+        "position": 1
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": null,
+            "roundName": "",
+            "sortOrder": 0
+        },
+        "user" : {
+            "userId": "2",
+            "userName": "marce"
+        },
+        "score": 110,
+        "position": 2
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": null,
+            "roundName": "",
+            "sortOrder": 0
+        },
+        "user" : {
+            "userId": "3",
+            "userName": "debbie"
+        },
+        "score": 80,
+        "position": 3
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": null,
+            "roundName": "",
+            "sortOrder": 0
+        },
+        "user" : {
+            "userId": "4",
+            "userName": "martin"
+        },
+        "score": 8,
+        "position": 4
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round" : { 
+            "roundId": null,
+            "roundName": "",
+            "sortOrder": 0
+        },
+        "user": {
+            "userId": "5",
+            "userName": "juli"
+        },
+        "score": 0,
+        "position": 5
+    },    
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "user": {
+            "userId": "1",
+            "userName": "anitsuga"
+        },
+        "score": 80,
+        "position": 2
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "user" : {
+            "userId": "2",
+            "userName": "marce"
+        },
+        "score": 90,
+        "position": 1
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "user" : {
+            "userId": "3",
+            "userName": "debbie"
+        },
+        "score": 70,
+        "position": 3
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "user" : {
+            "userId": "4",
+            "userName": "martin"
+        },
+        "score": 1,
+        "position": 4
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1
+        },
+        "user": {
+            "userId": "5",
+            "userName": "juli"
+        },
+        "score": 0,
+        "position": 5
+    }, 
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 2,
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
+        },
+        "user": {
+            "userId": "1",
+            "userName": "anitsuga"
+        },
+        "score": 40,
+        "position": 1
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 2,
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
+        },
+        "user" : {
+            "userId": "2",
+            "userName": "marce"
+        },
+        "score": 20,
+        "position": 2
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 2,
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
+        },
+        "user" : {
+            "userId": "3",
+            "userName": "debbie"
+        },
+        "score": 10,
+        "position": 3
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 2,
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
+        },
+        "user" : {
+            "userId": "4",
+            "userName": "martin"
+        },
+        "score": 7,
+        "position": 4
+    },
+    {
+        "tournament": { 
+            "tournamentId": 1,
+            "tournamentName": "Australian Open"
+        },
+        "round": {
+            "roundId": 2,
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2
+        },
+        "user": {
+            "userId": "5",
+            "userName": "juli"
+        },
+        "score": 0,
+        "position": 5
+    }
+]
