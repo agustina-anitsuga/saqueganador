@@ -67,17 +67,11 @@ export class BettingService {
 
     saveTeam( team : ITeam ) { //: Observable<ITeam> {
       let saveTeamUrl = this.teamUrl + team.teamId;
-      //const headerHttp = new HttpHeaders();
-      //headerHttp.set('Content-Type', 'application/json');
       console.log(saveTeamUrl)
-      // ret = this.http.post<ITeam>(saveTeamUrl, team, {  headers: headerHttp, withCredentials: true } )
-      //  .pipe(catchError(this.handleError));
-
       let ret = this.http.post<ITeam>(saveTeamUrl, team)
       .pipe(
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )).subscribe(response => console.log('subscribe'));
-
       console.log('savedTeam');
       return ret;
     }

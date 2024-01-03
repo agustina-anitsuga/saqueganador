@@ -29,20 +29,17 @@ export interface ILeague {
 
 export interface IPlayer {
     league: ILeague;
-    playerId: number;
+    playerId: string;
     playerName: string;
     playerProfilePic: string;
     playerProfileUrl: string;
+    ranking: number;
+    winRatio: number;
   }
 
 export interface IPlayerStatsPerRound {
     player : IPlayer;
     pointsToAward: number;  
-  }
-
-export interface IMatch {
-    player1: IPlayerStatsPerRound;
-    player2: IPlayerStatsPerRound;
   }
 
 export interface ISelectedPlayer {
@@ -95,13 +92,7 @@ export function emptySelectedPlayer() : ISelectedPlayer {
     return { 
       position : NaN,
       playerStats : {
-        player : {
-          playerId: NaN, 
-          playerName:'', 
-          playerProfilePic:'', 
-          playerProfileUrl:'', 
-          league: { leagueId: NaN, leagueName: ''} 
-        },
+        player : emptyPlayer(),
         pointsToAward: NaN ,
       },
       playerMultiplier: NaN,
@@ -113,10 +104,12 @@ export function emptySelectedPlayer() : ISelectedPlayer {
   export function emptyPlayer(){
     return {
       league: { leagueId: NaN, leagueName: '' },
-      playerId: NaN,
+      playerId: '',
       playerName: '',
       playerProfilePic: '',
-      playerProfileUrl: ''
+      playerProfileUrl: '',
+      ranking: 0,
+      winRatio: 0
     };
   }
 
@@ -126,3 +119,36 @@ export function emptySelectedPlayer() : ISelectedPlayer {
               pointsToAward: NaN ,
             };
   }
+
+
+export interface IMatchPlayer {
+  player: IPlayer;
+  pointsToAward: number;
+  won: boolean;
+}
+
+export interface IMatch {
+  matchId : string;
+  tournament : ITournament;
+  round : IRound;
+  a : IMatchPlayer;
+  b : IMatchPlayer;
+}
+
+export function emptyMatchPlayer(): IMatchPlayer {
+  return { 
+    player: emptyPlayer(),
+    pointsToAward: 0,
+    won: false
+  }
+}
+
+export function emptyMatch() : IMatch {
+    return {
+      matchId : '',
+      tournament : emptyTournament(),
+      round : emptyRound(),
+      a : emptyMatchPlayer(),
+      b : emptyMatchPlayer()
+    };
+}

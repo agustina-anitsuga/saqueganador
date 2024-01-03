@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { WelcomeComponent } from './home/welcome.component';
 import { RankingModule } from './ranking/ranking.module';
 import { BettingModule } from './betting/betting.module';
+import { AdminModule } from './admin/admin.module';
 import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 
@@ -28,7 +29,8 @@ import { SharedModule } from './shared/shared.module';
     BettingModule,
     AuthModule,
     NgbModule,
-    SharedModule
+    SharedModule,
+    AdminModule
   ],
   bootstrap: [AppComponent]
 })
