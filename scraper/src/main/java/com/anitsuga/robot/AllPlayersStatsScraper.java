@@ -46,7 +46,7 @@ public class AllPlayersStatsScraper {
     private void scrapeContent() {
         WebDriver driver = SeleniumUtils.buildDriver(Browser.CHROME);
 
-        List<Integer> years = IntStream.range(1998, 2004).boxed().collect(Collectors.toList());
+        List<Integer> years = IntStream.range(2023, 2024).boxed().collect(Collectors.toList());
         Collections.reverse(years);
 
         for (Integer year : years) {
@@ -98,6 +98,11 @@ public class AllPlayersStatsScraper {
                 ret.addAll(((Ranking) r).getPlayers());
             }
         }
+        /*
+        for ( int i=0; i<1246; i++ ) {
+            ret.remove(0);
+        }
+        */
         return ret;
     }
 

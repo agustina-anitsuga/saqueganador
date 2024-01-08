@@ -28,18 +28,18 @@ public class WTAPlayerPage extends Page {
     private static final Logger LOGGER = LoggerFactory.getLogger(WTAPlayerPage.class.getName());
 
 
-    @FindBy(xpath = "//*[@class=\"profile-header-info__firstname\"]")
+    @FindBy(xpath = "//*[@class=\"profile-header__firstname\"]")
     private WebElement firstName;
 
-    @FindBy(xpath = "//*[@class=\"profile-header-info__surname \"]")
+    @FindBy(xpath = "//*[@class=\"profile-header__name\"]")
     private WebElement lastName;
 
-    @FindBy(xpath = "//*[@class=\"profile-header-info__surname profile-header-info__surname--smaller\"]")
+    @FindBy(xpath = "//*[@class=\"profile-header__name\"]")
     private WebElement lastNameCompound;
 
-    @FindBy(xpath = "/html/body/section[4]/div/div[2]/div/div[2]/div[2]/div[1]/div[3]")
+    @FindBy(xpath = "/html/body/section[4]/div/div[2]/div/div[3]/div[2]/div[1]/div[3]")
     private WebElement birthDate;
-    @FindBy(xpath = "/html/body/section[4]/div/div[2]/div/div[2]/div[2]/div[2]/div[2]")
+    @FindBy(xpath = "/html/body/section[4]/div/div[2]/div/div[3]/div[2]/div[2]/div[2]")
     private WebElement birthPlace;
 
     @FindBy(xpath = "//div[@class=\"profile-header-info__nationalityCode\"]")
@@ -51,7 +51,7 @@ public class WTAPlayerPage extends Page {
     @FindBy(xpath = "//*[@class=\"profile-header-info__detail-height\"]")
     private WebElement heightInInches;
 
-    @FindBy(xpath = "/html/body/section[4]/div/div[2]/div/div[2]/div[1]/div[2]/div[2]")
+    @FindBy(xpath = "/html/body/section[4]/div/div[2]/div/div[3]/div[1]/div[2]/div[2]")
     private WebElement gameStyle;
 
     @FindBy(xpath = "/html/body/section[4]/div/div[1]/div[1]/div[1]/div/picture/img" )
@@ -62,6 +62,13 @@ public class WTAPlayerPage extends Page {
 
     @FindBy(xpath="//*[@class=\"profile-bio__content wrapper\"]")
     private WebElement bio;
+
+    @FindBy(xpath="//*[@class=\"profile-header-stats__item\"][1]/div[2]")
+    private WebElement ranking;
+
+    @FindBy(xpath="//*[@id=\"main-content\"]/div/div/div/div[1]/div[1]/div[2]/div[4]/div[2]")
+    private WebElement winRatio;
+
 
     /**
      * Default constructor
@@ -87,6 +94,26 @@ public class WTAPlayerPage extends Page {
 
     public String getFirstName(){
         return this.firstName.getText();
+    }
+
+    public Integer getRanking(){
+        Integer ret = null;
+        try {
+            ret = Integer.valueOf(this.ranking.getText());
+        } catch ( Exception e ) {
+            ret = null;
+        }
+        return ret;
+    }
+
+    public String getWinRatio(){
+        String ret = null;
+        try {
+            ret = this.winRatio.getText();
+        } catch ( Exception e ) {
+            ret = null;
+        }
+        return ret;
     }
 
     public String getLastName(){
@@ -199,6 +226,13 @@ public class WTAPlayerPage extends Page {
     }
 
     public String getFullName() {
-        return String.format("%s %s",this.getFirstName(),this.getLastName());
+        String ret = null;
+        try {
+            ret = this.lastName.getText();
+        } catch ( Exception e ) {
+            ret = null; //this.lastNameCompound.getText();
+        }
+        return ret;
+        //return String.format("%s %s",this.getFirstName(),this.getLastName());
     }
 }

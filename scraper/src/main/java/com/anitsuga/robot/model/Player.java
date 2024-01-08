@@ -43,6 +43,10 @@ public class Player extends Content {
 
     private String leagueProfileUrl;
 
+    private Integer ranking;
+
+    private String winRatio;
+
     private Stats stats;
 
     public String getKey(){
