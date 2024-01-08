@@ -47,7 +47,11 @@ export class AvailablePlayerComponent {
   matchHasStarted( player : IPlayerStatsPerRound ){
     let matchId = player.matchId;
     let m = this.matches.find((match) => match.matchId === matchId);
-    return m && m.matchStartTime && new Date(m.matchStartTime) <= new Date() ;
+    return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) );
+  }
+
+  matchHasWinner( match : IMatch ){
+    return match.a.won || match.b.won ;
   }
 
   onPlayerSelected( player : IPlayerStatsPerRound ){

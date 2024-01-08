@@ -38,9 +38,13 @@ export class MultiplierComponent {
     if(this.player && this.player.playerStats){
       let matchId = this.player.playerStats.matchId;
       let m = this.matches.find((match) => match.matchId === matchId);
-      return m && m.matchStartTime && new Date(m.matchStartTime) <= new Date() ; 
+      return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) ) ; 
     }
     return false;
+  }
+
+  matchHasWinner( match : IMatch ){
+    return match.a.won || match.b.won ;
   }
 
   addMutiplier(): void {

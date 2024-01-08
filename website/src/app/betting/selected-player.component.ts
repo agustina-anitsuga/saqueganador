@@ -57,9 +57,15 @@ export class SelectedPlayerComponent {
   }
 
   matchHasStarted( player:ISelectedPlayer ) {
+    console.log('matchHasStarted -> '+JSON.stringify(player));
     let matchId = player.playerStats.matchId;
     let m = this.matches.find((match) => match.matchId === matchId);
-    return m && m.matchStartTime && new Date(m.matchStartTime) <= new Date() ; 
+    console.log('match -> '+JSON.stringify(m));
+    return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) ) ; 
+  }
+
+  matchHasWinner( match : IMatch ){
+    return match.a.won || match.b.won ;
   }
 
   playerCanBeRemoved( player: ISelectedPlayer ){
