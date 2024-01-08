@@ -45,6 +45,7 @@
                     [multiplier]='selectedPlayer.playerMultiplier' 
                     [mode]='mode' 
                     [player]='selectedPlayer'
+                    [matches]="matches"
                     [maximumMultipliers]='maximumMultipliersPerPlayer()'
                     (multiplierAdded)='confirmMultiplierAdded()'
                     (multiplierRemoved)='confirmMultiplierRemoved()'>

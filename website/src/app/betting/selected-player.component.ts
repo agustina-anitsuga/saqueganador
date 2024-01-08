@@ -1,5 +1,5 @@
 import { Component,  Input, Output, EventEmitter } from "@angular/core";
-import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer } from "../shared/model";
+import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -13,6 +13,7 @@ export class SelectedPlayerComponent {
   @Input() selectedPlayer : ISelectedPlayer = emptySelectedPlayer();
   @Input() filteredTeam : ITeam = emptyTeam();
   @Input() availableMultipliers : number = NaN;
+  @Input() matches : IMatch[] = [];
 
   displayAddMultiplierModal    : boolean = false;
   displayRemoveMultiplierModal : boolean = false;
@@ -55,12 +56,20 @@ export class SelectedPlayerComponent {
     this.modalClosed(null);
   }
 
+  matchHasStarted( player:ISelectedPlayer ) {
+    let matchId = player.playerStats.matchId;
+    let m = this.matches.find((match) => match.matchId === matchId);
+    return m && m.matchStartTime && new Date(m.matchStartTime) <= new Date() ; 
+  }
+
   playerCanBeRemoved( player: ISelectedPlayer ){
-    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) && !player.played;
+    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) //&& !player.played 
+            && !this.matchHasStarted(player);
   }
 
   playerCanNotBeRemoved( player: ISelectedPlayer ){
-    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) && player.played;
+    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) //&& player.played
+            && this.matchHasStarted(player);
   }
 
   modalClosed( player: any ) {

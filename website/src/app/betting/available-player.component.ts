@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { IPlayerStatsPerRound, emptyPlayerStatsPerRound, IPlayer, ITeam, emptyTeam } from "../shared/model";
+import { IPlayerStatsPerRound, emptyPlayerStatsPerRound, IPlayer, ITeam, emptyTeam, IMatch } from "../shared/model";
 
 @Component({ 
   selector: 'pm-available-player', 
@@ -13,6 +13,9 @@ export class AvailablePlayerComponent {
   
   @Input() 
   team : ITeam = emptyTeam() ;  
+
+  @Input() 
+  matches : IMatch[] = [] ;  
 
   displayModal : boolean = false; 
 
@@ -35,9 +38,16 @@ export class AvailablePlayerComponent {
     return result;
   }
 
-  shouldAllowPlayerAddition( player : IPlayer ){
-    return ! this.teamContainsPlayer( player )
-            && ! this.leagueQuotaFull( player )
+  shouldAllowPlayerAddition( player : IPlayerStatsPerRound ){
+    return ! this.teamContainsPlayer( player.player )
+            && ! this.leagueQuotaFull( player.player )
+            && ! this.matchHasStarted( player )
+  }
+
+  matchHasStarted( player : IPlayerStatsPerRound ){
+    let matchId = player.matchId;
+    let m = this.matches.find((match) => match.matchId === matchId);
+    return m && m.matchStartTime && new Date(m.matchStartTime) <= new Date() ;
   }
 
   onPlayerSelected( player : IPlayerStatsPerRound ){

@@ -22,7 +22,7 @@ export class RankingService {
 
     getRanking(): Observable<IRankingResponse> {
         return this.http.get<IRankingResponse>(this.rankingUrl).pipe(
-            tap( data => console.log('All:', JSON.stringify(data)) ),
+            //tap( data => console.log('All:', JSON.stringify(data)) ),
             catchError( this.handleError ) 
         );
     }

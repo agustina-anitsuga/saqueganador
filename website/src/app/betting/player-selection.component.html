@@ -17,7 +17,7 @@
     </div>
     <div class='card-body divScroll'>
       <div class="row" *ngFor='let player of filteredPlayers'>
-        <pm-available-player [player]="player" [team]="team" (playerClicked)="onPlayerClicked($event)"></pm-available-player>
+        <pm-available-player [player]="player" [team]="team" [matches]="matches" (playerClicked)="onPlayerClicked($event)"></pm-available-player>
       </div>
     </div>
 </div>

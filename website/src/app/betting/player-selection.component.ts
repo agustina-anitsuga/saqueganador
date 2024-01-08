@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IPlayerStatsPerRound, ILeague, ITeam, emptyLeague, emptyTeam } from "../shared/model";
+import { IPlayerStatsPerRound, ILeague, ITeam, emptyLeague, emptyTeam, IMatch } from "../shared/model";
 import { BettingService } from "./betting.service";
 
 @Component({
@@ -14,6 +14,9 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input() 
   team : ITeam = emptyTeam();
+
+  @Input()
+  matches : IMatch[] = [];
 
   players : IPlayerStatsPerRound[] = [] ;
   filteredPlayers: IPlayerStatsPerRound[] = [] ;
@@ -57,7 +60,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   loadPlayersInRound(){
-    console.log("loadPlayersInRound:"+JSON.stringify(this.team));
+    //console.log("loadPlayersInRound:"+JSON.stringify(this.team));
     if( this.team ){
         let tournamentId = this.team.tournament.tournamentId;
         let roundId = this.team.round.roundId;

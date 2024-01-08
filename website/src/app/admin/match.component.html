@@ -11,9 +11,17 @@
           </div>
         </div>
         <div class="col-sm-2">
-          vs
+          <div class="row-sm-10">
+            <div>start time:</div>
+            <input type="datetime-local" 
+                [ngModel]="match.matchStartTime | date:'yyyy-MM-ddTHH:mm'"
+                (ngModelChange)="match.matchStartTime = $event" />
+          </div>
+          <div class="row-sm-10" style="margin-top:10px;">
+            <button class="primary" (click)="onItemSaved()">Save</button>
+          </div>
         </div>
-        <div class="card col-sm-4" (click)="onItemSelection(match.b)" >
+        <div class="card col-sm-4" (click)="onItemSelection(match.b)" style="margin-left:15px !important">
           <div  [ngClass]="{'winner': match.b.won}">
           <div>{{ match.b.player.playerName }} </div>
           <div>Ranking: {{match.b.player.ranking}} </div>          

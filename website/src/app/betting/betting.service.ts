@@ -28,7 +28,7 @@ export interface ITeamResponse {
 export class BettingService {
 
     private teamUrl = environment.teamUrl;
-    private playersUrl = 'api/betting/players';
+    private playersUrl = environment.playersUrl; //'api/betting/players-1.json'; //
     private usersUrl = environment.usersUrl;
     private tournamentUrl = 'api/betting/tournament.json';
     
@@ -36,7 +36,7 @@ export class BettingService {
 
     getCurrentTournament() : Observable<ITournament> {
         return this.http.get<ITournament>(this.tournamentUrl).pipe(
-            tap( data => console.log('All:', JSON.stringify(data)) ),
+            //tap( data => console.log('All:', JSON.stringify(data)) ),
             catchError( this.handleError ) 
         );
     }
@@ -49,7 +49,7 @@ export class BettingService {
     }
 
     getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> { 
-      let url = this.playersUrl+"-"+(roundId?roundId:1)+".json";
+      let url = this.playersUrl; //+"-"+(roundId?roundId:1)+".json"; TODO
       console.log(url);
       return this.http.get<IPlayerStatsPerRound[]>(url).pipe(
           //tap( data => console.log('All:', JSON.stringify(data)) ),

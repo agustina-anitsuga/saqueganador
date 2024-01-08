@@ -36,7 +36,12 @@ export class MatchComponent {
             this.match.a.won = false;
           }
       }
-      this.saveMatchResult();
+  }
+
+  onItemSaved(){
+    if(!this.match.a.won){ this.match.a.won = false }
+    if(!this.match.b.won){ this.match.b.won = false }  
+    this.saveMatchResult();
   }
 
   saveMatchResult(){

@@ -6,7 +6,7 @@ import { IMatch } from "../shared/model";
 import { environment } from '../../environments/environment';
 
 
-export interface IAdminDataResponse {
+export interface IMatchResponse {
   Items: IMatch[];
 }
 
@@ -15,12 +15,12 @@ export interface IAdminDataResponse {
 })
 export class AdminService {
 
-    private matchesUrl = 'api/admin/matches.json';
+    private matchesUrl = environment.matchesUrl;
 
     constructor( private http : HttpClient ) {}
 
-    getMatches() : Observable<IMatch[]> {
-        return this.http.get<IMatch[]>(this.matchesUrl).pipe(
+    getMatches() : Observable<IMatchResponse> {
+        return this.http.get<IMatchResponse>(this.matchesUrl).pipe(
           //tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 
         );
@@ -28,7 +28,6 @@ export class AdminService {
 
     saveMatch( match : IMatch ) { //: Observable<IMatch> {
       let saveMatchUrl = this.matchesUrl + match.matchId;
-      console.log(saveMatchUrl);
       return this.http.post<IMatch>(saveMatchUrl, match).pipe(
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )).subscribe(response => console.log('subscribe')

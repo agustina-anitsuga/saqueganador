@@ -1,3 +1,4 @@
+
 export interface ITournament {
   tournamentId: number;
   tournamentName: string;
@@ -40,6 +41,7 @@ export interface IPlayer {
 export interface IPlayerStatsPerRound {
     player : IPlayer;
     pointsToAward: number;  
+    matchId: string;
   }
 
 export interface ISelectedPlayer {
@@ -91,10 +93,7 @@ export function emptyLeague() : ILeague {
 export function emptySelectedPlayer() : ISelectedPlayer {
     return { 
       position : NaN,
-      playerStats : {
-        player : emptyPlayer(),
-        pointsToAward: NaN ,
-      },
+      playerStats : emptyPlayerStatsPerRound(),
       playerMultiplier: NaN,
       playerScore: 0,
       played: false
@@ -117,6 +116,7 @@ export function emptySelectedPlayer() : ISelectedPlayer {
     return  {
               player : emptyPlayer(),
               pointsToAward: NaN ,
+              matchId: ''
             };
   }
 
@@ -133,6 +133,7 @@ export interface IMatch {
   round : IRound;
   a : IMatchPlayer;
   b : IMatchPlayer;
+  matchStartTime : Date;
 }
 
 export function emptyMatchPlayer(): IMatchPlayer {
@@ -149,6 +150,7 @@ export function emptyMatch() : IMatch {
       tournament : emptyTournament(),
       round : emptyRound(),
       a : emptyMatchPlayer(),
-      b : emptyMatchPlayer()
+      b : emptyMatchPlayer(),
+      matchStartTime : new Date(2024, 1, 14, 22, 0) 
     };
 }

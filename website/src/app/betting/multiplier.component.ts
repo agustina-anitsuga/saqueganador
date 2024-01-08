@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { ISelectedPlayer, emptySelectedPlayer } from "../shared/model";
+import { ISelectedPlayer, emptySelectedPlayer, IMatch } from "../shared/model";
 
 @Component({
   selector: 'pm-multiplier',
@@ -17,6 +17,9 @@ export class MultiplierComponent {
   @Input()
   maximumMultipliers : number = 3;
   
+  @Input()
+  matches : IMatch[] = [];
+
   @Input() 
   player : ISelectedPlayer = emptySelectedPlayer();
 
@@ -31,14 +34,23 @@ export class MultiplierComponent {
     return this.maximumMultipliers - this.multiplier;
   }
 
+  matchHasStarted() {
+    if(this.player && this.player.playerStats){
+      let matchId = this.player.playerStats.matchId;
+      let m = this.matches.find((match) => match.matchId === matchId);
+      return m && m.matchStartTime && new Date(m.matchStartTime) <= new Date() ; 
+    }
+    return false;
+  }
+
   addMutiplier(): void {
-    if( this.mode ==='EDIT' ){
+    if( this.mode ==='EDIT' && !this.matchHasStarted() ){
       this.multiplierAdded.emit(this.player);
     }
   }
 
   removeMutiplier(): void {
-    if( this.mode ==='EDIT' ){
+    if( this.mode ==='EDIT' && !this.matchHasStarted() ){
       this.multiplierRemoved.emit(this.player);
     }
   }

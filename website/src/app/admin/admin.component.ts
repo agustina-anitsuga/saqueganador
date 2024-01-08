@@ -41,8 +41,8 @@ export class AdminComponent implements OnInit, OnDestroy {
     
     this.sub = this.adminService.getMatches().subscribe({
       next: adr => {
-        this.matches = adr; 
-        this.rounds = this.getRounds(adr);
+        this.matches = adr.Items; 
+        this.rounds = this.getRounds(this.matches);
         this.initializeSelections();
       },
       error: err => this.errorMessage = err

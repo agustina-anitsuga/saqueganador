@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer } from "../shared/model";
+import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer, IMatch } from "../shared/model";
 import { ActivatedRoute, Router } from '@angular/router';
 import { BettingService } from "./betting.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
@@ -19,6 +19,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   private _currentUserId : string = '';
 
   @Input() playerToAdd : ISelectedPlayer = emptySelectedPlayer();
+
+  @Input() matches : IMatch[] = [];
 
   teams : ITeam[] = [] ;
   filteredTeam: ITeam = emptyTeam();
