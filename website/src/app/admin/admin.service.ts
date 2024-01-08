@@ -28,6 +28,7 @@ export class AdminService {
 
     saveMatch( match : IMatch ) { //: Observable<IMatch> {
       let saveMatchUrl = this.matchesUrl + match.matchId;
+      console.log('saveMatch '+saveMatchUrl+' '+JSON.stringify(match));
       return this.http.post<IMatch>(saveMatchUrl, match).pipe(
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )).subscribe(response => console.log('subscribe')

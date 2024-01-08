@@ -57,10 +57,10 @@ export class SelectedPlayerComponent {
   }
 
   matchHasStarted( player:ISelectedPlayer ) {
-    console.log('matchHasStarted -> '+JSON.stringify(player));
+    //console.log('matchHasStarted -> '+JSON.stringify(player));
     let matchId = player.playerStats.matchId;
     let m = this.matches.find((match) => match.matchId === matchId);
-    console.log('match -> '+JSON.stringify(m));
+    //console.log('match -> '+JSON.stringify(m));
     return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) ) ; 
   }
 

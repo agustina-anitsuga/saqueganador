@@ -12,6 +12,7 @@
         </div>
         <div class="col-sm-2">
           <div class="row-sm-10">
+            <div>{{match.matchId}}</div>
             <div>start time:</div>
             <input type="datetime-local" 
                 [ngModel]="match.matchStartTime | date:'yyyy-MM-ddTHH:mm'"

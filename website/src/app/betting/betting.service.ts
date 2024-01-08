@@ -49,7 +49,7 @@ export class BettingService {
     }
 
     getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> { 
-      let url = this.playersUrl; //+"-"+(roundId?roundId:1)+".json"; TODO
+      let url = this.playersUrl + (roundId?roundId:1) ; //+"-"+(roundId?roundId:1)+".json"
       console.log(url);
       return this.http.get<IPlayerStatsPerRound[]>(url).pipe(
           //tap( data => console.log('All:', JSON.stringify(data)) ),
