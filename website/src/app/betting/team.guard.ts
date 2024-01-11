@@ -13,8 +13,8 @@ export class TeamGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-        const id = Number(route.paramMap.get("id"));
-        if( isNaN(id) || id<1 ){
+        const id = route.paramMap.get("id");
+        if( !id ){
           this.router.navigate(['/teams']);
           return false;
         }

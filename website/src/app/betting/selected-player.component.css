@@ -1,7 +1,9 @@
 .crop-container {
-    width: 95%;
-    height: 200px;
-    overflow: hidden;
+    width: 90% !important;
+    height: 275px !important;
+    overflow: hidden !important;
+    text-align: center !important;
+    margin: 5% !important;
   }
   
 .close-icon {
