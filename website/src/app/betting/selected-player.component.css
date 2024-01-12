@@ -1,11 +1,58 @@
 .crop-container {
     width: 90% !important;
-    height: 275px !important;
     overflow: hidden !important;
     text-align: center !important;
     margin: 5% !important;
   }
-  
+
+.hidden-player {
+  width: 90% !important;
+  max-height: 275px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 5% !important;
+}
+
+.local {
+  width: 90% !important;
+  max-height: 275px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 5% !important;
+}
+
+.wta-body {
+  width: 90% !important;
+  max-height: 275px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 5% !important;
+}
+
+.wta-face {
+  width: 90% !important;
+  max-height: 275px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 5% !important;
+}
+
+.atp {
+  width: 90% !important;
+  max-height: 275px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 5% !important;
+}
+
+.atp-espn {
+  width: 90% !important;
+  max-height: 275px !important;
+  overflow: hidden !important;
+  text-align: center !important;
+  margin: 5% !important;
+}
+
 .close-icon {
     cursor: pointer;
   }
@@ -14,3 +61,17 @@
   text-align: right !important; 
   margin-right:2% !important;
 }
+
+/* (A) DESIRED FIXED DIMENSION */
+.scaleB {
+  width: 350px;
+  height: 254px;
+  border: 10px solid blue;
+}
+
+.fill { object-fit: fill; }
+.contain { object-fit: contain; }
+.cover { object-fit: cover; }
+.scale { object-fit: scale-down; }
+
+

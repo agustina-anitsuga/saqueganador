@@ -21,6 +21,44 @@ export class SelectedPlayerComponent {
 
   constructor(private modalService: NgbModal) {}
 
+  photo() {
+    let player = this.selectedPlayer.playerStats.player;
+    let ret = player.playerProfilePic;
+    if ( !player.playerProfilePic.startsWith('.') && player.league.leagueName === 'WTA' ){
+        let photoUrl = player.playerProfilePic;
+        photoUrl = photoUrl.substring(0,photoUrl.indexOf('?')-1);
+        photoUrl = photoUrl + '?width=350&height=254';
+        ret = photoUrl;
+    } else if( this.photoType() === 'atp' ) {
+        ret =  './assets/images/tennis-player-atp-icon-green.png';
+    }
+    console.log('photo:'+ret)
+    return ret;
+  }
+
+  photoType() {
+    let ret = '';
+    let player = this.selectedPlayer.playerStats.player;
+    if ( player.playerProfilePic.startsWith('.') ){
+        ret = 'local';
+    } 
+    else if ( player.league.leagueName === 'WTA' ){
+        let photoUrl = player.playerProfilePic;
+        if( photoUrl.includes('.png') ){
+            ret = 'wta-body';
+        } else {
+            ret = 'wta-face';
+        }
+    } else {
+        if( player.playerProfilePic.startsWith('https://www.atptour.com/') ){
+          ret = 'atp';
+        } else {
+          ret = 'atp-espn';
+        }
+    }
+    return ret;
+  }
+
   shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {
     return  selectedPlayer.playerStats.player.playerId && (
             this.mode === 'EDIT' ||

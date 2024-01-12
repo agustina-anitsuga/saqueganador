@@ -89,12 +89,10 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   initializeSelections(){
       
-      this._selectedRound = this.getCurrentRound();
-      this.selectedRound = this._selectedRound;
+      this.selectedRound = this.getCurrentRound();
       
-      this._selectedUser = this.getCurrentUser();
-      this.selectedUser = this._selectedUser ;
-
+      this.selectedUser = this.getCurrentUser();
+      
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
 
