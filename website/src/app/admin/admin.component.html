@@ -4,11 +4,22 @@
     </div>
     <div class='card-body'>
       <div class='row'>
-        <div class='col-md-1 text-left' >Ronda:</div>
+        <div class='col-md-1 text-right' >Ronda:</div>
         <div class='col-md-2'>
           <select [(ngModel)]="selectedRound" class="h-100 w-100" >
             <option *ngFor="let r of rounds" [ngValue]="r">{{r.roundName}}</option>
           </select> 
+        </div>
+        <div class='col-md-1 text-right' >Liga:</div>
+        <div class='col-md-2'>
+          <select [(ngModel)]="selectedLeague" class="h-100 w-100" >
+            <option *ngFor="let l of leagues" [ngValue]="l">{{l.leagueName}}</option>
+          </select> 
+        </div>
+        <div class='col-md-1 text-right' >Jugador:</div>
+        <div class='col-md-2'>
+          <input type='text'
+          [(ngModel)]='listFilter' style="width:90%"/>    
         </div>
       </div>
       <div class='row'>

@@ -3,7 +3,7 @@ import { Subscription } from "rxjs";
 import { IMatch, IMatchPlayer } from "../shared/model";
 import { AdminService } from "./admin.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
-import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer } from "../shared/model";
+import { IRound, ILeague, emptyLeague, emptyRound } from "../shared/model";
 
 
 @Component({
@@ -18,8 +18,11 @@ export class AdminComponent implements OnInit, OnDestroy {
   matches : IMatch[] = [];
   filteredMatches : IMatch[] = [];
   rounds : IRound[] = [];
+  leagues : ILeague[] = [];
 
   private _selectedRound : IRound = emptyRound();
+  private _selectedLeague : ILeague = emptyLeague();
+  private _listFilter = '';
 
   errorMessage = '';
 
@@ -30,11 +33,29 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   set selectedRound( round: IRound ) {
     this._selectedRound = round;
-    this.filteredMatches = this.performFilter(this._selectedRound);
+    this.filteredMatches = this.performFilter();
   }
 
   get selectedRound() : IRound {
     return this._selectedRound;
+  }
+
+  set selectedLeague( league: ILeague ) {
+    this._selectedLeague = league;
+    this.filteredMatches = this.performFilter();
+  }
+
+  get selectedLeague() : ILeague {
+    return this._selectedLeague;
+  }
+
+  get listFilter(): string {
+    return this._listFilter;
+  }
+
+  set listFilter(value: string) {
+    this._listFilter = value;
+    this.filteredMatches = this.performFilter();
   }
 
   ngOnInit(): void {
@@ -43,6 +64,7 @@ export class AdminComponent implements OnInit, OnDestroy {
       next: adr => {
         this.matches = adr.Items; 
         this.rounds = this.getRounds(this.matches);
+        this.leagues = this.getLeagues(this.matches);
         this.initializeSelections();
       },
       error: err => this.errorMessage = err
@@ -59,10 +81,14 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   getRounds( matches : IMatch[] ) : IRound[] {
     let unsortedRounds = matches.map((t: IMatch) => t.round) 
-    return this.deDuplicate( unsortedRounds);
+    return this.deDuplicateRounds( unsortedRounds);
   }
 
-  deDuplicate( rounds : IRound[] ) : IRound[] {
+  getLeagues( matches : IMatch[] ) : ILeague[] {
+    return [ { leagueId:1, leagueName: 'ATP' } , { leagueId:2, leagueName: 'WTA' } ];
+  }
+
+  deDuplicateRounds( rounds : IRound[] ) : IRound[] {
     const ids = rounds.map(({ roundId }) => roundId );
     const filtered = rounds.filter(({ roundId }, index) => !ids.includes(roundId, index + 1));
     const sorted = filtered.sort( (elemA,elemB) => elemA.sortOrder - elemB.sortOrder );
@@ -73,8 +99,10 @@ export class AdminComponent implements OnInit, OnDestroy {
     return this.rounds? this.rounds[this.rounds.length - 1] : emptyRound() ;
   }
 
-  performFilter(round: IRound) : IMatch[] {
-    let ret = this.getMatchesByRound(this.matches,round);
+  performFilter() : IMatch[] {
+    let ret = this.getMatchesByPlayer(
+                this.getMatchesByLeague(
+                  this.getMatchesByRound(this.matches,this.selectedRound),this.selectedLeague),this.listFilter);
     return ret;
   }
 
@@ -82,4 +110,31 @@ export class AdminComponent implements OnInit, OnDestroy {
     const ret = round? matches.filter((t: IMatch) => t.round.roundId === round.roundId ) : [];
     return ret;
   }
+
+  getMatchesByLeague( matches : IMatch[], league : ILeague ) : IMatch[] {
+    let ret = matches;
+    if( league && !(Number.isNaN(league.leagueId)) ) {
+        ret = ( matches.filter((t: IMatch) => 
+          t.a.player && t.a.player.league && (!(Number.isNaN(league.leagueId))) ? 
+              t.a.player.league.leagueId === league.leagueId : false ) ) ;
+    }
+    return ret;
+  }
+
+  getMatchesByPlayer( matches : IMatch[], playerName : string ) : IMatch[] {
+    let ret = matches;
+    if( playerName ) {
+        ret = ( matches.filter((t: IMatch) => 
+               ( this.nameIsSet(t.a) && t.a.player.playerName.toLowerCase().includes(playerName.toLowerCase())) ||
+               ( this.nameIsSet(t.b) && t.b.player.playerName.toLowerCase().includes(playerName.toLowerCase()))
+               ) 
+          ) ;
+    }
+    return ret;
+  }
+
+  nameIsSet( value : IMatchPlayer ): boolean {
+    return !!value && !!value.player && !!value.player.playerName && typeof value.player.playerName === 'string' ;
+  } 
+
 }
