@@ -220,6 +220,13 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
     this.saveTeam();
   }  
 
+  maximumPossibleScore(){
+    return ( this.filteredTeam && this.filteredTeam.selection )? 
+    this.filteredTeam.selection.reduce( 
+        (partialSum, selection) => partialSum + (selection.played ? selection.playerScore : 
+            selection.playerMultiplier * selection.playerStats.pointsToAward), 0) : 0;
+  }
+
   multiplierAdded( player:ISelectedPlayer ){ 
     this.saveTeam();
   }  

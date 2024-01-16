@@ -62,10 +62,16 @@
     <div class='row'>
       <ng-container *ngIf = 'shouldDisplayTotalScore()'>
       <div class='col-md-2'>Puntos en la ronda:</div>
-      <div class='col-md-1'>
+      <div class='col-md-4 text-left'>
         {{filteredTeam.score}}
       </div>
       </ng-container>
+      <ng-container *ngIf = 'shouldDisplayTotalScore() && shouldDisplayAvailableMultipliers()'>
+        <div class='col-md-5 text-rigth'>M&aacute;ximo puntaje posible:</div>
+        <div class='col-md-1 text-left'>
+          {{this.maximumPossibleScore()}}
+        </div>
+        </ng-container>
     </div>
   </div>
 </div> 
