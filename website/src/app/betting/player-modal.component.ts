@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnChanges, ViewChild } from "@angular/core";
-import { IPlayerStatsPerRound, emptyPlayerStatsPerRound } from "../shared/model";
+import { IMatchPlayer } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -50,8 +50,8 @@ export class PlayerModalComponent implements OnChanges {
   }
 
   @Output() 
-  onModalAccepted: EventEmitter<IPlayerStatsPerRound> = new EventEmitter<IPlayerStatsPerRound>();
+  onModalAccepted: EventEmitter<IMatchPlayer> = new EventEmitter<IMatchPlayer>();
 
   @Output() 
-  onModalCancelled: EventEmitter<IPlayerStatsPerRound> = new EventEmitter<IPlayerStatsPerRound>();
+  onModalCancelled: EventEmitter<IMatchPlayer> = new EventEmitter<IMatchPlayer>();
 }

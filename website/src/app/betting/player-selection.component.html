@@ -4,20 +4,47 @@
     </div>
     <div class='card-body'>
       <div class="row">
+          <div style="width:20%;align-self:right;">
           Liga 
-          <select [(ngModel)]="selectedLeague" style="width:90%">
+          </div>
+          <div style="width:80%;align-self:right;">
+          <select [(ngModel)]="selectedLeague" style="width:100%">
             <option *ngFor="let league of leagues" [ngValue]="league">{{league.leagueName}}</option>
           </select>
+          </div>
       </div>
       <div class="row">
+          <div style="width:20%;align-self:right;">
           Jugador
-          <input type='text'
-              [(ngModel)]='listFilter' style="width:90%"/>    
+          </div>
+          <div style="width:80%;align-self:right;">
+            <input type='text'
+              [(ngModel)]='listFilter' style="width:100%"/>    
+          </div>
       </div>  
     </div>
     <div class='card-body divScroll'>
-      <div class="row" *ngFor='let player of filteredPlayers'>
-        <pm-available-player [player]="player" [team]="team" [matches]="matches" (playerClicked)="onPlayerClicked($event)"></pm-available-player>
+      
+      <div class="row" *ngFor='let match of filteredMatches'>
+        <div class='card'>
+            <div class="card-body">
+              <div class="row">
+                  <div class="col-sm-6">
+                  <pm-available-player [player]="match.a" [team]="team" [matches]="matches" (playerClicked)="onPlayerClicked($event)"></pm-available-player>
+                  </div>
+                  <div class="col-sm-6">
+                  <pm-available-player [player]="match.b" [team]="team" [matches]="matches" (playerClicked)="onPlayerClicked($event)"></pm-available-player>
+                  </div>
+              </div>
+              <ng-container *ngIf = 'matchStartTimeIsKnown(match)'>
+              <div class="row">
+                <div class="col-sm-12">
+                {{this.formattedMatchStartTime(match)}}
+                </div>
+              </div>
+              </ng-container>
+            </div>
+        </div>
       </div>
     </div>
 </div>

@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ISelectedPlayer, IPlayerStatsPerRound, ITeam, emptySelectedPlayer, emptyTeam, IMatch } from "../shared/model";
+import { ISelectedPlayer, ITeam, emptySelectedPlayer, emptyTeam, IMatch } from "../shared/model";
 import { AdminService } from "../admin/admin.service";
 import { Subscription } from "rxjs";
 
@@ -25,14 +25,9 @@ export class BettingComponent implements OnInit, OnDestroy {
 
   constructor(private adminService: AdminService) {}
 
-  onPlayerSelected( message : IPlayerStatsPerRound ){
-      this.playerToAdd = {
-        position : 0,
-        playerStats : message,
-        playerMultiplier: 1,
-        playerScore: 0,
-        played: false
-      }
+  onPlayerSelected( message : ISelectedPlayer ){
+      //console.log('betting.component onPlayerSelected -> '+JSON.stringify(message))
+      this.playerToAdd = message;
   }
 
   onTeamSelected( message : ITeam ){
@@ -48,7 +43,7 @@ export class BettingComponent implements OnInit, OnDestroy {
   }
 
   loadMatches(){
-    console.log("loadMatches");
+    //console.log("betting.component - loadMatches");
     this.sub = this.adminService.getMatches().subscribe({
         next: matches => {
           this.matches = matches.Items;

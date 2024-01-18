@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IPlayerStatsPerRound, ILeague, ITeam, emptyLeague, emptyTeam, IMatch } from "../shared/model";
-import { BettingService } from "./betting.service";
+import { ISelectedPlayer, ILeague, ITeam, emptyLeague, emptyTeam, IMatch } from "../shared/model";
+import { BettingService, IMatchResponse } from "./betting.service";
 
 @Component({
   selector: 'pm-player-selection', 
@@ -18,8 +18,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   @Input()
   matches : IMatch[] = [];
 
-  players : IPlayerStatsPerRound[] = [] ;
-  filteredPlayers: IPlayerStatsPerRound[] = [] ;
+  filteredMatches: IMatch[] = [] ;
   
   leagues : ILeague[] = [];
   private _selectedLeague : ILeague = emptyLeague();
@@ -36,7 +35,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
 
   set listFilter(value: string) {
     this._listFilter = value;
-    this.filteredPlayers = this.filterPlayers();
+    this.filteredMatches = this.filterMatches();
   }
 
   get selectedLeague(): ILeague {
@@ -45,18 +44,21 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
 
   set selectedLeague( value: ILeague ){
       this._selectedLeague = value;
-      this.filteredPlayers = this.filterPlayers();      
+      this.filteredMatches = this.filterMatches();      
   } 
 
-  filterPlayers() : IPlayerStatsPerRound[] {
-      return this.players.filter(({ player }, index) => 
-            ( !this._listFilter || player.playerName.toLowerCase().includes(this._listFilter.toLowerCase()) ) 
-            && ( !this.selectedLeague || !this.selectedLeague.leagueId || player.league.leagueId === this.selectedLeague.leagueId ) 
+  filterMatches() : IMatch[] {
+      return this.matches.filter(( match , index) => 
+            ( !this._listFilter || (match.a.player && match.a.player.playerName && match.a.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) || 
+                ( match.b.player && match.b.player.playerName && match.b.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) ) 
+            && ( !this.selectedLeague || !this.selectedLeague.leagueId || match.a.player.league.leagueId === this.selectedLeague.leagueId ) 
           );;
   }
 
   ngOnInit(): void {
+    console.log('init player selection')
     this.loadPlayersInRound();
+    console.log('end init player selections');
   }
 
   loadPlayersInRound(){
@@ -64,19 +66,23 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
     if( this.team ){
         let tournamentId = this.team.tournament.tournamentId;
         let roundId = this.team.round.roundId;
-        this.sub = this.bettingService.getPlayers(tournamentId,roundId).subscribe({
+        this.sub = this.bettingService.getMatches(tournamentId,roundId).subscribe({
           next: p => {
-            this.players = p;
-            this.filteredPlayers = this.players;
-            this.leagues = this.getLeagues( p );
+            this.matches = this.filterCurrentRound(p,roundId);
+            this.filteredMatches = this.matches;
+            this.leagues = this.getLeagues( this.filteredMatches );
           },
           error: err => this.errorMessage = err
         });
     }
   }
 
-  getLeagues( players : IPlayerStatsPerRound[] ){
-    let leagues = this.deDuplicate( players.map((p: IPlayerStatsPerRound) => p.player.league) );
+  filterCurrentRound( matches : IMatchResponse, roundId : number ){
+    return roundId? matches.Items.filter( (m, index) => m.round.roundId === roundId && m.a.pointsToAward > 0 ) : [];
+  }
+
+  getLeagues( matches : IMatch[] ){
+    let leagues = this.deDuplicate( matches.map((p: IMatch) => p.a.player.league) );
     leagues.push({ leagueId: NaN, leagueName: '' });
     return leagues;
   }
@@ -91,8 +97,16 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
     this.sub.unsubscribe();
   }
 
-  onPlayerClicked( player : IPlayerStatsPerRound ){
+  onPlayerClicked( player : ISelectedPlayer ){
     this.playerClicked.emit( player );
+  }
+
+  matchStartTimeIsKnown( match : IMatch ){
+    return !!match.matchStartTime;
+  }
+
+  formattedMatchStartTime( match : IMatch ){
+    return ('' + match.matchStartTime).replace('T',' ');
   }
 
   ngOnChanges(): void {
@@ -100,6 +114,6 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   @Output() 
-  playerClicked: EventEmitter<IPlayerStatsPerRound> = new EventEmitter<IPlayerStatsPerRound>();
+  playerClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
 
 }

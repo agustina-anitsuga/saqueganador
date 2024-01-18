@@ -1,13 +1,14 @@
-import { Component,  Input, Output, EventEmitter } from "@angular/core";
-import { ISelectedPlayer, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
+import { Component,  Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
+import { ISelectedPlayer, IPlayer, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { photo, photoType} from '../shared/photos';
 
 @Component({
   selector: 'pm-selected-player',
   templateUrl: './selected-player.component.html',
   styleUrls: ['./selected-player.component.css']
 })
-export class SelectedPlayerComponent {
+export class SelectedPlayerComponent implements OnInit, OnDestroy {
 
   @Input() mode : string = "EDIT" // EDIT VIEW
   @Input() selectedPlayer : ISelectedPlayer = emptySelectedPlayer();
@@ -19,44 +20,17 @@ export class SelectedPlayerComponent {
   displayRemoveMultiplierModal : boolean = false;
   displayRemovePlayerModal     : boolean = false;
 
+  photo : string = '';
+  photoType : string = '';
+
   constructor(private modalService: NgbModal) {}
 
-  photo() {
-    let player = this.selectedPlayer.playerStats.player;
-    let ret = player.playerProfilePic;
-    if ( !player.playerProfilePic.startsWith('.') && player.league.leagueName === 'WTA' ){
-        let photoUrl = player.playerProfilePic;
-        photoUrl = photoUrl.substring(0,photoUrl.indexOf('?')-1);
-        photoUrl = photoUrl + '?width=350&height=254';
-        ret = photoUrl;
-    } else if( this.photoType() === 'atp' ) {
-        ret =  './assets/images/tennis-player-atp-icon-green.png';
-    }
-    console.log('photo:'+ret)
-    return ret;
+  ngOnInit(): void {
+    this.photo = photo(this.selectedPlayer.playerStats.player) ;
+    this.photoType = photoType(this.selectedPlayer.playerStats.player) ;
   }
-
-  photoType() {
-    let ret = '';
-    let player = this.selectedPlayer.playerStats.player;
-    if ( player.playerProfilePic.startsWith('.') ){
-        ret = 'local';
-    } 
-    else if ( player.league.leagueName === 'WTA' ){
-        let photoUrl = player.playerProfilePic;
-        if( photoUrl.includes('.png') ){
-            ret = 'wta-body';
-        } else {
-            ret = 'wta-face';
-        }
-    } else {
-        if( player.playerProfilePic.startsWith('https://www.atptour.com/') ){
-          ret = 'atp';
-        } else {
-          ret = 'atp-espn';
-        }
-    }
-    return ret;
+  
+  ngOnDestroy(): void {
   }
 
   shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {

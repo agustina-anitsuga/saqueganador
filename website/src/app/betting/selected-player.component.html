@@ -15,9 +15,9 @@
           <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
               <div class="row center">
                   <div>
-                      <div class='{{this.photoType()}}' >
+                      <div class='{{photoType}}' >
                         <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
-                          <img src="{{this.photo()}}" style="width:100%" />
+                          <img src="{{photo}}" style="width:100%" />
                         </a> 
                       </div> 
                       <div>                  

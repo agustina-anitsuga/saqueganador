@@ -1,16 +1,20 @@
-import { Component, Input, Output, EventEmitter } from "@angular/core";
-import { IPlayerStatsPerRound, emptyPlayerStatsPerRound, IPlayer, ITeam, emptyTeam, IMatch } from "../shared/model";
+import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
+import { IPlayerStatsPerRound, ISelectedPlayer, emptyMatchPlayer, emptyMatch, IPlayer, ITeam, emptyTeam, IMatch, IMatchPlayer } from "../shared/model";
+import { photo, photoType} from '../shared/photos';
 
 @Component({ 
   selector: 'pm-available-player', 
   templateUrl: './available-player.component.html',
   styleUrls: ['./available-player.component.css']
 })
-export class AvailablePlayerComponent {
+export class AvailablePlayerComponent implements OnInit, OnDestroy {
 
   @Input() 
-  player : IPlayerStatsPerRound = emptyPlayerStatsPerRound() ;
+  player : IMatchPlayer = emptyMatchPlayer() ;
   
+  @Input() 
+  match : IMatch = emptyMatch() ;
+
   @Input() 
   team : ITeam = emptyTeam() ;  
 
@@ -18,6 +22,16 @@ export class AvailablePlayerComponent {
   matches : IMatch[] = [] ;  
 
   displayModal : boolean = false; 
+  photo : string = '';
+  photoType : string = '';
+
+  ngOnInit(): void {
+    this.photo = photo(this.player.player) ;
+    this.photoType = photoType(this.player.player) ;
+  }
+  
+  ngOnDestroy(): void {
+  }
 
   teamContainsPlayer( player : IPlayer ){
     return (player && this.team && this.team.selection)?  
@@ -38,14 +52,14 @@ export class AvailablePlayerComponent {
     return result;
   }
 
-  shouldAllowPlayerAddition( player : IPlayerStatsPerRound ){
+  shouldAllowPlayerAddition( match : IMatch, player : IMatchPlayer ){
     return ! this.teamContainsPlayer( player.player )
             && ! this.leagueQuotaFull( player.player )
-            && ! this.matchHasStarted( player )
+            && ! this.matchHasStarted( match )
   }
 
-  matchHasStarted( player : IPlayerStatsPerRound ){
-    let matchId = player.matchId;
+  matchHasStarted( match : IMatch ){
+    let matchId = match.matchId;
     let m = this.matches.find((match) => match.matchId === matchId);
     return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) );
   }
@@ -54,12 +68,24 @@ export class AvailablePlayerComponent {
     return match.a.won || match.b.won ;
   }
 
-  onPlayerSelected( player : IPlayerStatsPerRound ){
-    this.playerClicked.emit( player );
+  onPlayerSelected( player : IMatchPlayer ){
+    let playerStats : IPlayerStatsPerRound = {
+      player : player.player,
+      pointsToAward: player.pointsToAward,  
+      matchId: this.match.matchId
+    };
+    let selectedPlayer : ISelectedPlayer = {
+      position : 0,
+      playerStats : playerStats,
+      playerMultiplier: 1,
+      playerScore: 0,
+      played: false
+    };
+    this.playerClicked.emit( selectedPlayer );
     this.modalClosed( player );
   }
 
-  modalClosed( player : IPlayerStatsPerRound ){
+  modalClosed( player : IMatchPlayer ){
     this.displayModal = false;
   }
 
@@ -72,6 +98,6 @@ export class AvailablePlayerComponent {
   }
   
   @Output() 
-  playerClicked: EventEmitter<IPlayerStatsPerRound> = new EventEmitter<IPlayerStatsPerRound>();
+  playerClicked: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
 
 }

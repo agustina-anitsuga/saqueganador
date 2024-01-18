@@ -50,6 +50,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   set selectedRound( round: IRound ) {
     this._selectedRound = round;
     this.filteredTeam = this.performFilter(this._selectedUser,this._selectedRound);
+    //console.log('team.component selectedRound -> '+JSON.stringify(round));
   }
 
   get selectedRound() : IRound {
@@ -61,6 +62,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   performFilter(user: IUser, round: IRound): ITeam {
+    //console.log('team.component.performFilter');
     let ret = this.getTeamsByRound(this.getTeamsByUser(this.teams,user),round)[0];
     this.teamFiltered.emit( ret );
     return ret;
@@ -199,6 +201,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(): void {
+      console.log('team.component ngOnChanges playerToAdd -> '+JSON.stringify(this.playerToAdd));
       if( this.playerToAdd.playerStats.player.playerId ){
         let players = this.filteredTeam.selection;
         for (let i = 0; i < players.length; i++) {

@@ -5,10 +5,15 @@ import { Observable, catchError, tap, throwError } from "rxjs";
 import { IUser } from "../shared/model";
 import { ITeam } from "../shared/model";
 import { ITournament } from "../shared/model";
+import { IMatch } from "../shared/model";
 import { IPlayerStatsPerRound } from "../shared/model";
 
 import { environment } from '../../environments/environment';
 
+
+export interface IMatchResponse {
+  Items: IMatch[];
+}
 
 export interface IUserResponse {
   $metadata: object;
@@ -28,11 +33,20 @@ export interface ITeamResponse {
 export class BettingService {
 
     private teamUrl = environment.teamUrl;
-    private playersUrl = environment.playersUrl; //'api/betting/players-1.json'; //
+    private playersUrl = environment.playersUrl; 
     private usersUrl = environment.usersUrl;
     private tournamentUrl = 'api/betting/tournament.json';
-    
+    private matchesUrl = environment.matchesUrl;
+
     constructor( private http : HttpClient ) {}
+
+    getMatches( tournamentId: number, roundId : number ) : Observable<IMatchResponse> {
+        return this.http.get<IMatchResponse>(this.matchesUrl).pipe(
+          //tap( data => console.log('All:', JSON.stringify(data)) ),
+          // TODO filter properly
+          catchError( this.handleError ) 
+        );
+    }
 
     getCurrentTournament() : Observable<ITournament> {
         return this.http.get<ITournament>(this.tournamentUrl).pipe(
