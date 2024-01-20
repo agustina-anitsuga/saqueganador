@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 import { AppComponent } from './app.component'; 
 import { WelcomeComponent } from './home/welcome.component';
@@ -18,6 +19,8 @@ import { SharedModule } from './shared/shared.module';
     WelcomeComponent
   ],
   imports: [
+    NgxGoogleAnalyticsModule.forRoot('G-3SW2Z74M55'),
+    NgxGoogleAnalyticsRouterModule,
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot([
