@@ -56,9 +56,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('init player selection')
     this.loadPlayersInRound();
-    console.log('end init player selections');
   }
 
   loadPlayersInRound(){

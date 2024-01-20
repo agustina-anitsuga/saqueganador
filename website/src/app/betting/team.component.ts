@@ -201,7 +201,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnChanges(): void {
-      console.log('team.component ngOnChanges playerToAdd -> '+JSON.stringify(this.playerToAdd));
+      //console.log('team.component ngOnChanges playerToAdd -> '+JSON.stringify(this.playerToAdd));
       if( this.playerToAdd.playerStats.player.playerId ){
         let players = this.filteredTeam.selection;
         for (let i = 0; i < players.length; i++) {

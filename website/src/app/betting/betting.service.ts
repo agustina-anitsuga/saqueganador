@@ -64,7 +64,7 @@ export class BettingService {
 
     getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> { 
       let url = this.playersUrl + (roundId?roundId:1) ; //+"-"+(roundId?roundId:1)+".json"
-      console.log(url);
+      //console.log(url);
       return this.http.get<IPlayerStatsPerRound[]>(url).pipe(
           //tap( data => console.log('All:', JSON.stringify(data)) ),
           catchError( this.handleError ) 
@@ -81,12 +81,12 @@ export class BettingService {
 
     saveTeam( team : ITeam ) { //: Observable<ITeam> {
       let saveTeamUrl = this.teamUrl + team.teamId;
-      console.log(saveTeamUrl)
+      //console.log(saveTeamUrl)
       let ret = this.http.post<ITeam>(saveTeamUrl, team)
       .pipe(
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )).subscribe(response => console.log('subscribe'));
-      console.log('savedTeam');
+      //console.log('savedTeam');
       return ret;
     }
 

@@ -69,6 +69,7 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
   }
 
   onPlayerSelected( player : IMatchPlayer ){
+    //console.log('onPlayerSelected -> '+this.match.matchId);
     let playerStats : IPlayerStatsPerRound = {
       player : player.player,
       pointsToAward: player.pointsToAward,  
