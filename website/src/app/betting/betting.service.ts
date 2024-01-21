@@ -62,6 +62,14 @@ export class BettingService {
         );
     }
 
+    getTeamsByUser( user : IUser ): Observable<ITeam[]> {
+      let url = this.teamUrl + (user?user.userId:'') ;
+      return this.http.get<ITeam[]>(url).pipe(
+          //tap( data => console.log('All:', JSON.stringify(data)) ),
+          catchError( this.handleError ) 
+      );
+    }
+
     getPlayers( tournamentId : number, roundId : number ): Observable<IPlayerStatsPerRound[]> { 
       let url = this.playersUrl + (roundId?roundId:1) ; //+"-"+(roundId?roundId:1)+".json"
       //console.log(url);

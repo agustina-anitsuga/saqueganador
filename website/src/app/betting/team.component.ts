@@ -30,10 +30,13 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   users : IUser[] = [];
   private _selectedUser : IUser = emptyUser();
-  
+
+  loggedInUser : IUser = emptyUser();
+
   errorMessage = '';
 
   subTeam!: Subscription;
+  subMyTeam!: Subscription;
   subUsers!: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, private bettingService: BettingService, private authenticator: AuthenticatorService) {}
@@ -71,22 +74,35 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit(): void {
     this._currentUserId = "" + this.route.snapshot.paramMap.get("id");
 
-    this.subUsers = this.bettingService.getGroupUsers().subscribe({
-      next: ur => {
-        this.users = this.sortUsers(ur.Items);
-        this.initializeSelections();
-      },
-      error: err => this.errorMessage = err
-    });
+    if( this.mode === 'VIEW' ) {
+        this.subUsers = this.bettingService.getGroupUsers().subscribe({
+          next: ur => {
+            this.users = this.sortUsers(ur.Items);
+            this.initializeSelections();
+          },
+          error: err => this.errorMessage = err
+        });
 
-    this.subTeam = this.bettingService.getTeams().subscribe({
-      next: t => {
-        this.teams = t.Items;
-        this.rounds = this.getRounds(this.teams);
-        this.initializeSelections();
-      },
-      error: err => this.errorMessage = err
-    });
+        this.subTeam = this.bettingService.getTeams().subscribe({
+          next: t => {
+            this.teams = t.Items;
+            this.rounds = this.getRounds(this.teams);
+            this.initializeSelections();
+          },
+          error: err => this.errorMessage = err
+        });
+    }
+    else {
+        this.subMyTeam = this.bettingService.getTeamsByUser(this.getCurrentUser()).subscribe({
+          next: t => {
+            this.teams = t;
+            this.rounds = this.getRounds(this.teams);
+            this.initializeSelections();
+          },
+          error: err => this.errorMessage = err
+        });
+    }
+    
   }
 
   initializeSelections(){
@@ -94,6 +110,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       this.selectedRound = this.getCurrentRound();
       
       this.selectedUser = this.getCurrentUser();
+
+      this.loggedInUser = this.getLoggedInUser();
       
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
   }
@@ -116,6 +134,15 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       return this.rounds? this.rounds[this.rounds.length - 1] : emptyRound() ;
   }
 
+  getLoggedInUser() : IUser {
+      let ret = emptyUser();
+      if (this.authenticator.user) {
+          ret = { "userId": this.authenticator.user.getUsername(), 
+                  "userName": '' } ; 
+      }
+      return ret;
+  }
+
   getCurrentUser() : IUser {   
       let ret = emptyUser();
       if(this._currentUserId && !(this._currentUserId==="null")){
@@ -123,8 +150,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
           ret = { "userId": this._currentUserId, "userName": "" } ; 
       } else if (this.authenticator.user) {
           // a user is logged in   
-          ret = { "userId": this.authenticator.user.getUsername(), 
-                  "userName": '' } ; 
+          ret = this.getLoggedInUser(); 
       }
       return ret;
   }
@@ -151,8 +177,9 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    this.subTeam.unsubscribe();
-    this.subUsers.unsubscribe();
+    if(this.subTeam) { this.subTeam.unsubscribe(); }
+    if(this.subMyTeam) { this.subMyTeam.unsubscribe(); }
+    if(this.subUsers) { this.subUsers.unsubscribe(); }
   }
 
   compareUsers( user1:IUser, user2:IUser ){

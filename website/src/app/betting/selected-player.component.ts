@@ -1,5 +1,5 @@
 import { Component,  Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
-import { ISelectedPlayer, IPlayer, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
+import { ISelectedPlayer, IUser, emptyUser, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { photo, photoType} from '../shared/photos';
 
@@ -15,6 +15,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   @Input() filteredTeam : ITeam = emptyTeam();
   @Input() availableMultipliers : number = NaN;
   @Input() matches : IMatch[] = [];
+  @Input() loggedInUser : IUser = emptyUser();
 
   displayAddMultiplierModal    : boolean = false;
   displayRemoveMultiplierModal : boolean = false;
@@ -35,9 +36,16 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
 
   shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {
     return  selectedPlayer.playerStats.player.playerId && (
-            this.mode === 'EDIT' ||
-            (this.mode === 'VIEW' && selectedPlayer.played));
+                this.mode === 'EDIT' ||
+                (this.mode === 'VIEW' && selectedPlayer.played) ||
+                (this.mode === 'VIEW' && this.teamIsOwnedByLoggedInUser() ) 
+            );
   }
+
+  teamIsOwnedByLoggedInUser(){
+      return this.filteredTeam && this.filteredTeam.user && this.loggedInUser &&
+            (this.filteredTeam.user.userId === this.loggedInUser.userId) ;
+  }  
 
   shouldDisplayPendingSelection( selectedPlayer : ISelectedPlayer ) {
     return  !selectedPlayer.playerStats.player.playerId && 
@@ -49,7 +57,8 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   shouldDisplayPendingResult( selectedPlayer : ISelectedPlayer ) {
-    return  this.mode == 'VIEW' && !selectedPlayer.played;
+    return  this.mode == 'VIEW' && !selectedPlayer.played && 
+            !(this.loggedInUser && (this.filteredTeam.user.userId === this.loggedInUser.userId));
   }
 
   maximumMultipliersPerPlayer() : number {
