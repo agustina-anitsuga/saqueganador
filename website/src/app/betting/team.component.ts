@@ -252,9 +252,15 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   maximumPossibleScore(){
     return ( this.filteredTeam && this.filteredTeam.selection )? 
-    this.filteredTeam.selection.reduce( 
-        (partialSum, selection) => partialSum + (selection.played ? selection.playerScore : 
-            selection.playerMultiplier * selection.playerStats.pointsToAward), 0) : 0;
+                this.filteredTeam.selection.reduce( 
+                    (partialSum, selection) => partialSum + 
+                        ( selection ? 
+                            ( selection && selection.played ? selection.playerScore : 
+                                ( selection && selection.playerMultiplier? selection.playerMultiplier : 1 ) * selection.playerStats.pointsToAward
+                            ) : 0 
+                        ) 
+                    , 0) 
+                : 0;
   }
 
   multiplierAdded( player:ISelectedPlayer ){ 

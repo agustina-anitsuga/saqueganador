@@ -66,7 +66,7 @@
 <pm-player-modal 
         [player]="selectedPlayer" 
         [playerName]="selectedPlayer.playerStats.player.playerName"
-        [playerProfilePic]="selectedPlayer.playerStats.player.playerProfilePic"         
+        [playerProfilePic]="photo"         
         [message]="addMultiplierMessage()"
         [display]="displayAddMultiplierModal"
         (onModalAccepted)="onMultiplierAdded($event)"
@@ -76,7 +76,7 @@
 <pm-player-modal 
         [player]="selectedPlayer" 
         [playerName]="selectedPlayer.playerStats.player.playerName"
-        [playerProfilePic]="selectedPlayer.playerStats.player.playerProfilePic" 
+        [playerProfilePic]="photo" 
         [message]="removeMultiplierMessage()"
         [display]="displayRemoveMultiplierModal"
         (onModalAccepted)="onMultiplierRemoved($event)"
@@ -86,7 +86,7 @@
 <pm-player-modal 
         [player]="selectedPlayer" 
         [playerName]="selectedPlayer.playerStats.player.playerName"
-        [playerProfilePic]="selectedPlayer.playerStats.player.playerProfilePic"  
+        [playerProfilePic]="photo"  
         [message]="removePlayerMessage()"
         [display]="displayRemovePlayerModal"
         (onModalAccepted)="onPlayerRemoved($event)"

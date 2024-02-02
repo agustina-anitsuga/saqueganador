@@ -2,6 +2,7 @@
 export interface ITournament {
   tournamentId: number;
   tournamentName: string;
+  activeLeagues: number;
 }
 
 export interface IRound {
@@ -64,7 +65,8 @@ export interface ITeam {
 export function emptyTournament() : ITournament{
   return {
     tournamentId: NaN,
-    tournamentName: ''
+    tournamentName: '',
+    activeLeagues: NaN
   };
 }
 

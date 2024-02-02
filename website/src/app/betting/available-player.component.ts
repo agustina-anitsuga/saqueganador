@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
-import { IPlayerStatsPerRound, ISelectedPlayer, emptyMatchPlayer, emptyMatch, IPlayer, ITeam, emptyTeam, IMatch, IMatchPlayer } from "../shared/model";
+import { IPlayerStatsPerRound, ISelectedPlayer, emptyMatchPlayer, emptyMatch, IPlayer, ITeam, emptyTeam, IMatch, IMatchPlayer, ITournament, emptyTournament } from "../shared/model";
 import { photo, photoType} from '../shared/photos';
 
 @Component({ 
@@ -14,6 +14,9 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
   
   @Input() 
   match : IMatch = emptyMatch() ;
+
+  @Input()
+  tournament : ITournament = emptyTournament();
 
   @Input() 
   team : ITeam = emptyTeam() ;  
@@ -42,12 +45,15 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
 
   leagueQuotaFull( player : IPlayer ){
     let result = false;
-    if( ( player.league.leagueId >= 0) && this.team && this.team.selection ){
-        let quota = this.team.selection.length / 2 ;
-        let selectedPlayers = this.team.selection.filter( elem => elem.playerStats.player.playerId ); 
-        let leaguePlayers = selectedPlayers.filter( elem => 
-                      elem.playerStats.player.league.leagueId === player.league.leagueId );
-        result = ( leaguePlayers.length >= quota );
+    if( this.tournament && this.tournament.activeLeagues ){
+      let numActiveLeagues = this.tournament.activeLeagues;
+      if( ( player.league.leagueId >= 0) && this.team && this.team.selection ){
+          let quota = this.team.selection.length / numActiveLeagues ;
+          let selectedPlayers = this.team.selection.filter( elem => elem.playerStats.player.playerId ); 
+          let leaguePlayers = selectedPlayers.filter( elem => 
+                        elem.playerStats.player.league.leagueId === player.league.leagueId );
+          result = ( leaguePlayers.length >= quota );
+      }
     }
     return result;
   }
@@ -56,6 +62,7 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
     return ! this.teamContainsPlayer( player.player )
             && ! this.leagueQuotaFull( player.player )
             && ! this.matchHasStarted( match )
+            && this.playerHasRival( match, player );
   }
 
   matchHasStarted( match : IMatch ){
@@ -66,6 +73,14 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
 
   matchHasWinner( match : IMatch ){
     return match.a.won || match.b.won ;
+  }
+
+  playerExists( match :IMatch, player : IMatchPlayer ){
+     return player.player && player.player.playerId ; 
+  }
+
+  playerHasRival( match :IMatch, player : IMatchPlayer ){
+    return player.player && player.pointsToAward > 0 ; 
   }
 
   onPlayerSelected( player : IMatchPlayer ){

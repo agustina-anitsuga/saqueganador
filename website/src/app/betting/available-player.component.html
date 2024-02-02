@@ -1,19 +1,36 @@
 <div class="card">
     <table class="table">
-        <tr><td><img src="{{photo}}" style="width:100%"/></td></tr>
-        <tr><td>{{ player.player.playerName }}</td></tr>
-        <tr><td>Puntos en juego {{ player.pointsToAward }}</td></tr>
-        <ng-container *ngIf = 'shouldAllowPlayerAddition(match,player)'>
-            <tr><td><img src="assets/images/plus-sign.svg" style="width:25%"
-                (click)="confirmSelection()"/></td></tr>   
-        </ng-container>  
+        <ng-container *ngIf = 'playerExists(match,player)'>
+            <tr><td><img src="{{photo}}" style="width:100%"/></td></tr>
+            <tr><td>{{ player.player.playerName }}</td></tr>
+            <ng-container *ngIf = 'playerHasRival(match,player)'>
+                <tr><td>Puntos en juego {{ player.pointsToAward }}</td></tr>
+            </ng-container>
+            <ng-container *ngIf = 'shouldAllowPlayerAddition(match,player)'>
+                <tr><td><img src="assets/images/plus-sign.svg" style="width:25%"
+                    (click)="confirmSelection()"/></td></tr>   
+            </ng-container>  
+            <ng-container *ngIf = '!shouldAllowPlayerAddition(match,player)'>
+                <tr><td><img src="assets/images/nothing.svg" style="width:25%"/></td></tr>   
+            </ng-container>  
+        </ng-container>
+        <ng-container *ngIf = '!playerExists(match,player)'>
+            <tr><td>
+                <div class="hidden-player" >
+                    <img src="assets/images/yellow-question-mark.png" style="width:95%">
+                </div>
+            </td></tr>   
+            <ng-container *ngIf = '!shouldAllowPlayerAddition(match,player)'>
+                <tr><td><img src="assets/images/nothing.svg" style="width:28%"/></td></tr>   
+            </ng-container>  
+        </ng-container>
     </table>   
 </div>
 
 <pm-player-modal 
         [player]="player" 
         [playerName]="player.player.playerName"
-        [playerProfilePic]="player.player.playerProfilePic" 
+        [playerProfilePic]="photo" 
         [message]="modalMessage()"
         [display]="displayModal"
         (onModalAccepted)="onPlayerSelected($event)"

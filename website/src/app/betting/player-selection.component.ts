@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ISelectedPlayer, ILeague, ITeam, emptyLeague, emptyTeam, IMatch } from "../shared/model";
+import { ISelectedPlayer, ILeague, ITeam, emptyLeague, emptyTeam, IMatch, ITournament, emptyTournament } from "../shared/model";
 import { BettingService, IMatchResponse } from "./betting.service";
 
 @Component({
@@ -17,6 +17,8 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
 
   @Input()
   matches : IMatch[] = [];
+
+  tournament : ITournament = emptyTournament() ;
 
   filteredMatches: IMatch[] = [] ;
   
@@ -62,7 +64,8 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   loadPlayersInRound(){
     //console.log("loadPlayersInRound:"+JSON.stringify(this.team));
     if( this.team ){
-        let tournamentId = this.team.tournament.tournamentId;
+        this.tournament = this.team.tournament;
+        let tournamentId = this.tournament.tournamentId;
         let roundId = this.team.round.roundId;
         this.sub = this.bettingService.getMatches(tournamentId,roundId).subscribe({
           next: p => {
@@ -76,11 +79,12 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   filterCurrentRound( matches : IMatchResponse, roundId : number ){
-    return roundId? matches.Items.filter( (m, index) => m.round.roundId === roundId && m.a.pointsToAward > 0 ) : [];
+    return roundId? matches.Items.filter( (m, index) => m.round.roundId === roundId ) : [];
   }
 
   getLeagues( matches : IMatch[] ){
-    let leagues = this.deDuplicate( matches.map((p: IMatch) => p.a.player.league) );
+    console.log(JSON.stringify(matches));
+    let leagues = this.deDuplicate( matches.map((p: IMatch) => (p.a.player.league ? p.a.player.league : p.b.player.league)) );
     leagues.push({ leagueId: NaN, leagueName: '' });
     return leagues;
   }
