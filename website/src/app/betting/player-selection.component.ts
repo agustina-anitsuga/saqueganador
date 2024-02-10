@@ -36,6 +36,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   set listFilter(value: string) {
+    console.log('listFilter');
     this._listFilter = value;
     this.filteredMatches = this.filterMatches();
   }
@@ -50,6 +51,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   } 
 
   filterMatches() : IMatch[] {
+      console.log('filterMatches');
       return this.matches.filter(( match , index) => 
             ( !this._listFilter || (match.a.player && match.a.player.playerName && match.a.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) || 
                 ( match.b.player && match.b.player.playerName && match.b.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) ) 
