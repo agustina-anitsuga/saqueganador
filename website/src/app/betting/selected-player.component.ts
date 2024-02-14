@@ -38,6 +38,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
     return  selectedPlayer.playerStats.player.playerId && (
                 this.mode === 'EDIT' ||
                 (this.mode === 'VIEW' && selectedPlayer.played) ||
+                (this.mode === 'VIEW' && this.matchHasStarted(selectedPlayer)) ||
                 (this.mode === 'VIEW' && this.teamIsOwnedByLoggedInUser() ) 
             );
   }
@@ -78,10 +79,19 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   matchHasStarted( player:ISelectedPlayer ) {
-    //console.log('matchHasStarted -> '+JSON.stringify(player));
+    //if(player.playerStats.player.playerName === 'Arthur Fils') {
+    //    console.log('matchHasStarted -> '+JSON.stringify(player));
+    //    console.log(JSON.stringify(this.matches));
+    //} 
     let matchId = player.playerStats.matchId;
     let m = this.matches.find((match) => match.matchId === matchId);
-    //console.log('match -> '+JSON.stringify(m));
+    //if(player.playerStats.player.playerName === 'Arthur Fils') {  
+    //  console.log('match -> ' + JSON.stringify(m));
+    //  if(m){
+    //    console.log(' newDate-> ' + (new Date(m.matchStartTime))
+    //          + ' matchHasStarted -> ' + (new Date(m.matchStartTime) <= new Date()));
+    //  }
+    //}
     return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) ) ; 
   }
 

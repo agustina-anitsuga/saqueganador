@@ -137,7 +137,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   getLoggedInUser() : IUser {
       let ret = emptyUser();
       if (this.authenticator.user) {
-          ret = { "userId": this.authenticator.user.getUsername(), 
+          ret = { "userId": // '63123103-a9e5-40f2-aa73-03458ddd3d37', 
+                            this.authenticator.user.getUsername(), 
                   "userName": '' } ; 
       }
       return ret;
