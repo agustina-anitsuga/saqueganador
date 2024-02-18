@@ -60,7 +60,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   shouldDisplayPendingResult( selectedPlayer : ISelectedPlayer ) {
-    return  this.mode == 'VIEW' && !selectedPlayer.played && 
+    return  this.mode == 'VIEW' && !this.matchHasStarted(selectedPlayer)  && 
             !(this.loggedInUser && (this.filteredTeam.user.userId === this.loggedInUser.userId));
   }
 
