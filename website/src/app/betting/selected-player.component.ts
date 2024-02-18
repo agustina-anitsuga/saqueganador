@@ -2,6 +2,8 @@ import { Component,  Input, Output, EventEmitter, OnInit, OnDestroy } from "@ang
 import { ISelectedPlayer, IUser, emptyUser, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { photo, photoType} from '../shared/photos';
+import { matchHasStarted } from "../shared/utils" ;
+
 
 @Component({
   selector: 'pm-selected-player',
@@ -79,24 +81,8 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   matchHasStarted( player:ISelectedPlayer ) {
-    //if(player.playerStats.player.playerName === 'Arthur Fils') {
-    //    console.log('matchHasStarted -> '+JSON.stringify(player));
-    //    console.log(JSON.stringify(this.matches));
-    //} 
     let matchId = player.playerStats.matchId;
-    let m = this.matches.find((match) => match.matchId === matchId);
-    //if(player.playerStats.player.playerName === 'Arthur Fils') {  
-    //  console.log('match -> ' + JSON.stringify(m));
-    //  if(m){
-    //    console.log(' newDate-> ' + (new Date(m.matchStartTime))
-    //          + ' matchHasStarted -> ' + (new Date(m.matchStartTime) <= new Date()));
-    //  }
-    //}
-    return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) ) ; 
-  }
-
-  matchHasWinner( match : IMatch ){
-    return match.a.won || match.b.won ;
+    return matchHasStarted(matchId, this.matches);
   }
 
   playerCanBeRemoved( player: ISelectedPlayer ){

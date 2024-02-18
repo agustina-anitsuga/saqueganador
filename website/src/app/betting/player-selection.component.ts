@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } 
 import { Subscription } from "rxjs";
 import { ISelectedPlayer, ILeague, ITeam, emptyLeague, emptyTeam, IMatch, ITournament, emptyTournament } from "../shared/model";
 import { BettingService, IMatchResponse } from "./betting.service";
+import { deDuplicateLeagues } from "../shared/utils";
 
 @Component({
   selector: 'pm-player-selection', 
@@ -36,7 +37,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   set listFilter(value: string) {
-    console.log('listFilter');
+    //console.log('listFilter');
     this._listFilter = value;
     this.filteredMatches = this.filterMatches();
   }
@@ -51,7 +52,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   } 
 
   filterMatches() : IMatch[] {
-      console.log('filterMatches');
+      //console.log('filterMatches');
       return this.matches.filter(( match , index) => 
             ( !this._listFilter || (match.a.player && match.a.player.playerName && match.a.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) || 
                 ( match.b.player && match.b.player.playerName && match.b.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) ) 
@@ -85,17 +86,13 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getLeagues( matches : IMatch[] ){
-    console.log(JSON.stringify(matches));
-    let leagues = this.deDuplicate( matches.map((p: IMatch) => (p.a.player.league ? p.a.player.league : p.b.player.league)) );
+    //console.log(JSON.stringify(matches));
+    let leagues = deDuplicateLeagues( matches.map((p: IMatch) => (p.a.player.league ? p.a.player.league : p.b.player.league)) );
     leagues.push({ leagueId: NaN, leagueName: '' });
     return leagues;
   }
 
-  deDuplicate( leagues : ILeague[] ){
-    const ids = leagues.map(({ leagueId }) => leagueId );
-    const filtered = leagues.filter(({ leagueId }, index) => !ids.includes(leagueId, index + 1));
-    return filtered;
-  }
+
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();

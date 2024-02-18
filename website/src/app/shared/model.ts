@@ -3,12 +3,16 @@ export interface ITournament {
   tournamentId: number;
   tournamentName: string;
   activeLeagues: number;
+  rounds: IRound[];
+  currentRound: number;
+  finalRound: number;
 }
 
 export interface IRound {
     roundId: number;
     roundName: string;
     sortOrder: number;
+    teamSize: number;
   }
 
 export interface IUser {
@@ -66,7 +70,10 @@ export function emptyTournament() : ITournament{
   return {
     tournamentId: NaN,
     tournamentName: '',
-    activeLeagues: NaN
+    activeLeagues: NaN,
+    rounds: [],
+    currentRound: NaN,
+    finalRound: NaN
   };
 }
 
@@ -81,7 +88,7 @@ export function emptyTeam() : ITeam {
   }  
 
 export function emptyRound() : IRound {
-    return { roundId : NaN, roundName : '', sortOrder:NaN };
+    return { roundId : NaN, roundName : '', sortOrder:NaN, teamSize:NaN };
   }
 
 export function emptyUser() : IUser {

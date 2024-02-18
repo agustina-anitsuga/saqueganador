@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { ISelectedPlayer, emptySelectedPlayer, IMatch } from "../shared/model";
+import { matchHasStarted } from "../shared/utils" ;
 
 @Component({
   selector: 'pm-multiplier',
@@ -37,14 +38,9 @@ export class MultiplierComponent {
   matchHasStarted() {
     if(this.player && this.player.playerStats){
       let matchId = this.player.playerStats.matchId;
-      let m = this.matches.find((match) => match.matchId === matchId);
-      return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) ) ; 
+      return matchHasStarted(matchId,this.matches);
     }
     return false;
-  }
-
-  matchHasWinner( match : IMatch ){
-    return match.a.won || match.b.won ;
   }
 
   addMutiplier(): void {

@@ -4,7 +4,7 @@ import { IMatch, IMatchPlayer } from "../shared/model";
 import { AdminService } from "./admin.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
 import { IRound, ILeague, emptyLeague, emptyRound } from "../shared/model";
-
+import { deDuplicateRounds } from "../shared/utils";
 
 @Component({
   selector: 'pm-admin',
@@ -81,18 +81,11 @@ export class AdminComponent implements OnInit, OnDestroy {
 
   getRounds( matches : IMatch[] ) : IRound[] {
     let unsortedRounds = matches.map((t: IMatch) => t.round) 
-    return this.deDuplicateRounds( unsortedRounds);
+    return deDuplicateRounds( unsortedRounds);
   }
 
   getLeagues( matches : IMatch[] ) : ILeague[] {
     return [ { leagueId:1, leagueName: 'ATP' } , { leagueId:2, leagueName: 'WTA' } ];
-  }
-
-  deDuplicateRounds( rounds : IRound[] ) : IRound[] {
-    const ids = rounds.map(({ roundId }) => roundId );
-    const filtered = rounds.filter(({ roundId }, index) => !ids.includes(roundId, index + 1));
-    const sorted = filtered.sort( (elemA,elemB) => elemA.sortOrder - elemB.sortOrder );
-    return sorted;
   }
 
   getCurrentRound() : IRound {

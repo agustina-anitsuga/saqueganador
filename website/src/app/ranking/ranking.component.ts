@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { IRanking, IRound, emptyRound } from "../shared/model";
 import { RankingService } from "./ranking.service";
+import { deDuplicateRounds } from "../shared/utils";
 
 @Component({
   selector: 'pm-ranking',
@@ -54,13 +55,7 @@ export class RankingComponent implements OnInit, OnDestroy {
   }
 
   getRounds( ranking : IRanking[] ) {
-    return this.sortRounds( this.deDuplicate( ranking.map((r: IRanking) => r.round) ) );
-  }
-
-  deDuplicate( rounds : IRound[] ){
-    const ids = rounds.map(({ roundId }) => roundId );
-    const filtered = rounds.filter(({ roundId }, index) => !ids.includes(roundId, index + 1));
-    return filtered;
+    return this.sortRounds( deDuplicateRounds( ranking.map((r: IRanking) => r.round) ) );
   }
 
   getGlobalRanking( ranking : IRanking[] ) {

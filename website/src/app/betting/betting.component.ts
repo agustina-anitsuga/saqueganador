@@ -47,6 +47,7 @@ export class BettingComponent implements OnInit, OnDestroy {
     this.sub = this.adminService.getMatches().subscribe({
         next: matches => {
           this.matches = matches.Items;
+          //console.log('loadMatches -> '+JSON.stringify(this.matches));
         },
         error: err => this.errorMessage = err
       }

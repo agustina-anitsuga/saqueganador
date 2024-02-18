@@ -3,8 +3,9 @@ import { Subscription } from "rxjs";
 import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer, IMatch } from "../shared/model";
 import { ActivatedRoute, Router } from '@angular/router';
 import { BettingService } from "./betting.service";
+import { AdminService } from "../admin/admin.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
-
+import { deDuplicateRounds } from "../shared/utils";
 
 @Component({
   selector: 'pm-team',
@@ -38,8 +39,11 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   subTeam!: Subscription;
   subMyTeam!: Subscription;
   subUsers!: Subscription;
+  subMatches!: Subscription;
 
-  constructor(private route: ActivatedRoute, private router: Router, private bettingService: BettingService, private authenticator: AuthenticatorService) {}
+  constructor(private route: ActivatedRoute, private router: Router, 
+            private bettingService: BettingService, private adminService: AdminService,
+            private authenticator: AuthenticatorService) {}
   
   set selectedUser( user: IUser ) {
     this._selectedUser = user;
@@ -91,6 +95,15 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
           },
           error: err => this.errorMessage = err
         });
+
+        this.subMatches = this.adminService.getMatches().subscribe({
+          next: matches => {
+            this.matches = matches.Items;
+            //console.log('loadMatches -> '+JSON.stringify(this.matches));
+          },
+          error: err => this.errorMessage = err
+        }
+      );
     }
     else {
         this.subMyTeam = this.bettingService.getTeamsByUser(this.getCurrentUser()).subscribe({
@@ -167,14 +180,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   getRounds( team : ITeam[] ) : IRound[] {
-    return this.deDuplicate( team.map((t: ITeam) => t.round) );
-  }
-
-  deDuplicate( rounds : IRound[] ) : IRound[] {
-    const ids = rounds.map(({ roundId }) => roundId );
-    const filtered = rounds.filter(({ roundId }, index) => !ids.includes(roundId, index + 1));
-    const sorted = filtered.sort( (elemA,elemB) => elemA.sortOrder - elemB.sortOrder );
-    return sorted;
+    return deDuplicateRounds( team.map((t: ITeam) => t.round) );
   }
 
   ngOnDestroy(): void {

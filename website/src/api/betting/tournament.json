@@ -1,5 +1,35 @@
 {
     "tournamentId": 2,
     "tournamentName": "Argentina Open",
-    "activeLeagues":1
+    "activeLeagues":1,
+    "rounds": [
+        { 
+            "roundId": 1,
+            "roundName": "Primera Ronda",
+            "sortOrder": 1,
+            "teamSize": 8
+      },{ 
+            "roundId": 2,
+            "roundName": "Segunda Ronda",
+            "sortOrder": 2,
+            "teamSize": 8
+      },{ 
+            "roundId": 3,
+            "roundName": "Cuartos de Final",
+            "sortOrder": 3,
+            "teamSize": 4
+      },{ 
+            "roundId": 4,
+            "roundName": "Semifinal",
+            "sortOrder": 4,
+            "teamSize": 2
+      },{ 
+            "roundId": 5,
+            "roundName": "Final",
+            "sortOrder": 5,
+            "teamSize": 1
+      }
+    ],
+    "currentRound": 1,
+    "finalRound": 5
 }

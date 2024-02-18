@@ -1,6 +1,8 @@
 import { Component, Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
 import { IPlayerStatsPerRound, ISelectedPlayer, emptyMatchPlayer, emptyMatch, IPlayer, ITeam, emptyTeam, IMatch, IMatchPlayer, ITournament, emptyTournament } from "../shared/model";
 import { photo, photoType} from '../shared/photos';
+import { matchHasStarted } from "../shared/utils" ;
+
 
 @Component({ 
   selector: 'pm-available-player', 
@@ -61,26 +63,16 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
   shouldAllowPlayerAddition( match : IMatch, player : IMatchPlayer ){
     return ! this.teamContainsPlayer( player.player )
             && ! this.leagueQuotaFull( player.player )
-            && ! this.matchHasStarted( match )
+            && !matchHasStarted( match.matchId, this.matches )
             && this.playerHasRival( match, player );
-  }
-
-  matchHasStarted( match : IMatch ){
-    let matchId = match.matchId;
-    let m = this.matches.find((match) => match.matchId === matchId);
-    return m && ( ( m.matchStartTime && new Date(m.matchStartTime) <= new Date() ) || this.matchHasWinner(m) );
-  }
-
-  matchHasWinner( match : IMatch ){
-    return match.a.won || match.b.won ;
   }
 
   playerExists( match :IMatch, player : IMatchPlayer ){
      return player.player && player.player.playerId ; 
   }
 
-  playerHasRival( match :IMatch, player : IMatchPlayer ){
-    return player.player && player.pointsToAward > 0 ; 
+  playerHasRival( match :IMatch, player : IMatchPlayer ) : boolean {
+    return !!player.player && player.pointsToAward > 0 ; 
   }
 
   onPlayerSelected( player : IMatchPlayer ){
