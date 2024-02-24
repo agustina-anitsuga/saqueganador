@@ -19,9 +19,9 @@ export const handler = async (event) => {
         'Content-Type': 'application/json',
     };
 
-    let round = { roundId : 1, roundName : 'Primera Ronda', sortOrder:1, teamSize:8 };
-    let tournament = { tournamentId: 1, tournamentName: 'Australian Open' };
-
+    let tournament = await getTournament();
+    let round = getNextRound(tournament);
+        
     try {
         console.log('Started generating round '+round.roundName);
         users = await documentClient.scan({ TableName: 'SaqueGanador-Users' });
@@ -30,7 +30,7 @@ export const handler = async (event) => {
             let team = await createTeam( user, tournament, round);
             teams.push(team);
             console.log('Finished generating round for user '+user["userName"]);
-        };
+        }
         console.log('Finished generating round '+round.roundName);
     } catch (err) {
         console.log('Error generating round '+err);
@@ -45,6 +45,22 @@ export const handler = async (event) => {
         body,
         headers,
     };
+};
+
+export const format = (pTournament) =>  {
+    return {
+        tournamentId: pTournament.tournamentId,
+        tournamentName: pTournament.tournamentName
+    };
+};
+
+export const getTournament= async(key) => {
+    let ret = null;
+    let tournaments = await documentClient.scan({ TableName: 'SaqueGanador-Tournaments' });
+    if( tournaments.Items.length == 1 ){
+        ret = tournaments.Items[0];
+    }
+    return ret;
 };
 
 export const createTeam = async (pUser , pTournament, pRound) =>  {
@@ -63,11 +79,11 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
         
         // if it does not, create a new one
         if( !team ){
-            console.log('could not find team '+key)
+            console.log('could not find team '+key);
             team = {
                 teamId: key,
                 user: pUser,
-                tournament: pTournament, 
+                tournament: format(pTournament), 
                 round: pRound, 
                 selection: [],
                 score: 0
@@ -83,6 +99,56 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
         }
         
         // if there was a previous round, fill in victorious players
+        if( pRound.roundId>1 ){
+            let previousRoundTeamKey = pTournament.tournamentId + '-' + (pRound.roundId-1) + '-' + pUser.userId;
+            console.log('key for team in previous round'+ key);
+            
+            let previousTeam = (await getTeam(previousRoundTeamKey)).Item;
+            console.log('previousTeam -> '+JSON.stringify(previousTeam));
+            
+            let teamSize = pRound.teamSize;
+            if( !teamSize ) { teamSize = 8 }
+            
+            for( let i=0; i < teamSize; i++){
+                try { 
+                    console.log( 'previous team selection['+i+'] -> '+JSON.stringify( previousTeam.selection[i] ) );
+                    if ( (previousTeam.selection[i].playerScore > 0)  // player won in last round
+                          && !team.selection[i].playerStats.player.playerId  // position has not yet been filled in current round
+                        ) {
+                        console.log('preserve player '+previousTeam.selection[i].playerStats.player.playerId);
+                        
+                        team.selection[i].played = false;
+                        team.selection[i].playerMultiplier = 1;
+                        team.selection[i].playerScore = 0;
+                        team.selection[i].playerStats.matchId = getNextRoundMatchId(
+                                        getStem(previousTeam.selection[i].playerStats.matchId),
+                                        pTournament,
+                                        previousTeam.round,
+                                        pRound);
+                        team.selection[i].playerStats.player = previousTeam.selection[i].playerStats.player;
+                        team.selection[i].playerStats.pointsToAward = 0 ;
+                        team.selection[i].pastPick = true;
+                        team.selection[i].confirmed = previousTeam.selection[i].played;
+                        
+                        let matchResult = await getMatch(team.selection[i].playerStats.matchId);
+                        console.log( 'match->' + JSON.stringify(matchResult));
+                        if(matchResult.Item){
+                            let match = matchResult.Item;
+                            if( match.scoreAssigned ){
+                                let playerId = team.selection[i].playerStats.player.playerId;
+                                if( match.a.player.playerId === playerId ){
+                                    team.selection[i].playerStats.pointsToAward = match.a.pointsToAward ;
+                                } else if ( match.b.player.playerId === playerId ){
+                                    team.selection[i].playerStats.pointsToAward = match.b.pointsToAward ;
+                                }
+                            }
+                        }
+                    }
+                } catch ( err ){
+                    console.log(err);
+                }
+            }
+        } 
         
         await saveTeam( team );  
         
@@ -92,7 +158,28 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
     
     console.log('end createTeam' );
     return team;
-}
+};
+
+export const getNextRound = (tournament) =>  {
+    let roundId = tournament.currentRound.roundId;
+    let nextRoundId = roundId + 1;
+    let nextRound = tournament.rounds.find( (elem) => elem.roundId === nextRoundId );
+    return nextRound;
+};
+
+export const getStem = (key) =>  {
+    let ret = key.slice(0,key.length-2);
+    console.log('stem for '+key+' => '+ret);
+    return ret;
+};
+
+export const getNextRoundMatchId = ( pStem, pTournament, pRound, pNextRound ) =>  {
+    let currentRound = pTournament.tournamentId + '-' + pRound.roundId + '-' ;
+    let nextRound = pTournament.tournamentId + '-' + pNextRound.roundId + '-' ;
+    let ret = pStem.replace( currentRound, nextRound );
+    console.log('getNextRoundMatchId->'+ret);
+    return ret;
+};
 
 export const emptySelection = {
         "position" : 0, 
@@ -119,7 +206,7 @@ export const saveTeam = async (team) =>  {
     }
     console.log('end saveTeam '+JSON.stringify(ret));
     return ret;
-}
+};
 
 export const getTeam = async(key) => {
     let team = await documentClient.get({
@@ -127,7 +214,14 @@ export const getTeam = async(key) => {
               Key: {teamId: key},
             });
     return team;
-}
+};
 
+export const getMatch = async(key) => {
+    let match = await documentClient.get({
+              TableName: "SaqueGanador-Matches",
+              Key: {matchId: key},
+            });
+    return match;
+};
 
 

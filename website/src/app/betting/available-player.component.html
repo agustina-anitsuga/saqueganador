@@ -2,7 +2,11 @@
     <table class="table">
         <ng-container *ngIf = 'playerExists(match,player)'>
             <tr><td><img src="{{photo}}" style="width:100%"/></td></tr>
-            <tr><td>{{ player.player.playerName }}</td></tr>
+            <tr>
+                <td>
+                    <a href="{{player.player.playerProfileUrl}}" target="_blank">{{ player.player.playerName }}</a>
+                </td>
+            </tr>
             <ng-container *ngIf = 'playerHasRival(match,player)'>
                 <tr><td>Puntos en juego {{ player.pointsToAward }}</td></tr>
             </ng-container>

@@ -20,14 +20,31 @@ export const handler = async (event) => {
     let httpMethod = event.requestContext.http.method;
     let httpPath = event.requestContext.http.path;
     console.log('Received httpMethod:', httpMethod);
+    console.log('Received httpPath:', httpPath);
     
     try {
         switch (httpMethod) {
             case 'GET':
                 if( httpPath === "/" ){
                     body = await dynamo.scan({ TableName: 'SaqueGanador-Teams' });
-                } else {
-                    throw new Error(`Get not supported on "${httpPath}"`);
+                } 
+                else if( httpPath.startsWith("/" ) ) {
+                    let userId = httpPath.substring(1);
+                    console.log('User ID: '+userId);
+                    let temp = await dynamo.scan({ TableName: 'SaqueGanador-Teams' });
+                    console.log(JSON.stringify(temp));
+                    body = [];
+                    for( let i=0 ; i< temp.Items.length ; i ++ ){
+                        let team = temp.Items[i];
+                        console.log('team -> '+JSON.stringify(team));
+                        if( team.user.userId === userId ){
+                            body.push(team); // todo: change by proper query
+                        }
+                    }
+                    console.log(JSON.stringify(body));
+                } 
+                else {
+                    throw new Error(`GET not supported`);
                 }
                 break;
             case 'POST': // this should probably do some security check - I should not be allowed to change someone else's team
@@ -60,16 +77,17 @@ export const handler = async (event) => {
 
 export const saveTeam = async (team) =>  {
     let ret = null;
-
+    let penalties = team.penaltyMultipliers ? team.penaltyMultipliers : 0;
     console.log('begin saveTeam '+JSON.stringify(team));
     var params = {
         TableName:"SaqueGanador-Teams",
         Key: {
             teamId : team.teamId
         },
-        UpdateExpression: "set selection = :aSelection",
+        UpdateExpression: "set selection = :aSelection, penaltyMultipliers = :aPenalties",
         ExpressionAttributeValues:{
-            ":aSelection":team.selection
+            ":aSelection":team.selection,
+            ":aPenalties":penalties
         },
         ReturnValues:"UPDATED_NEW"
     };
@@ -87,4 +105,4 @@ export const saveTeam = async (team) =>  {
     */
     
     return ret;
-}
+};

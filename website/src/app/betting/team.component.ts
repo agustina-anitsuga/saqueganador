@@ -14,7 +14,7 @@ import { deDuplicateRounds } from "../shared/utils";
 })
 export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
-  pageTitle : string = "Equipo "
+  pageTitle : string = "Equipo ";
 
   @Input() mode : string = 'VIEW' ; // VIEW, EDIT  
   private _currentUserId : string = '';
@@ -99,7 +99,6 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
         this.subMatches = this.adminService.getMatches().subscribe({
           next: matches => {
             this.matches = matches.Items;
-            //console.log('loadMatches -> '+JSON.stringify(this.matches));
           },
           error: err => this.errorMessage = err
         }
@@ -127,6 +126,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       this.loggedInUser = this.getLoggedInUser();
       
       this.filteredTeam = this.performFilter( this._selectedUser, this._selectedRound );
+
   }
 
   sortUsers( users:IUser[] ){
@@ -150,7 +150,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   getLoggedInUser() : IUser {
       let ret = emptyUser();
       if (this.authenticator.user) {
-          ret = { "userId": // '63123103-a9e5-40f2-aa73-03458ddd3d37', 
+          ret = { "userId": //'63123103-a9e5-40f2-aa73-03458ddd3d37', 
                             this.authenticator.user.getUsername(), 
                   "userName": '' } ; 
       }
@@ -187,6 +187,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
     if(this.subTeam) { this.subTeam.unsubscribe(); }
     if(this.subMyTeam) { this.subMyTeam.unsubscribe(); }
     if(this.subUsers) { this.subUsers.unsubscribe(); }
+    if(this.subMatches) { this.subMatches.unsubscribe(); }
   }
 
   compareUsers( user1:IUser, user2:IUser ){
@@ -204,7 +205,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   allMatchesPlayed() {
-    return this.filteredTeam.selection.every( player => player.played );
+    return this.filteredTeam.selection.every( player => !!player.played );
   }
 
   allPlayersSelected() {
@@ -215,7 +216,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   selectedPlayerCount() {
     return ( this.filteredTeam && this.filteredTeam.selection )? 
              this.filteredTeam.selection.reduce( 
-              (partialSum, selection) => partialSum + (selection.playerStats.player.playerId? 1:0), 0) : 0;
+              (partialSum, item) => partialSum + (!!item.playerStats.player.playerId? 1:0), 0) : 0;
   }
 
   maximumMultipliers() : number {
@@ -230,12 +231,18 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
               rta = rta + (this.filteredTeam.selection[i].playerMultiplier?
                            this.filteredTeam.selection[i].playerMultiplier:0);
           }
+          //console.log('consumedMultipliers-penalties -> '+this.penaltyMultipliers());
+          rta = rta + this.penaltyMultipliers();
       }
       return rta;
   }
 
+  penaltyMultipliers(): number {
+    return this.filteredTeam ? 
+            ( this.filteredTeam.penaltyMultipliers ? this.filteredTeam.penaltyMultipliers : 0 ) : 0 ;  
+  }
+
   ngOnChanges(): void {
-      //console.log('team.component ngOnChanges playerToAdd -> '+JSON.stringify(this.playerToAdd));
       if( this.playerToAdd.playerStats.player.playerId ){
         let players = this.filteredTeam.selection;
         for (let i = 0; i < players.length; i++) {
@@ -250,10 +257,14 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   playerRemoved( player:ISelectedPlayer ){ 
+    //console.log('playerRemoved -> '+JSON.stringify(player));
     let index = this.filteredTeam.selection.findIndex( 
           elem => elem.playerStats.player.playerId === player.playerStats.player.playerId );
     this.filteredTeam.selection[index] = emptySelectedPlayer();
-
+    if( player.pastPick ){
+      let penalties = this.penaltyMultipliers();
+      this.filteredTeam.penaltyMultipliers = penalties + 1
+    }
     this.saveTeam();
   }  
 
@@ -262,7 +273,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
                 this.filteredTeam.selection.reduce( 
                     (partialSum, selection) => partialSum + 
                         ( selection ? 
-                            ( selection && selection.played ? selection.playerScore : 
+                            ( selection && !!selection.played ? selection.playerScore : 
                                 ( selection && selection.playerMultiplier? selection.playerMultiplier : 1 ) * selection.playerStats.pointsToAward
                             ) : 0 
                         ) 

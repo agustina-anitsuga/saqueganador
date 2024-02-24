@@ -1,0 +1,208 @@
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+
+
+const client = new DynamoDBClient({
+  region: process.env.AWS_REGION,
+});
+const documentClient = DynamoDBDocument.from(client);
+
+
+export const draw = [
+{ matchId: '2-1-atp-1.1.1.1.2.1' , playerId: 'juan-pablo-varillas' },
+{ matchId: '2-1-atp-1.1.1.1.2.2' , playerId: 'camilo-ugo-carabelli' },
+{ matchId: '2-1-atp-1.1.1.2.1.1' , playerId: 'andrea-vavassori' },
+{ matchId: '2-1-atp-1.1.2.2.1.2' , playerId: 'daniel-elahi-galan' },
+{ matchId: '2-1-atp-1.2.2.1.2.2' , playerId: 'mariano-navone' }
+  ];
+
+export const handler = async (event) => {
+    console.log('Received event:', JSON.stringify(event, null, 2));
+
+    let matches = [];
+    let body;
+    let statusCode = '200';
+    const headers = {
+        'Content-Type': 'application/json',
+    };
+
+    try {
+        let pTournament = await getTournament();
+        console.log('Started generating draw for tournament '+pTournament.tournamentName);
+        
+        for (const match of draw) {
+            console.log('Started generating match '+ JSON.stringify(match));
+            let pRound = getRound(pTournament,getRoundId(match.matchId));
+            let match1 = await createMatch( match, pTournament, pRound );
+            matches.push(match1);
+            console.log('Finished generating match '+ JSON.stringify(match1));
+        }
+        console.log('Finished generating draw');
+        
+    } catch (err) {
+        console.log('Error generating draw '+err);
+        statusCode = '400';
+        body = err.message;
+    } finally {
+        body = JSON.stringify(matches);
+    }
+
+    return {
+        statusCode,
+        body,
+        headers,
+    };
+};
+
+export const getRoundId = (key) =>  {
+    let ret = key.slice(key.indexOf('-')+1,key.length);
+    ret = ret.slice(0,ret.indexOf('-'));
+    console.log('roundId for '+key+' => '+ret);
+    return parseInt(ret);
+};
+
+export const getStem = (key) =>  {
+    let ret = key.slice(0,key.length-2);
+    console.log('stem for '+key+' => '+ret);
+    return ret;
+};
+
+export const getPosition = (key) =>  {
+    let ret = key.slice(-1);
+    console.log('position for '+key+' => '+ret);
+    return ret;
+};
+
+export const getRound = (pTournament,pRoundId) =>  {
+    return pTournament.rounds.find((element) => element.roundId = pRoundId);
+};
+
+export const getLeague = (key) =>  {
+    let ret = { leagueId: 1, leagueName: 'ATP' };
+    if( key === 'wta' ){
+        ret = { leagueId: 2, leagueName: 'WTA' };
+    }
+    return ret;
+};
+
+export const format = (pPlayer) =>  {
+    let ret = {
+        league : getLeague(pPlayer.League),
+        playerId: pPlayer.playerId,
+        playerName: pPlayer.FullName,
+        playerProfilePic: pPlayer.ProfilePicUrl,
+        playerProfileUrl: (pPlayer.LeagueProfileUrl ? pPlayer.LeagueProfileUrl : pPlayer.Source),
+        ranking: Number(pPlayer.Ranking),
+        winRatio: Number(pPlayer.MatchesWon) / (Number(pPlayer.MatchesWon) + Number(pPlayer.MatchesLost))
+    };
+    return ret;
+};
+
+export const emptyMatch = ( pTournament, pRound ) => {
+  return {
+      matchId: '',
+      tournament: { 
+          tournamentId: pTournament.tournamentId,
+          tournamentName: pTournament.tournamentName,
+          activeLeagues: pTournament.activeLeagues
+      },
+      round : pRound,
+      a: {
+          player : {},
+          pointsToAward: 0  
+      },
+      b: {
+          player : {},
+          pointsToAward: 0  
+      },
+      scoreAssigned: false
+    };
+};
+
+export const createMatch = async (pMatch,pTournament,pRound) =>  {
+    console.log('begin createMatch '+ JSON.stringify(pMatch) );
+    let match = null;
+    
+    try {
+        let key = getStem(pMatch.matchId);
+      
+        // fetch match from db if exists
+        let matchResult = await getMatch(key);
+        match = matchResult.Item;
+        console.log('after get '+JSON.stringify(match));
+        
+        // if it does not, create a new one
+        if( !match ){
+            console.log('could not find match '+key);
+            match = emptyMatch(pTournament,pRound);
+            match.matchId = key;
+        } 
+
+        // set the player in the match
+        let playerResult = await getPlayer(pMatch.playerId);
+        if( playerResult.Item ){
+            let position = await getPosition(pMatch.matchId);
+            let player = format(playerResult.Item)
+            if( position === '1' ){
+                match.a.player = player;
+            } else {
+                match.b.player = player;
+            }
+            
+        } else {
+            console.log('Player not found '+pMatch.playerId);
+        }
+        
+        await saveMatch( match );  
+        
+    } catch ( err ){
+        console.log('error createMatch '+ err);
+    }
+    
+    console.log('end createMatch' );
+    return match;
+};
+
+export const saveMatch = async (match) =>  {
+    let ret = null;
+    console.log('begin saveMatch '+JSON.stringify(match));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Matches',
+          Item: match
+        };
+        ret = await documentClient.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveMatch '+JSON.stringify(ret));
+    return ret;
+};
+
+export const getTournament= async(key) => {
+    let ret = null;
+    let tournaments = await documentClient.scan({ TableName: 'SaqueGanador-Tournaments' });
+    if( tournaments.Items.length == 1 ){
+        ret = tournaments.Items[0];
+    }
+    return ret;
+};
+
+export const getMatch= async(key) => {
+    let match = await documentClient.get({
+              TableName: "SaqueGanador-Matches",
+              Key: {matchId: key},
+            });
+    return match;
+};
+
+export const getPlayer= async(key) => {
+    let player = await documentClient.get({
+              TableName: "SaqueGanador-Players",
+              Key: {playerId: key},
+            });
+    return player;
+};
+
+
+

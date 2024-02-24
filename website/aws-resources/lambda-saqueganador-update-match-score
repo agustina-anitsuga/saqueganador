@@ -1,0 +1,122 @@
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
+
+const snsClient = new SNSClient({});
+
+
+const client = new DynamoDBClient({
+  region: process.env.AWS_REGION,
+});
+const documentClient = DynamoDBDocument.from(client);
+
+
+export const handler = async (event) => {
+  console.log('Received event:', JSON.stringify(event, null, 2));
+  
+  let message = event.Records[0].Sns.Message ;
+  let match = JSON.parse(message);
+  console.log( 'Received match -> ' + JSON.stringify(match) );
+  
+  let body = await updateMatchScores( match );
+  await updateRanking();
+  
+  const response = {
+    statusCode: 200,
+    body: JSON.stringify(body),
+  };
+  return response;
+};
+
+export const updateRanking = async () => {
+  console.log('updateRanking');
+  let topicArn = 'arn:aws:sns:us-east-1:687400810619:saqueganador-ranking-needs-update';
+  let message = 'ranking update required';
+  try {
+      const response = await snsClient.send(
+          new PublishCommand({
+            Message: message,
+            TopicArn: topicArn,
+          }),
+      );
+      console.log(response);
+  } catch ( err ) {
+      console.log( err );
+  }
+};
+
+export const getWinner = (match) => {
+  return match.a.won? match.a.player : ( match.b.won ? match.b.player : null ) ;
+};
+
+export const getLoser = (match) => {
+  return match.a.won? match.b.player : ( match.b.won ? match.a.player : null ) ;
+};
+
+export const updateMatchScores = async (match) => {
+  let winner = getWinner(match);
+  console.log( 'winner -> '+ JSON.stringify(winner));
+  let loser = getLoser(match);
+  console.log( 'loser -> '+ JSON.stringify(loser));
+  let impactedTeams = await getImpactedTeams(match);
+  console.log('impactedTeams -> ' + JSON.stringify(impactedTeams) );
+  let response = [];
+  for( let i=0; i<impactedTeams.length; i++){
+      let team = impactedTeams[i];
+      let selectedWinner = team.selection.find( (elem) => elem.playerStats.player.playerId === winner.playerId );
+      let selectedLoser = team.selection.find( (elem) => elem.playerStats.player.playerId === loser.playerId );
+      if( selectedWinner || selectedLoser ){
+          console.log('team to be updated -> '+JSON.stringify(team));
+          if( selectedWinner ){
+            selectedWinner.played = true;
+            selectedWinner.playerScore = selectedWinner.playerStats.pointsToAward * selectedWinner.playerMultiplier ;
+          }
+          if( selectedLoser ){
+            selectedLoser.played = true;
+            selectedLoser.playerScore = 0 ;
+          }
+          saveTeam(team);
+          response.push(team);
+      }
+  }
+  return response;
+};
+
+export const getImpactedTeams = async (match) => {
+  let partialKey = match.tournament.tournamentId + '-' + match.round.roundId + '-' ;
+  console.log( 'partialKey -> ' + partialKey);
+  let teams = [];
+  try {
+      const params = {
+            TableName: 'SaqueGanador-Teams',
+            ScanFilter: {
+               "teamId": {
+                    ComparisonOperator: "BEGINS_WITH",
+                    AttributeValueList: [partialKey]
+               }
+            }
+        };
+      let result = await documentClient.scan(params);
+      teams = result.Items;
+  } catch (err){
+    console.log(err);
+  }
+  return teams;
+};
+
+export const saveTeam = async (team) =>  {
+    let ret = null;
+    console.log('begin saveTeam '+JSON.stringify(team));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Teams',
+          Item: team
+        };
+        ret = await documentClient.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveTeam '+JSON.stringify(ret));
+    return ret;
+};
+

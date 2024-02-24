@@ -22,6 +22,9 @@ export class PlayerModalComponent implements OnChanges {
   message : string = '' ; 
 
   @Input()
+  warning : string = '' ; 
+
+  @Input()
   display : boolean = false;
 
   @ViewChild('content') content : any ;

@@ -87,7 +87,9 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
       playerStats : playerStats,
       playerMultiplier: 1,
       playerScore: 0,
-      played: false
+      played: false,
+      pastPick: false,
+      confirmed: true
     };
     this.playerClicked.emit( selectedPlayer );
     this.modalClosed( player );

@@ -12,22 +12,21 @@ export const handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     let body;
-    let users;
     let statusCode = '200';
     let ranking = [];
     const headers = {
         'Content-Type': 'application/json',
     };
 
+    let tournament = await getTournament();
     let minRound = 1;
-    let maxRound = 1;
-    let tournamentId = 1;
-
+    let maxRound = tournament.currentRound;
+    
     try {
         
-        ranking = await calculateScores( minRound, maxRound, tournamentId );
+        ranking = await calculateScores( minRound, maxRound, tournament.tournamentId );
         
-        ranking = await calculatePositions( minRound, maxRound, tournamentId );
+        ranking = await calculatePositions( minRound, maxRound, tournament.tournamentId );
         
     } catch (err) {
         console.log('Error generating round '+err);
@@ -44,16 +43,27 @@ export const handler = async (event) => {
     };
 };
 
+export const getTournament= async(key) => {
+    let ret = null;
+    let tournaments = await documentClient.scan({ TableName: 'SaqueGanador-Tournaments' });
+    if( tournaments.Items.length == 1 ){
+        ret = tournaments.Items[0];
+    }
+    return ret;
+};
+
 export const calculatePositions = async( minRound, maxRound, tournamentId ) => {
     let ranking = [];
     console.log('Begin Calculating ranking positions');
     for( let roundId = minRound; roundId<=maxRound; roundId++ ){
+        console.log('Updating round '+roundId);
         let rankingsPerRound = await getRankingsPerRound( tournamentId, roundId );
-        let sortedRankingsPerRound = await sortRankings(rankingsPerRound.Items);
+        let sortedRankingsPerRound = await sortRankings(rankingsPerRound);
         let position = 0;
         let lastScore = -1;
         for( let i=0; i<sortedRankingsPerRound.length; i++){
             let r = sortedRankingsPerRound[i];
+            console.log('Sorted ranking '+JSON.stringify(r));
             if( !(r.score === lastScore) ){
                 position = position +1;
             }
@@ -65,7 +75,7 @@ export const calculatePositions = async( minRound, maxRound, tournamentId ) => {
         console.log('calculated ranking positions in round '+roundId+'->'+JSON.stringify(ranking));
     }
     let globalRankings = await getGlobalRankings( tournamentId );
-    let sortedGlobalRankings = await sortRankings(globalRankings.Items);
+    let sortedGlobalRankings = await sortRankings(globalRankings);
     let position = 0;
     let lastScore = -1;
     for( let i=0; i<sortedGlobalRankings.length; i++){
@@ -82,12 +92,21 @@ export const calculatePositions = async( minRound, maxRound, tournamentId ) => {
     
     console.log('End Calculating ranking positions');
     return ranking;
-}
+};
 
 export const sortRankings = ( rankings ) => {
     console.log('to sort '+JSON.stringify(rankings));
-    return rankings.sort( function(a, b){ a.score - b.score } );
-}
+    let response = rankings.sort( function(a, b){ 
+        if ( a.score < b.score ) {
+            return 1;
+        } else if ( a.score > b.score ) {
+            return -1;
+        }
+        return 0;
+    } );
+    console.log('Sorted rankings '+JSON.stringify(response));
+    return response;
+};
 
 export const calculateScores = async( minRound, maxRound, tournamentId ) => {
     console.log('Started calculateScores');
@@ -107,10 +126,10 @@ export const calculateScores = async( minRound, maxRound, tournamentId ) => {
             await processGlobalRanking( user, r.tournament, userGlobalScore );
         }
         console.log('Finished calculateScores for user '+user["userName"]);
-    };
+    }
     console.log('Finished calculateScores');
     return ranking;
-}
+};
 
 export const getRankingsPerRound = async( pTournamentId, pRoundId ) => {
     const partialKey = pTournamentId + '-' + pRoundId + '-';
@@ -126,8 +145,8 @@ export const getRankingsPerRound = async( pTournamentId, pRoundId ) => {
     };
     let rankings = await documentClient.scan(params);
     console.log('end getRankingsPerRound' );
-    return rankings;
-}
+    return rankings.Items;
+};
 
 export const getGlobalRankings = async( pTournamentId ) => {
     const partialKey = pTournamentId + '--';
@@ -143,8 +162,8 @@ export const getGlobalRankings = async( pTournamentId ) => {
     };
     let rankings = await documentClient.scan(params);
     console.log('end getGlobalRankings' );
-    return rankings;
-}
+    return rankings.Items;
+};
 
 export const processGlobalRanking = async (pUser , pTournament, pUserGlobalScore) =>  {
     console.log('begin processGlobalRanking '+ JSON.stringify(pUser) + ' ' + JSON.stringify(pTournament) + ' ' + pUserGlobalScore);
@@ -167,7 +186,7 @@ export const processGlobalRanking = async (pUser , pTournament, pUserGlobalScore
                 score: 0,
                 position: 0
             };
-        };
+        }
         ranking.score = pUserGlobalScore;
         await saveRanking( ranking );
         
@@ -177,7 +196,7 @@ export const processGlobalRanking = async (pUser , pTournament, pUserGlobalScore
     
     console.log('end processGlobalRanking' );
     return ranking;
-}
+};
 
 export const processRanking = async (pUser , pTournamentId, pRoundId) =>  {
     console.log('begin processRanking '+ JSON.stringify(pUser) );
@@ -211,7 +230,7 @@ export const processRanking = async (pUser , pTournamentId, pRoundId) =>  {
                     score: 0,
                     position: 0
                 };
-            };
+            }
             ranking.score = team.score;
             await saveRanking( ranking );
         } 
@@ -222,7 +241,7 @@ export const processRanking = async (pUser , pTournamentId, pRoundId) =>  {
     
     console.log('end processRanking' );
     return ranking;
-}
+};
 
 export const saveTeam = async (team) =>  {
     let ret = null;
@@ -238,7 +257,7 @@ export const saveTeam = async (team) =>  {
     }
     console.log('end saveTeam '+JSON.stringify(ret));
     return ret;
-}
+};
 
 export const saveRanking = async (ranking) =>  {
     let ret = null;
@@ -254,7 +273,7 @@ export const saveRanking = async (ranking) =>  {
     }
     console.log('end saveRanking '+JSON.stringify(ret));
     return ret;
-}
+};
 
 export const getTeam = async(key) => {
     let team = await documentClient.get({
@@ -262,7 +281,7 @@ export const getTeam = async(key) => {
               Key: {teamId: key},
             });
     return team;
-}
+};
 
 export const getRanking = async(key) => {
     let ranking = await documentClient.get({
@@ -270,6 +289,6 @@ export const getRanking = async(key) => {
               Key: {rankingId: key},
             });
     return ranking;
-}
+};
 
 

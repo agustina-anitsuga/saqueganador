@@ -1,9 +1,7 @@
 import { Component,  Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
 import { ISelectedPlayer, IUser, emptyUser, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { photo, photoType} from '../shared/photos';
 import { matchHasStarted } from "../shared/utils" ;
-
 
 @Component({
   selector: 'pm-selected-player',
@@ -26,7 +24,6 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   photo : string = '';
   photoType : string = '';
 
-  constructor(private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.photo = photo(this.selectedPlayer.playerStats.player) ;
@@ -39,7 +36,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {
     return  selectedPlayer.playerStats.player.playerId && (
                 this.mode === 'EDIT' ||
-                (this.mode === 'VIEW' && selectedPlayer.played) ||
+                (this.mode === 'VIEW' && !!selectedPlayer.played) ||
                 (this.mode === 'VIEW' && this.matchHasStarted(selectedPlayer)) ||
                 (this.mode === 'VIEW' && this.teamIsOwnedByLoggedInUser() ) 
             );
@@ -86,13 +83,23 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   playerCanBeRemoved( player: ISelectedPlayer ){
-    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) //&& !player.played 
-            && !this.matchHasStarted(player);
+    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) 
+            && !this.matchHasStarted(player) 
+            && (!player.pastPick||(player.pastPick && this.availableMultipliers>=1))
+            && player.confirmed ;
   }
 
-  playerCanNotBeRemoved( player: ISelectedPlayer ){
-    return this.mode === 'EDIT' && this.shouldDisplayPlayer(player) //&& player.played
-            && this.matchHasStarted(player);
+  playerCanNotBeRemoved( player: ISelectedPlayer ) {
+    return (this.mode === 'EDIT') && this.shouldDisplayPlayer(player) &&
+            ( 
+                this.matchHasStarted(player) 
+                || (!!player.pastPick && (this.availableMultipliers<=0) )
+                || (!player.confirmed && !player.played)
+            );
+  }
+
+  playerIsConfirmed( player: ISelectedPlayer ) : boolean {
+    return player.confirmed;
   }
 
   modalClosed( player: any ) {
@@ -129,7 +136,15 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   removePlayerMessage(){
-    return 'Quitar a ' + this.selectedPlayer.playerStats.player.playerName +' de mi equipo?'
+    return 'Quitar a ' + this.selectedPlayer.playerStats.player.playerName +' de mi equipo?';
+  }
+
+  penaltyMessage(){
+    let msg = '';
+    if( this.selectedPlayer.pastPick ){
+        msg = msg + 'Esto consumirá una pelotita multiplicadora. '
+    }
+    return msg;
   }
 
   onPlayerRemoved( player : any ){

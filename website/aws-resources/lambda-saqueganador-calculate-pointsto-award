@@ -1,0 +1,97 @@
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+
+
+const client = new DynamoDBClient({
+  region: process.env.AWS_REGION,
+});
+const documentClient = DynamoDBDocument.from(client);
+
+export const handler = async (event, context, callback) => {
+    
+    console.log('Triggered calculation of points to award.');
+    let successfull = 0;
+    
+    event.Records.forEach( async (record) => {
+        console.log('Stream record: ', JSON.stringify(record, null, 2));
+        try {
+          if (record.eventName == 'INSERT' || record.eventName == 'MODIFY' ) {
+            console.log('match id -> '+record.dynamodb.NewImage.matchId.S);
+            let match = await getMatch(record.dynamodb.NewImage.matchId.S);
+            console.log(JSON.stringify(match));
+
+            // if both players are present, set points to be awarded
+            if( match.a.player && match.a.player.playerId
+                && match.b.player && match.b.player.playerId
+                && !match.scoreAssigned.BOOL ){
+                    
+                console.log('Calculate points for players in match '+JSON.stringify(match));
+                    
+                match.a.pointsToAward = calculatePointsToAward(match.a.player,match.b.player);
+                match.b.pointsToAward = calculatePointsToAward(match.b.player,match.a.player);
+                match.scoreAssigned = true;
+                
+                await saveMatch(match);
+                successfull = successfull + 1;
+            }
+          }
+        } catch (err) {
+            console.log(err);
+        }
+    });
+    
+    console.log('Finished calculation of points to award.');
+    callback(null, `Successfully processed ${successfull} / ${event.Records.length} records.`);
+};   
+
+
+export const calculatePointsToAward = (player, opponent) =>  {
+    
+    let baseScore = 120;
+    let rankingDiff = player.ranking - opponent.ranking;
+    let diffRankingWeight = 2.1;
+    let plusRankingDiffLessThan5 = 50;
+    let plusRankingDiffLessThan10 = 25;
+    let plusLowWinRatio = 20;
+    let minScore = 50;
+    let maxScore = 500;
+    
+    let pointsToAward = baseScore + rankingDiff * diffRankingWeight +
+                        ( Math.abs(rankingDiff) <= 5 ? plusRankingDiffLessThan5 : 0 ) +
+                        ( Math.abs(rankingDiff) > 5 && Math.abs(rankingDiff) <= 10 ? plusRankingDiffLessThan10 : 0 ) +
+                        ( player.winRatio > 0.62 ? 0 : plusLowWinRatio );
+    
+    if( pointsToAward < minScore ){
+        pointsToAward = minScore;
+    }
+    
+    if( pointsToAward > maxScore ){
+        pointsToAward = maxScore;
+    }
+    
+    return Math.round(pointsToAward);
+};
+
+export const saveMatch = async (match) =>  {
+    let ret = null;
+    console.log('begin saveMatch '+JSON.stringify(match));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Matches',
+          Item: match
+        };
+        ret = await documentClient.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveMatch '+JSON.stringify(ret));
+    return ret;
+};
+
+export const getMatch = async(key) => {
+    let match = await documentClient.get({
+              TableName: "SaqueGanador-Matches",
+              Key: {matchId: key},
+            });
+    return match.Item;
+};

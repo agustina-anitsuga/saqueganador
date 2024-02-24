@@ -55,6 +55,8 @@ export interface ISelectedPlayer {
     playerMultiplier: number;
     playerScore: number;
     played: boolean;
+    pastPick: boolean;
+    confirmed: boolean;
   }
 
 export interface ITeam {
@@ -64,6 +66,7 @@ export interface ITeam {
     round : IRound;
     selection: ISelectedPlayer[];
     score: number;
+    penaltyMultipliers: number;
   }
 
 export function emptyTournament() : ITournament{
@@ -84,7 +87,9 @@ export function emptyTeam() : ITeam {
       tournament: emptyTournament(), 
       round: emptyRound(), 
       selection: [],
-      score: NaN } ;
+      score: NaN,
+      penaltyMultipliers: 0, 
+    } ;
   }  
 
 export function emptyRound() : IRound {
@@ -105,7 +110,9 @@ export function emptySelectedPlayer() : ISelectedPlayer {
       playerStats : emptyPlayerStatsPerRound(),
       playerMultiplier: NaN,
       playerScore: 0,
-      played: false
+      played: false,
+      pastPick: false,
+      confirmed: true
       };
   }
 

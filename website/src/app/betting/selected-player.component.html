@@ -16,16 +16,21 @@
               <div class="row center">
                   <div>
                       <div class='{{photoType}}' >
-                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}"  target="_blank">
                           <img src="{{photo}}" style="width:100%" />
                         </a> 
                       </div> 
                       <div>                  
-                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}" >
+                        <a href="{{selectedPlayer.playerStats.player.playerProfileUrl}}"  target="_blank">
                           {{ selectedPlayer.playerStats.player.playerName }}
                         </a>
                       </div>
-                      <div>Puntos en juego {{ selectedPlayer.playerStats.pointsToAward }}</div> 
+                      <ng-container *ngIf = 'playerIsConfirmed(selectedPlayer)' >
+                        <div>Puntos en juego {{ selectedPlayer.playerStats.pointsToAward }}</div> 
+                      </ng-container>
+                      <ng-container *ngIf = '!playerIsConfirmed(selectedPlayer)' >
+                        <div>&nbsp;</div>
+                      </ng-container>
                   </div>
               </div>
           </ng-container>
@@ -52,16 +57,20 @@
                 </pm-multiplier>
               </div>
           </ng-container>
-          <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
+          <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer) && playerIsConfirmed(selectedPlayer)' >
               <div>
-                  <ng-container *ngIf = 'selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
+                  <ng-container *ngIf = '!!selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
                   <ng-container *ngIf = '!selectedPlayer.played'>Resultado Pendiente</ng-container>
               </div>
+          </ng-container>
+          <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer) && !playerIsConfirmed(selectedPlayer)' >
+            <div>
+                Esperando resultado de la ronda anterior
+            </div>
           </ng-container>
         </div> 
     </div>
 </div>
-
 
 <pm-player-modal 
         [player]="selectedPlayer" 
@@ -88,6 +97,7 @@
         [playerName]="selectedPlayer.playerStats.player.playerName"
         [playerProfilePic]="photo"  
         [message]="removePlayerMessage()"
+        [warning]="penaltyMessage()"
         [display]="displayRemovePlayerModal"
         (onModalAccepted)="onPlayerRemoved($event)"
         (onModalCancelled)="modalClosed($event)">

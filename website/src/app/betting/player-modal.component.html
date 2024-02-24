@@ -8,6 +8,10 @@
             <div class="crop-container">
                 <img src="{{playerProfilePic}}" style="width:80%"/>
             </div>
+            <div *ngIf='warning'
+                class='alert alert-danger'>
+                {{ warning }}
+            </div>
         </div>
         <div class="modal-footer" style="text-align:center">
             <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel')">No</button>
