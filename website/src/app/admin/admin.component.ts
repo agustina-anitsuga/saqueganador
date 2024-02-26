@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
-import { IMatch, IMatchPlayer } from "../shared/model";
 import { AdminService } from "./admin.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
-import { IRound, ILeague, emptyLeague, emptyRound } from "../shared/model";
+import { IRound, ILeague, emptyLeague, emptyRound, ITournament, IMatch, IMatchPlayer, emptyTournament } from "../shared/model";
 import { deDuplicateRounds } from "../shared/utils";
+import { AlertService } from "../shared/alert.service";
 
 @Component({
   selector: 'pm-admin',
@@ -13,8 +13,9 @@ import { deDuplicateRounds } from "../shared/utils";
 })
 export class AdminComponent implements OnInit, OnDestroy {
 
-  public pageTitle = 'Admin';
+  public pageTitle = 'Administrar Partidos';
 
+  tournament : ITournament = emptyTournament();
   matches : IMatch[] = [];
   filteredMatches : IMatch[] = [];
   rounds : IRound[] = [];
@@ -27,8 +28,12 @@ export class AdminComponent implements OnInit, OnDestroy {
   errorMessage = '';
 
   sub!: Subscription;
+  subTournament!: Subscription;
+
   
-  constructor( private adminService: AdminService, private authenticator: AuthenticatorService) {}
+  constructor( private adminService: AdminService, 
+               private alertService: AlertService,  
+               private authenticator: AuthenticatorService) {}
 
 
   set selectedRound( round: IRound ) {
@@ -69,10 +74,19 @@ export class AdminComponent implements OnInit, OnDestroy {
       },
       error: err => this.errorMessage = err
     });
+
+    this.subTournament = this.adminService.getCurrentTournament().subscribe({
+      next: t => {
+        this.tournament = t.Items[0]; 
+      },
+      error: err => this.errorMessage = err
+    });
+
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    if(this.sub) this.sub.unsubscribe();
+    if(this.subTournament) this.subTournament.unsubscribe();
   }
 
   initializeSelections(){
@@ -130,4 +144,21 @@ export class AdminComponent implements OnInit, OnDestroy {
     return !!value && !!value.player && !!value.player.playerName && typeof value.player.playerName === 'string' ;
   } 
 
+  currentRound(){
+    let roundId = this.tournament.currentRound;
+    let round = this.tournament.rounds.find( (r) => r.roundId === roundId );
+    return '' + roundId + ' - ' + (round?round.roundName:'');
+  }
+
+  onRoundStarted(){
+    this.alertService.clear();
+    this.adminService.startNextRound().subscribe(
+    post => {
+      this.alertService.info("Ronda iniciada");
+    },
+    err => {
+      console.log(err);
+      this.alertService.error("Error -> "+err);
+    });
+  }
 }

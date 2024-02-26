@@ -45,8 +45,7 @@ export const handler = async (event) => {
                             let tournament = await getTournament();
                             await generateNextRoundMatch(match,tournament);
                         }
-                        await updateScores(match);
-                        await updateTeams(match);
+                        await notifyMatchScoreAvailable(match);
                     }
                     body = JSON.stringify(match);
                 } else {
@@ -180,7 +179,7 @@ export const getNextRound = (round, tournament) =>  {
     return nextRound;
 };
 
-export const updateScores = async (match) =>  {
+export const notifyMatchScoreAvailable = async (match) =>  {
     let topicArn = 'arn:aws:sns:us-east-1:687400810619:saqueganador-match-result-available';
     let message = JSON.stringify(match);
     try {
@@ -213,115 +212,3 @@ export const saveMatch = async (match) =>  {
     return ret;
 };
 
-export const updateTeams = async (match) => {
-    
-    console.log( 'Begin updateTeams' ); 
-    try {
-        
-        // look up tournament
-        let tournament = await getTournament();
-        console.log('Tournament -> '+JSON.stringify(tournament));
-        
-        // look up the next round match
-        let nextRound = getNextRound(match.round,tournament);
-        let nextRoundMatchId = getNextRoundMatchId(getStem(match.matchId),match.tournament,match.round,nextRound);
-        let nextRoundMatch = await getMatch(nextRoundMatchId);
-        console.log('Next Round -> '+JSON.stringify(nextRound)+' nextRoundMatch -> '+nextRoundMatch );
-        
-        // get teams    
-        let teams = await getTeamsInRound(tournament,nextRound);
-        for (var team of teams) {
-            console.log('Analyze team -> '+JSON.stringify(team));
-            console.log('Analyze team selection -> '+JSON.stringify(team.selection));
-            for ( var player of team.selection ){
-                console.log('Analyze player -> '+JSON.stringify(player));
-                if( player && player.playerStats 
-                    && player.playerStats.matchId === nextRoundMatchId ){
-                    console.log('Player in nextRoundMatch');
-                    if( matchHasWinner(match) ) {
-                        if( playerWonMatch( player, match ) ){
-                            player.confirmed = true;
-                            if( matchHasPointsToBeAwarded(nextRoundMatch) ){
-                                player.playerStats.pointsToAward = pointsToAwardToPlayer(nextRoundMatch,player);
-                            }
-                        } else {
-                            player = null;       
-                        }
-                        await saveTeam(team);
-                    }
-                }
-            }
-        }
-    
-    } catch ( err ) {
-        console.log( 'Error updating teams' + err );   
-    }
-};
-
-
-export const saveTeam = async (team) =>  {
-    let ret = null;
-    let penalties = team.penaltyMultipliers ? team.penaltyMultipliers : 0;
-    console.log('begin saveTeam '+JSON.stringify(team));
-    var params = {
-        TableName:"SaqueGanador-Teams",
-        Key: {
-            teamId : team.teamId
-        },
-        UpdateExpression: "set selection = :aSelection, penaltyMultipliers = :aPenalties",
-        ExpressionAttributeValues:{
-            ":aSelection":team.selection,
-            ":aPenalties":penalties
-        },
-        ReturnValues:"UPDATED_NEW"
-    };
-    ret = await dynamo.update(params);
-    console.log('end saveTeam '+JSON.stringify(ret));
-    
-    /*
-    console.log('begin saveTeam '+JSON.stringify(team));
-    var params = {
-          TableName: 'SaqueGanador-Teams',
-          Item: team
-        };
-    ret = await dynamo.put(params);
-    console.log('end saveTeam '+JSON.stringify(ret));
-    */
-    
-    return ret;
-};
-
-export const pointsToAwardToPlayer = ( match, player ) => {
-     return ( match.a.player.playerId === player.playerStats.player.playerId ) ? 
-                match.a.pointsToAward : match.b.pointsToAward ;
-};
-
-export const playerWonMatch = ( player, match ) => {
-     return ( match.a.won && match.a.player.playerId === player.playerStats.player.playerId ) ||
-            ( match.b.won && match.b.player.playerId === player.playerStats.player.playerId ) ;
-};
-
-export const matchHasPointsToBeAwarded = ( match ) => {
-    return match.scoreAssigned;
-};
-
-export const matchHasWinner = ( match ) => {
-     return match.a.won || match.b.won;
-};
-
-export const getTeamsInRound = async ( tournament, round ) => {
-    const partialKey = tournament.tournamentId + '-' + round.roundId + '-';
-    console.log('begin getTeamsInRound '+ partialKey );
-    const params = {
-        TableName: 'SaqueGanador-Teams',
-        ScanFilter: {
-           "teamId": {
-                ComparisonOperator: "BEGINS_WITH",
-                AttributeValueList: [partialKey]
-           }
-        }
-    };
-    let teams = await dynamo.scan(params);
-    console.log('end getTeamsInRound -> ' + JSON.stringify(teams) );
-    return teams.Items;
-};

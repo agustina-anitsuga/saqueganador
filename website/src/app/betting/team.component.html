@@ -7,7 +7,7 @@
       <div class='row' >
         <div class='col-md-1 text-left'>Equipo:</div>
         <div class='col-md-3'>
-          <select [(ngModel)]="selectedUser" class="h-100 w-100" [compareWith]="compareUsers">
+          <select [(ngModel)]="selectedUser" class="h-100 w-100" [compareWith]="compareUsers" id="user">
             <option *ngFor="let u of users" [ngValue]="u">{{u.userName}}</option>
           </select>
         </div>
@@ -16,7 +16,7 @@
       <div class='row'>
         <div class='col-md-1 text-left' >Ronda:</div>
         <div class='col-md-2'>
-          <select [(ngModel)]="selectedRound" class="h-100 w-100" >
+          <select [(ngModel)]="selectedRound" class="h-100 w-100" id="round">
             <option *ngFor="let r of rounds" [ngValue]="r">{{r.roundName}}</option>
           </select> 
         </div>

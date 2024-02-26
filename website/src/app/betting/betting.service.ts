@@ -27,6 +27,13 @@ export interface ITeamResponse {
   Items: ITeam[];
 }
 
+export interface ITournamentResponse {
+  $metadata: object;
+  Count: number;
+  Items: ITournament[];
+}
+
+
 @Injectable({
   providedIn: 'root'
 })
@@ -35,7 +42,7 @@ export class BettingService {
     private teamUrl = environment.teamUrl;
     private playersUrl = environment.playersUrl; 
     private usersUrl = environment.usersUrl;
-    private tournamentUrl = 'api/betting/tournament.json';
+    private tournamentUrl = environment.tournamentUrl;
     private matchesUrl = environment.matchesUrl;
 
     constructor( private http : HttpClient ) {}
@@ -48,8 +55,8 @@ export class BettingService {
         );
     }
 
-    getCurrentTournament() : Observable<ITournament> {
-        return this.http.get<ITournament>(this.tournamentUrl).pipe(
+    getCurrentTournament() : Observable<ITournamentResponse> {
+        return this.http.get<ITournamentResponse>(this.tournamentUrl).pipe(
             //tap( data => console.log('All:', JSON.stringify(data)) ),
             catchError( this.handleError ) 
         );

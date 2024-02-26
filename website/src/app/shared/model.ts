@@ -6,6 +6,7 @@ export interface ITournament {
   rounds: IRound[];
   currentRound: number;
   finalRound: number;
+  admins: string[]
 }
 
 export interface IRound {
@@ -76,7 +77,8 @@ export function emptyTournament() : ITournament{
     activeLeagues: NaN,
     rounds: [],
     currentRound: NaN,
-    finalRound: NaN
+    finalRound: NaN,
+    admins: []
   };
 }
 

@@ -28,7 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.sub = this.bettingService.getCurrentTournament().subscribe({
       next: t => {
-        this.tournament = t;
+        this.tournament = t.Items[0];
       },
       error: err => this.errorMessage = err
     });
@@ -40,7 +40,18 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   isUserLoggedIn(){
+    //console.log(this.authService.currentUser().username);
     return this.authService.currentUser();
+  }
+
+  isAdminLoggedIn(){
+    let user = this.authService.currentUser();
+    let admins = this.tournament.admins;
+    let username : string = '';
+    if( user ){
+      username = user.username ? user.username : '';
+    }
+    return admins.includes(username);
   }
 
   logout() {

@@ -21,8 +21,8 @@ export const handler = async (event) => {
         console.log(response);
         
         let user = await getUser(event.request.userAttributes.sub);
-        let round = { roundId : 1, roundName : 'Primera Ronda', sortOrder:1, teamSize:8 };
-        let tournament = { tournamentId: 2, tournamentName: 'Argentina Open', activeLeagues: 1 };
+        let tournament = await getTournament();
+        let round = await getRound( tournament );
         await createTeam( user, tournament, round);
     
     } catch (err) {
@@ -30,6 +30,21 @@ export const handler = async (event) => {
     } 
 
     return event ;
+};
+
+export const getRound = (tournament) =>  {
+    let roundId = tournament.currentRound;
+    let round = tournament.rounds.find( (elem) => elem.roundId === roundId );
+    return round;
+};
+
+export const getTournament = async(key) => {
+    let ret = null;
+    let tournaments = await dynamo.scan({ TableName: 'SaqueGanador-Tournaments' });
+    if( tournaments.Items.length == 1 ){
+        ret = tournaments.Items[0];
+    }
+    return ret;
 };
 
 export const getUser = async (pUserId) =>  {
@@ -56,7 +71,7 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
         
         // if it does not, create a new one
         if( !team ){
-            console.log('could not find team '+key)
+            console.log('could not find team '+key);
             team = {
                 teamId: key,
                 user: pUser,
@@ -83,7 +98,7 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
     
     console.log('end createTeam' );
     return team;
-}
+};
 
 export const emptySelection = {
         "position" : 0, 
@@ -110,7 +125,7 @@ export const saveTeam = async (team) =>  {
     }
     console.log('end saveTeam '+JSON.stringify(ret));
     return ret;
-}
+};
 
 export const getTeam = async(key) => {
     let team = await dynamo.get({
@@ -118,5 +133,5 @@ export const getTeam = async(key) => {
               Key: {teamId: key},
             });
     return team;
-}
+};
 

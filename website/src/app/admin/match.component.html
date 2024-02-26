@@ -4,30 +4,30 @@
         <div class="col-sm-1"></div>
         <div class="card col-sm-4" (click)="onItemSelection(match.a)" >
           <div  [ngClass]="{'winner': match.a.won}">
-          <div>{{ match.a.player.playerName }} </div>
+          <div><b>{{ match.a.player.playerName }}</b></div>
           <div>Ranking: {{match.a.player.ranking}} </div>          
-          <div>Win %: {{match.a.player.winRatio}} </div>                    
-          <div>Points to award: {{match.a.pointsToAward}} </div>
+          <div>% victorias: {{match.a.player.winRatio}} </div>                    
+          <div>Puntos en juego: {{match.a.pointsToAward}} </div>
           </div>
         </div>
         <div class="col-sm-2">
           <div class="row-sm-10">
             <div>{{match.matchId}}</div>
-            <div>start time:</div>
+            <div>fecha y hora inicio:</div>
             <input type="datetime-local" 
                 [ngModel]="match.matchStartTime | date:'yyyy-MM-ddTHH:mm'"
                 (ngModelChange)="match.matchStartTime = $event" />
           </div>
           <div class="row-sm-10" style="margin-top:10px;">
-            <button class="primary" (click)="onItemSaved()">Save</button>
+            <button class="btn btn-block px-sm-3 px-md-5 btn-primary" (click)="onItemSaved();" onclick="this.blur()">Guardar</button>
           </div>
         </div>
         <div class="card col-sm-4" (click)="onItemSelection(match.b)" style="margin-left:15px !important">
           <div  [ngClass]="{'winner': match.b.won}">
-          <div>{{ match.b.player.playerName }} </div>
+          <div><b>{{ match.b.player.playerName }}</b></div>
           <div>Ranking: {{match.b.player.ranking}} </div>          
-          <div>Win %: {{match.b.player.winRatio}} </div>                    
-          <div>Points to award: {{match.b.pointsToAward}} </div>
+          <div>% victorias: {{match.b.player.winRatio}} </div>                    
+          <div>Puntos en juego: {{match.b.pointsToAward}} </div>
           </div>
         </div>
         <div class="col-sm-1"></div>

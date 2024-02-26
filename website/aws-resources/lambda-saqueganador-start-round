@@ -19,25 +19,35 @@ export const handler = async (event) => {
         'Content-Type': 'application/json',
     };
 
-    let tournament = await getTournament();
-    let round = getNextRound(tournament);
-        
+    let httpMethod = event.requestContext.http.method;
+    console.log('Received httpMethod:', httpMethod);
+    
     try {
-        console.log('Started generating round '+round.roundName);
-        users = await documentClient.scan({ TableName: 'SaqueGanador-Users' });
-        for (const user of users.Items) {
-            console.log('Started generating round for user '+ JSON.stringify(user));
-            let team = await createTeam( user, tournament, round);
-            teams.push(team);
-            console.log('Finished generating round for user '+user["userName"]);
+        switch (httpMethod) {
+            case 'POST':
+                            
+                let tournament = await getTournament();
+                let round = getNextRound(tournament);
+                    
+                console.log('Started generating round '+round.roundName);
+                users = await documentClient.scan({ TableName: 'SaqueGanador-Users' });
+                for (const user of users.Items) {
+                    console.log('Started generating round for user '+ JSON.stringify(user));
+                    let team = await createTeam( user, tournament, round);
+                    teams.push(team);
+                    console.log('Finished generating round for user '+user["userName"]);
+                }
+                console.log('Finished generating round '+round.roundName);
+                
+                break;
+            default:
+                throw new Error(`Unsupported method "${httpMethod}"`);
         }
-        console.log('Finished generating round '+round.roundName);
     } catch (err) {
-        console.log('Error generating round '+err);
         statusCode = '400';
         body = err.message;
     } finally {
-        body = JSON.stringify(teams);
+        body = JSON.stringify(body);
     }
 
     return {
@@ -112,11 +122,13 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
             for( let i=0; i < teamSize; i++){
                 try { 
                     console.log( 'previous team selection['+i+'] -> '+JSON.stringify( previousTeam.selection[i] ) );
-                    if ( (previousTeam.selection[i].playerScore > 0)  // player won in last round
-                          && !team.selection[i].playerStats.player.playerId  // position has not yet been filled in current round
+                    let match = getMatch(previousTeam.selection[i].playerStats.matchId);
+                    
+                    if ( !team.selection[i].playerStats.player.playerId  // position has not yet been filled in current round
+                            && ( ( matchHasWinner(match) && playerWon(previousTeam.selection[i],match) ) || ( !matchHasWinner(match) ) )
                         ) {
                         console.log('preserve player '+previousTeam.selection[i].playerStats.player.playerId);
-                        
+                            
                         team.selection[i].played = false;
                         team.selection[i].playerMultiplier = 1;
                         team.selection[i].playerScore = 0;
@@ -161,7 +173,7 @@ export const createTeam = async (pUser , pTournament, pRound) =>  {
 };
 
 export const getNextRound = (tournament) =>  {
-    let roundId = tournament.currentRound.roundId;
+    let roundId = tournament.currentRound;
     let nextRoundId = roundId + 1;
     let nextRound = tournament.rounds.find( (elem) => elem.roundId === nextRoundId );
     return nextRound;
@@ -171,6 +183,16 @@ export const getStem = (key) =>  {
     let ret = key.slice(0,key.length-2);
     console.log('stem for '+key+' => '+ret);
     return ret;
+};
+
+export const playerWon = (player,match) => {
+    let playerId = player.playerStats.player.playerId;
+    return ( match.a.won && match.a.player.playerId === playerId ) ||
+            ( match.b.won && match.b.player.playerId === playerId ) ;
+};
+
+export const matchHasWinner = (match) =>  {
+    return match.a.won || match.b.won;
 };
 
 export const getNextRoundMatchId = ( pStem, pTournament, pRound, pNextRound ) =>  {
