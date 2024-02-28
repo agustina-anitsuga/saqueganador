@@ -99,7 +99,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   playerIsConfirmed( player: ISelectedPlayer ) : boolean {
-    return player.confirmed;
+    return player.confirmed || player.played ;
   }
 
   modalClosed( player: any ) {
