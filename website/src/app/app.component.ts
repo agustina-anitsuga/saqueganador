@@ -29,6 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.sub = this.bettingService.getCurrentTournament().subscribe({
       next: t => {
         this.tournament = t.Items[0];
+        //console.log(JSON.stringify(this.tournament));
       },
       error: err => this.errorMessage = err
     });

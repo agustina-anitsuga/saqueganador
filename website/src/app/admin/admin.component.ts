@@ -150,7 +150,7 @@ export class AdminComponent implements OnInit, OnDestroy {
     return '' + roundId + ' - ' + (round?round.roundName:'');
   }
 
-  onRoundStarted(){
+  onNextRoundStarted(){
     this.alertService.clear();
     this.adminService.startNextRound().subscribe(
     post => {
@@ -161,4 +161,5 @@ export class AdminComponent implements OnInit, OnDestroy {
       this.alertService.error("Error -> "+err);
     });
   }
+
 }

@@ -13,7 +13,7 @@ import { MatchComponent } from './match.component';
   imports: [
     RouterModule.forChild([
         { path: 'admin', 
-            //canActivate: [AuthGuard], 
+            canActivate: [AuthGuard], 
             component: AdminComponent },
     ]),
     SharedModule 
