@@ -1,15 +1,27 @@
-<div class="card h-100" >
-    <ng-container *ngIf = 'playerCanBeRemoved(selectedPlayer)' >
-        <span class="pull-right clickable close-icon playnice" data-effect="fadeOut" 
-                  (click)='confirmPlayerRemoval()'>
-            <i class="fa fa-times"></i>
-        </span>
-    </ng-container>
-    <ng-container *ngIf = 'playerCanNotBeRemoved(selectedPlayer)' >
-      <span class="pull-right playnice" data-effect="fadeOut" >
-            <i class="fa fa-thumb-tack"></i> 
-      </span>
-    </ng-container>
+<div class="card h-100">
+    <div class="card-header">
+      <div class="row">
+          <div class="col-md-1">
+            <span class="pull-left" style="padding:3%">
+              {{getPosition(selectedPlayer)}}
+            </span>
+          </div>
+          <div class="col-md-3">&nbsp;</div>
+          <div class="col-md-7" style="text-align:right">
+            <ng-container *ngIf = 'playerCanBeRemoved(selectedPlayer)' >
+                <span class="pull-right clickable close-icon playnice" data-effect="fadeOut" 
+                          (click)='confirmPlayerRemoval()'>
+                    <i class="fa fa-times"></i>
+                </span>
+            </ng-container>
+            <ng-container *ngIf = 'playerCanNotBeRemoved(selectedPlayer)' >
+              <span class="pull-right playnice" data-effect="fadeOut" >
+                    <i class="fa fa-thumb-tack"></i> 
+              </span>
+            </ng-container> 
+          </div>
+      </div>
+    </div>
     <div class="card-block">
         <div>
           <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer)' >
@@ -67,6 +79,22 @@
             <div>
                 Esperando resultado de la ronda anterior
             </div>
+          </ng-container>
+          <ng-container *ngIf = 'needsNextRoundSelection(selectedPlayer)' >
+              <div class="card" style="margin:3%;padding:2%;">
+                <div class="row">                    
+                    <div class="col-md-6">
+                        <ng-container *ngIf = '!playerIsInFirstPosition(selectedPlayer)' >
+                        <i class="fa fa-arrow-left" aria-hidden="true" (click)="moveLeft(selectedPlayer)"></i>
+                        </ng-container>
+                    </div>
+                    <div class="col-md-6">
+                      <ng-container *ngIf = '!playerIsInLastPosition(selectedPlayer)' >
+                      <i class="fa fa-arrow-right" aria-hidden="true" (click)="moveRight(selectedPlayer)"></i>
+                      </ng-container>
+                  </div>
+                </div>
+              </div>
           </ng-container>
         </div> 
     </div>

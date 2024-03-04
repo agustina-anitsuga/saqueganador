@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ISelectedPlayer, ITeam, IUser, IRound, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer, IMatch } from "../shared/model";
+import { ISelectedPlayer, ITeam, IUser, IRound, ITournament, emptyTeam, emptyRound, emptyUser, emptySelectedPlayer, IMatch, emptyTournament } from "../shared/model";
 import { ActivatedRoute, Router } from '@angular/router';
 import { BettingService } from "./betting.service";
 import { AdminService } from "../admin/admin.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
 import { deDuplicateRounds } from "../shared/utils";
+import { SelectorMatcher } from "@angular/compiler";
 
 @Component({
   selector: 'pm-team',
@@ -32,6 +33,8 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   users : IUser[] = [];
   private _selectedUser : IUser = emptyUser();
 
+  tournament : ITournament = emptyTournament();
+
   loggedInUser : IUser = emptyUser();
 
   errorMessage = '';
@@ -40,6 +43,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   subMyTeam!: Subscription;
   subUsers!: Subscription;
   subMatches!: Subscription;
+  subTournament!: Subscription;
 
   constructor(private route: ActivatedRoute, private router: Router, 
             private bettingService: BettingService, private adminService: AdminService,
@@ -110,11 +114,27 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
             this.teams = t;
             this.rounds = this.getRounds(this.teams);
             this.initializeSelections();
+            this.fixPositions();
+          },
+          error: err => this.errorMessage = err
+        });
+
+        this.subTournament = this.bettingService.getCurrentTournament().subscribe({
+          next: t => {
+            this.tournament = t.Items[0];
           },
           error: err => this.errorMessage = err
         });
     }
     
+  }
+
+  fixPositions(){
+      for( var i=0; i<this.filteredTeam.selection.length; i = i+1 ) {
+          if( this.filteredTeam.selection[i] && !this.filteredTeam.selection[i].position ){
+            this.filteredTeam.selection[i].position = i+1;
+          }
+      }
   }
 
   initializeSelections(){
@@ -157,6 +177,103 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       return ret;
   }
 
+  playerLeftOf( player : ISelectedPlayer )  : ISelectedPlayer | null {
+      let i = player.position - 2;
+      let ret = null;
+      for( ; i>=0 ; i = i - 1){
+          let temp = this.filteredTeam.selection[i];
+          if( this.playerCanBeMoved(temp)){
+              ret = temp;
+              break;
+          }
+      }
+      console.log('Player to left of '+player.playerStats.player.playerName+' is '+JSON.stringify(ret));
+      return ret;
+  }
+
+  playerRightOf( player : ISelectedPlayer ) : ISelectedPlayer | null {
+      let i = player.position ;
+      let ret = null;
+      for( ; i<this.filteredTeam.selection.length ; i = i + 1){
+          let temp = this.filteredTeam.selection[i];
+          if( this.playerCanBeMoved(temp)){
+              ret = temp;
+              break;
+          }
+      }
+      console.log('Player to right of '+player.playerStats.player.playerName+' is '+JSON.stringify(ret));
+      return ret;
+  }
+
+  playerCanBeMoved( player: ISelectedPlayer ) : boolean {
+    return !!player && !!player.playerStats 
+        && !!player.playerStats.player && !!player.playerStats.player.playerId 
+        && !player.played
+        && player.confirmed;
+  } 
+
+  playerMovedLeft( player : ISelectedPlayer ) {
+    let left = this.playerLeftOf( player );
+    if(left) {
+        this.swap(left,player);
+    }
+  }
+
+  playerMovedRight( player : ISelectedPlayer ) {
+    let right = this.playerRightOf( player );
+    if(right) {
+        this.swap(player,right);
+    }
+  }
+
+  swap( left : ISelectedPlayer, right : ISelectedPlayer ) {  
+      
+      let tempL : ISelectedPlayer = JSON.parse(JSON.stringify(left));
+      let tempR : ISelectedPlayer = JSON.parse(JSON.stringify(right));
+
+      let positionL = tempL.position;
+      let positionR = tempR.position;
+
+      this.filteredTeam.selection[ positionL-1 ] = tempR;
+      this.filteredTeam.selection[ positionL-1 ].position = positionL;
+      this.filteredTeam.selection[ positionR-1 ] = tempL;
+      this.filteredTeam.selection[ positionR-1 ].position = positionR;
+
+      this.saveTeam();
+  }
+
+  needsNextRoundSelection() {
+    return this.mode === 'EDIT'
+      && ( this.currentRoundTeamSize() > this.nextRoundTeamSize() )
+  }
+
+  nextRoundSelectioMessage() : string {
+    let size = this.nextRoundTeamSize();
+    let ret = "Sólo los jugadores en las posiciones 1 a "+size+" pasan a la ronda siguiente.";
+    if( size === 1 ){
+      ret = "Sólo el jugador en la posición 1 pasa a la ronda siguiente.";
+    }
+    if( size === 2 ){
+      ret = "Sólo los jugadores en las posiciones 1 y 2 pasan a la ronda siguiente.";
+    }
+    return ret;
+  }
+
+  currentRoundTeamSize() : number {
+      let round = this.filteredTeam.round;
+      let aRound = this.tournament.rounds.find( (r) => r.roundId === round.roundId );
+      return aRound? aRound.teamSize : 0;
+  }
+
+  nextRoundTeamSize() : number {
+      let round = this.filteredTeam.round;
+      if( this.tournament.finalRound === round.roundId ){
+          return 1000;
+      }
+      let aRound = this.tournament.rounds.find( (r) => r.roundId === (round.roundId + 1) );
+      return aRound? aRound.teamSize : 0;
+  }
+
   getCurrentUser() : IUser {   
       let ret = emptyUser();
       if(this._currentUserId && !(this._currentUserId==="null")){
@@ -188,6 +305,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
     if(this.subMyTeam) { this.subMyTeam.unsubscribe(); }
     if(this.subUsers) { this.subUsers.unsubscribe(); }
     if(this.subMatches) { this.subMatches.unsubscribe(); }
+    if(this.subTournament) { this.subTournament.unsubscribe(); }
   }
 
   compareUsers( user1:IUser, user2:IUser ){
@@ -249,6 +367,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
             if( !players[i].playerStats.player.playerId ){
               this.filteredTeam.selection[i] = this.playerToAdd;
               this.playerToAdd = emptySelectedPlayer();
+              this.fixPositions();
               break;
             }
         }

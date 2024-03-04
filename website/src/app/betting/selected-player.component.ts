@@ -1,5 +1,5 @@
 import { Component,  Input, Output, EventEmitter, OnInit, OnDestroy } from "@angular/core";
-import { ISelectedPlayer, IUser, emptyUser, ITeam, emptyTeam, emptySelectedPlayer, IMatch } from "../shared/model";
+import { ISelectedPlayer, IUser, emptyUser, ITeam, ITournament, emptyTeam, emptySelectedPlayer, IMatch, emptyTournament } from "../shared/model";
 import { photo, photoType} from '../shared/photos';
 import { matchHasStarted } from "../shared/utils" ;
 
@@ -16,6 +16,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   @Input() availableMultipliers : number = NaN;
   @Input() matches : IMatch[] = [];
   @Input() loggedInUser : IUser = emptyUser();
+  @Input() tournament: ITournament = emptyTournament();
 
   displayAddMultiplierModal    : boolean = false;
   displayRemoveMultiplierModal : boolean = false;
@@ -98,6 +99,90 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
             );
   }
 
+  moveLeft( player: ISelectedPlayer ) {
+    if( this.mode === 'EDIT' 
+      && this.playerCanBeMoved(player)
+      && !!this.playerToLeftOf(player) ) {
+        this.playerMovedLeft.emit(player);
+    }
+  }
+
+  moveRight( player: ISelectedPlayer ) {
+    if( this.mode === 'EDIT' 
+        && this.playerCanBeMoved(player) 
+        && !!this.playerToRightOf(player) ) {
+        this.playerMovedRight.emit(player);
+    }
+  }
+
+  playerIsInLastPosition( player: ISelectedPlayer ) : boolean {
+      return player && ( player.position === this.filteredTeam.selection.length || !this.playerToRightOf(player) );
+  }
+
+  playerIsInFirstPosition( player: ISelectedPlayer ) : boolean {
+      return player && ( player.position === 1 || !this.playerToLeftOf(player) );
+  }
+
+  playerToLeftOf( player: ISelectedPlayer ){
+      let i = player.position - 2;
+      let ret = null;
+      for(  ; i>=0; i = i - 1 ){
+          let temp = this.filteredTeam.selection[i];
+          if( this.playerCanBeMoved(temp) ){
+              ret = temp;
+              break;
+          }
+      }
+      //console.log('playerToLeftOf -> '+player.playerStats.player.playerName+' is '+JSON.stringify(ret));
+      return ret;
+  }
+
+  playerToRightOf( player: ISelectedPlayer ){
+      let i = player.position;
+      let ret = null;
+      for(  ; i<this.filteredTeam.selection.length; i = i + 1 ){
+          let temp = this.filteredTeam.selection[i];
+          if( this.playerCanBeMoved(temp) ){
+              ret = temp;
+              break;
+          }
+      }
+      //console.log('playerToRightOf -> '+player.playerStats.player.playerName+' is '+JSON.stringify(ret));
+      return ret;
+  }
+
+  playerCanBeMoved( player: ISelectedPlayer ) : boolean {
+      return !!player && !!player.playerStats 
+          && !!player.playerStats.player && !!player.playerStats.player.playerId 
+          && !player.played
+          && player.confirmed;
+  }
+
+  getPosition( player: ISelectedPlayer ) : string {
+    return player.position ? '' + player.position : '';
+  }
+
+  needsNextRoundSelection( player: ISelectedPlayer ) {
+    return this.mode === 'EDIT' 
+      && this.playerCanBeMoved( player)
+      && ( this.currentRoundTeamSize() > this.nextRoundTeamSize() )
+  }
+
+  currentRoundTeamSize() : number {
+      let round = this.filteredTeam.round;
+      let aRound = this.tournament.rounds.find( (r) => r.roundId === round.roundId );
+      return aRound? aRound.teamSize : 0;
+  }
+
+  nextRoundTeamSize() : number {
+      let round = this.filteredTeam.round;
+      if( this.tournament.finalRound === round.roundId ){
+          return 1000;
+      }
+      let aRound = this.tournament.rounds.find( (r) => r.roundId === (round.roundId + 1) );
+      return aRound? aRound.teamSize : 0;
+  }
+
   playerIsConfirmed( player: ISelectedPlayer ) : boolean {
     return player.confirmed || player.played ;
   }
@@ -160,4 +245,9 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   @Output() 
   playerRemoved: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
   
+  @Output() 
+  playerMovedRight: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
+
+  @Output() 
+  playerMovedLeft: EventEmitter<ISelectedPlayer> = new EventEmitter<ISelectedPlayer>();
 }
