@@ -74,4 +74,8 @@
 .cover { object-fit: cover; }
 .scale { object-fit: scale-down; }
 
-
+.winner {
+  background-color:#96f5a1 !important;
+  margin-left: 5%;
+  margin-right: 5%; 
+}

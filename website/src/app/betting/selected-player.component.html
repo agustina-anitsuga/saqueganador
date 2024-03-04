@@ -71,7 +71,14 @@
           </ng-container>
           <ng-container *ngIf = 'shouldDisplayPlayer(selectedPlayer) && playerIsConfirmed(selectedPlayer)' >
               <div>
-                  <ng-container *ngIf = '!!selectedPlayer.played'>Puntaje {{ selectedPlayer.playerScore }}</ng-container>
+                  <ng-container *ngIf = '!!selectedPlayer.played'>
+                      <ng-container *ngIf = 'selectedPlayer.playerScore > 0'>
+                          <div class="card winner">Puntaje {{ selectedPlayer.playerScore }}</div>
+                      </ng-container>
+                      <ng-container *ngIf = 'selectedPlayer.playerScore <= 0'>
+                          <i class="fa fa-times" style="color: red;"></i>
+                      </ng-container>
+                  </ng-container>
                   <ng-container *ngIf = '!selectedPlayer.played'>Resultado Pendiente</ng-container>
               </div>
           </ng-container>
