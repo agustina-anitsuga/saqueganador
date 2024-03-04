@@ -1,23 +1,23 @@
 <div class="card h-100">
     <div class="card-header">
       <div class="row">
-          <div class="col-md-1">
-            <span class="pull-left" style="padding:3%">
+          <div class="col-sm-1">
+            <span class="pull-left" style="padding-left:3%">
               {{getPosition(selectedPlayer)}}
             </span>
           </div>
-          <div class="col-md-3">&nbsp;</div>
-          <div class="col-md-7" style="text-align:right">
+          <div class="col-sm-2">&nbsp;</div>
+          <div class="col-sm-8 float-right justify-content-end align-items-right align-self-end" style="text-align:right;">
             <ng-container *ngIf = 'playerCanBeRemoved(selectedPlayer)' >
-                <span class="pull-right clickable close-icon playnice" data-effect="fadeOut" 
+                <div class="pull-right clickable close-icon playnice float-right justify-content-end align-items-right align-self-end" data-effect="fadeOut" 
                           (click)='confirmPlayerRemoval()'>
                     <i class="fa fa-times"></i>
-                </span>
+            </div>
             </ng-container>
             <ng-container *ngIf = 'playerCanNotBeRemoved(selectedPlayer)' >
-              <span class="pull-right playnice" data-effect="fadeOut" >
+              <div class="pull-right playnice float-right justify-content-end align-items-right align-self-end" data-effect="fadeOut" >
                     <i class="fa fa-thumb-tack"></i> 
-              </span>
+              </div>
             </ng-container> 
           </div>
       </div>
