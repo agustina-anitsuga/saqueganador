@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, OnChanges, Input, Output, EventEmitter } from "@angular/core";
 import { Subscription } from "rxjs";
-import { ISelectedPlayer, ILeague, ITeam, emptyLeague, emptyTeam, IMatch, ITournament, emptyTournament } from "../shared/model";
+import { ISelectedPlayer, ILeague, ITeam, emptyLeague, emptyTeam, IMatch, IMatchPlayer, ITournament, emptyTournament } from "../shared/model";
 import { BettingService, IMatchResponse } from "./betting.service";
 import { deDuplicateLeagues } from "../shared/utils";
 
@@ -56,9 +56,16 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
       return this.matches.filter(( match , index) => 
             ( !this._listFilter || (match.a.player && match.a.player.playerName && match.a.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) || 
                 ( match.b.player && match.b.player.playerName && match.b.player.playerName.toLowerCase().includes(this._listFilter.toLowerCase())) ) 
-            && ( !this.selectedLeague || !this.selectedLeague.leagueId || match.a.player.league.leagueId === this.selectedLeague.leagueId ) 
+            && ( !this.selectedLeague || !this.selectedLeague.leagueId || this.matchesLeague(this.selectedLeague,match.a) || this.matchesLeague(this.selectedLeague,match.b) ) 
           );;
   }
+
+  matchesLeague( league:ILeague, matchPlayer : IMatchPlayer ) : boolean {
+    return matchPlayer.player 
+        && matchPlayer.player.league 
+        && (!(Number.isNaN(league.leagueId))) ? 
+            matchPlayer.player.league.leagueId === league.leagueId : false ;
+  } 
 
   ngOnInit(): void {
     this.loadPlayersInRound();
