@@ -122,11 +122,18 @@ export class AdminComponent implements OnInit, OnDestroy {
     let ret = matches;
     if( league && !(Number.isNaN(league.leagueId)) ) {
         ret = ( matches.filter((t: IMatch) => 
-          t.a.player && t.a.player.league && (!(Number.isNaN(league.leagueId))) ? 
-              t.a.player.league.leagueId === league.leagueId : false ) ) ;
-    }
+            this.matchesLeague( league, t.a ) || this.matchesLeague( league, t.b ) 
+          )) ;
+    } 
     return ret;
   }
+
+  matchesLeague( league:ILeague, matchPlayer : IMatchPlayer ) : boolean {
+      return matchPlayer.player 
+          && matchPlayer.player.league 
+          && (!(Number.isNaN(league.leagueId))) ? 
+              matchPlayer.player.league.leagueId === league.leagueId : false ;
+  } 
 
   getMatchesByPlayer( matches : IMatch[], playerName : string ) : IMatch[] {
     let ret = matches;
