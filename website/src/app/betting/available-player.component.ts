@@ -52,9 +52,12 @@ export class AvailablePlayerComponent implements OnInit, OnDestroy {
       if( ( player.league.leagueId >= 0) && this.team && this.team.selection ){
           let quota = this.team.selection.length / numActiveLeagues ;
           let selectedPlayers = this.team.selection.filter( elem => elem.playerStats.player ); 
-          let leaguePlayers = selectedPlayers.filter( elem => 
-                        elem.playerStats.player.league.leagueId === player.league.leagueId );
-          result = ( leaguePlayers.length >= quota );
+          if( selectedPlayers ){
+            let leaguePlayers = selectedPlayers.filter( elem => 
+                          ( elem && elem.playerStats && elem.playerStats.player && elem.playerStats.player.league )?
+                          elem.playerStats.player.league.leagueId === player.league.leagueId : false ) ;
+            result = ( leaguePlayers.length >= quota );
+          }
       }
     }
     return result;

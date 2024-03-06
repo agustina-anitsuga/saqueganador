@@ -130,9 +130,11 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   fixPositions(){
-      for( var i=0; i<this.filteredTeam.selection.length; i = i+1 ) {
-          if( this.filteredTeam.selection[i] && !this.filteredTeam.selection[i].position ){
-            this.filteredTeam.selection[i].position = i+1;
+      if(this.filteredTeam && this.filteredTeam.selection){
+          for( var i=0; i<this.filteredTeam.selection.length; i = i+1 ) {
+              if( this.filteredTeam.selection[i] && !this.filteredTeam.selection[i].position ){
+                this.filteredTeam.selection[i].position = i+1;
+              }
           }
       }
   }
@@ -249,7 +251,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
 
   currentRoundTeamDoesNotMeetRequirements() : boolean {
 
-    if( this.tournament.activeLeagues === 1 )
+    if( !this.tournament || this.tournament.activeLeagues === 1 )
       return false;
 
     let currentRoundTeamSize = this.currentRoundTeamSize();
@@ -258,8 +260,10 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
      
     for( var i=0 ; i<currentRoundTeamSize; i++){
         let player = this.filteredTeam.selection[i];
-        if( player.playerStats.player.league.leagueName === 'ATP' ) atpCount = atpCount + 1;
-        if( player.playerStats.player.league.leagueName === 'WTA' ) wtaCount = wtaCount + 1;
+        if(player && player.playerStats && player.playerStats.player && player.playerStats.player.league ){
+          if( player.playerStats.player.league.leagueName === 'ATP' ) atpCount = atpCount + 1;
+          if( player.playerStats.player.league.leagueName === 'WTA' ) wtaCount = wtaCount + 1;
+        }
     }
 
     return ( (atpCount>currentRoundTeamSize/2) || (wtaCount>currentRoundTeamSize/2) );
@@ -276,8 +280,10 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
      
     for( var i=0 ; i<nextRoundTeamSize; i++){
         let player = this.filteredTeam.selection[i];
-        if( player.playerStats.player.league.leagueName === 'ATP' ) atpCount = atpCount + 1;
-        if( player.playerStats.player.league.leagueName === 'WTA' ) wtaCount = wtaCount + 1;
+        if(player && player.playerStats && player.playerStats.player && player.playerStats.player.league ){
+          if( player.playerStats.player.league.leagueName === 'ATP' ) atpCount = atpCount + 1;
+          if( player.playerStats.player.league.leagueName === 'WTA' ) wtaCount = wtaCount + 1;
+        }
     }
 
     return this.needsNextRoundSelection() && 
@@ -297,15 +303,18 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   currentRoundTeamSize() : number {
+      if(!this.filteredTeam) return 0;
       let round = this.filteredTeam.round;
-      let aRound = this.tournament.rounds.find( (r) => r.roundId === round.roundId );
+      let aRound = round? this.tournament.rounds.find( (r) => r.roundId === round.roundId ) : emptyRound();
       return aRound? aRound.teamSize : 0;
   }
 
   nextRoundTeamSize() : number {
+      if(!this.filteredTeam) return 0;
       let round = this.filteredTeam.round;
       if( this.tournament.finalRound === round.roundId ){
-          return 1000;
+          let finalRound : IRound|undefined = round? this.tournament.rounds.find( (r) => r.roundId === round.roundId ) : emptyRound();
+          return finalRound? finalRound.teamSize : 1000;
       }
       let aRound = this.tournament.rounds.find( (r) => r.roundId === (round.roundId + 1) );
       return aRound? aRound.teamSize : 0;
