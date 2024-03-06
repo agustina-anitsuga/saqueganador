@@ -36,6 +36,18 @@
         <ng-container *ngIf = 'needsNextRoundSelection()'>
           <div class='card alert alert-danger' style="margin-top:3%;padding:2%;">{{nextRoundSelectioMessage()}}</div>
         </ng-container>
+        <ng-container *ngIf = 'currentRoundTeamDoesNotMeetRequirements()'>
+          <div class='card alert alert-danger' style="margin-top:3%;padding:2%;">
+              Tu equipo no cumple con el requisito de tener 50% de jugadores de ATP y 50% de WTA.
+              Corregilo para evitar una penalizaci&oacute;n de una pelotita multiplicadora en la siguiente ronda!
+          </div>
+        </ng-container>
+        <ng-container *ngIf = 'nextRoundTeamDoesNotMeetRequirements()'>
+          <div class='card alert alert-danger' style="margin-top:3%;padding:2%;">
+              Tu equipo para la pr&oacute;xima ronda no cumple con el requisito de tener 50% de jugadores de ATP y 50% de WTA.
+              Corregilo para evitar una penalizaci&oacute;n de una pelotita multiplicadora!
+          </div>
+        </ng-container>
       </div>
       <div class='row'>
         &nbsp;

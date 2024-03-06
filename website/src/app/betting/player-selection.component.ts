@@ -29,6 +29,7 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
   
   errorMessage = '';
   sub!: Subscription;
+  subTournament!: Subscription;
 
   constructor(private bettingService: BettingService) {}
   
@@ -77,6 +78,13 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
         this.tournament = this.team.tournament;
         let tournamentId = this.tournament.tournamentId;
         let roundId = this.team.round.roundId;
+
+        this.subTournament = this.bettingService.getCurrentTournament().subscribe({
+          next: t => {
+            this.tournament = t.Items[0];
+          }
+        });
+
         this.sub = this.bettingService.getMatches(tournamentId,roundId).subscribe({
           next: p => {
             this.matches = this.filterCurrentRound(p,roundId);
@@ -99,10 +107,9 @@ export class PlayerSelectionComponent implements OnInit, OnDestroy, OnChanges {
     return leagues;
   }
 
-
-
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    if(this.sub) this.sub.unsubscribe();
+    if(this.subTournament) this.subTournament.unsubscribe();
   }
 
   onPlayerClicked( player : ISelectedPlayer ){

@@ -242,9 +242,46 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
       this.saveTeam();
   }
 
-  needsNextRoundSelection() {
+  needsNextRoundSelection() : boolean {
     return this.mode === 'EDIT'
       && ( this.currentRoundTeamSize() > this.nextRoundTeamSize() )
+  }
+
+  currentRoundTeamDoesNotMeetRequirements() : boolean {
+
+    if( this.tournament.activeLeagues === 1 )
+      return false;
+
+    let currentRoundTeamSize = this.currentRoundTeamSize();
+    let wtaCount = 0;
+    let atpCount = 0;
+     
+    for( var i=0 ; i<currentRoundTeamSize; i++){
+        let player = this.filteredTeam.selection[i];
+        if( player.playerStats.player.league.leagueName === 'ATP' ) atpCount = atpCount + 1;
+        if( player.playerStats.player.league.leagueName === 'WTA' ) wtaCount = wtaCount + 1;
+    }
+
+    return ( (atpCount>currentRoundTeamSize/2) || (wtaCount>currentRoundTeamSize/2) );
+  }
+
+  nextRoundTeamDoesNotMeetRequirements() : boolean {
+    
+    if( this.tournament.activeLeagues === 1 )
+      return false;
+
+    let nextRoundTeamSize = this.nextRoundTeamSize();
+    let wtaCount = 0;
+    let atpCount = 0;
+     
+    for( var i=0 ; i<nextRoundTeamSize; i++){
+        let player = this.filteredTeam.selection[i];
+        if( player.playerStats.player.league.leagueName === 'ATP' ) atpCount = atpCount + 1;
+        if( player.playerStats.player.league.leagueName === 'WTA' ) wtaCount = wtaCount + 1;
+    }
+
+    return this.needsNextRoundSelection() && 
+          ( (atpCount>nextRoundTeamSize/2) || (wtaCount>nextRoundTeamSize/2) );
   }
 
   nextRoundSelectioMessage() : string {
