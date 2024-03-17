@@ -290,7 +290,7 @@ export class TeamComponent implements OnInit, OnDestroy, OnChanges {
           ( (atpCount>nextRoundTeamSize/2) || (wtaCount>nextRoundTeamSize/2) );
   }
 
-  nextRoundSelectioMessage() : string {
+  nextRoundSelectionMessage() : string {
     let size = this.nextRoundTeamSize();
     let ret = "Sólo los jugadores en las posiciones 1 a "+size+" pasan a la ronda siguiente.";
     if( size === 1 ){
