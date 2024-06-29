@@ -47,19 +47,33 @@ export const handler = async (event, context, callback) => {
 
 export const calculatePointsToAward = (player, opponent) =>  {
     
-    let baseScore = 120;
-    let rankingDiff = player.ranking - opponent.ranking;
-    let diffRankingWeight = 2.1;
-    let plusRankingDiffLessThan5 = 50;
-    let plusRankingDiffLessThan10 = 25;
-    let plusLowWinRatio = 20;
+    let rankingDiff = Math.abs(player.ranking - opponent.ranking);
+    let baseScore = 320;
     let minScore = 50;
-    let maxScore = 500;
-    
-    let pointsToAward = baseScore + rankingDiff * diffRankingWeight +
-                        ( Math.abs(rankingDiff) <= 5 ? plusRankingDiffLessThan5 : 0 ) +
-                        ( Math.abs(rankingDiff) > 5 && Math.abs(rankingDiff) <= 10 ? plusRankingDiffLessThan10 : 0 ) +
-                        ( player.winRatio > 0.62 ? 0 : plusLowWinRatio );
+    let maxScore = 275;
+    let avg = 150;
+
+    let pointsToAward = 0 ;
+
+    if( player.ranking <= opponent.ranking ){
+        if( (avg - rankingDiff) < minScore ){
+            pointsToAward = minScore;
+        }
+        else if( (avg-rankingDiff) > maxScore ){
+            pointsToAward = maxScore;
+        } else {
+            pointsToAward = avg - rankingDiff;
+        }
+    } else {
+        if( (baseScore - ( avg - rankingDiff ) ) < minScore ){
+            pointsToAward = minScore;
+        }
+        else if( ( baseScore - (avg-rankingDiff) ) > maxScore ){
+            pointsToAward = maxScore;
+        } else {
+            pointsToAward = baseScore - ( avg - rankingDiff );
+        }
+    }
     
     if( pointsToAward < minScore ){
         pointsToAward = minScore;
