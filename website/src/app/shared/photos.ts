@@ -1,5 +1,33 @@
 import { IPlayer } from './model';
 
+function isLocalPhotoAvailable( player : IPlayer ){
+    return player.playerId === 'tomas-martin-etcheverry' ||
+            player.playerId === 'luciano-darderi' ||
+            player.playerId === 'holger-rune' ||
+            player.playerId === 'francisco-cerundolo' ||
+            player.playerId === 'mariano-navone' ||
+            player.playerId === 'luca-nardi' ||
+            player.playerId === 'facundo-diaz-acosta' ||
+            player.playerId === 'kei-nishikori' ||
+            player.playerId === 'paul-jubb' ||
+            player.playerId === 'billy-harris' ||
+            player.playerId === 'juan-pablo-varillas' ||
+            player.playerId === 'dominic-stricker' ||
+            player.playerId === 'matteo-arnaldi' ||
+            player.playerId === 'arthur-fils' ||
+            player.playerId === 'sumit-nagal' ||
+            player.playerId === 'yannick-hanfmann' ||
+            player.playerId === 'adam-walton' ||
+            player.playerId === 'alexandre-muller' ||
+            player.playerId === 'pavel-kotov' ||
+            player.playerId === 'pedro-martinez' ||
+            player.playerId === 'james-duckworth' ||
+            player.playerId === 'jack-draper' ||
+            player.playerId === 'thiago-seyboth-wild' ||
+            player.playerId === 'giovanni-mpetshi-perricard' ||
+            player.playerId === 'ben-shelton' ;
+}
+
 export function photo( player : IPlayer ) : string {
     //console.log('photo for '+player.playerName);
     let ret = player.playerProfilePic;
@@ -13,7 +41,11 @@ export function photo( player : IPlayer ) : string {
             ret = photoUrl;
         }
     } else if( photoType(player) === 'atp' ) {
-        ret =  './assets/images/tennis-player-atp-icon-green.png';
+        if( isLocalPhotoAvailable(player) ){
+            ret = './assets/images/players/' + player.playerId + '.png';
+        } else {
+            ret = './assets/images/tennis-player-atp-icon-green.png';
+        }
     }
     //console.log('photo:'+ret)
     return ret;
