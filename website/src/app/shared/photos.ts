@@ -23,6 +23,37 @@ function isLocalPhotoAvailable( player : IPlayer ){
             player.playerId === 'pedro-martinez' ||
             player.playerId === 'james-duckworth' ||
             player.playerId === 'jack-draper' ||
+            player.playerId === 'flavio-cobolli' ||
+            player.playerId === 'rinky-hijikata' ||
+            player.playerId === 'henry-searle' ||
+            player.playerId === 'roman-safiullin' ||
+            player.playerId === 'nuno-borges' ||
+            player.playerId === 'liam-broady' ||
+            player.playerId === 'vit-kopriva' ||
+            player.playerId === 'max-purcell' ||
+            player.playerId === 'fabian-marozsan' ||
+            player.playerId === 'quentin-halys' ||
+            player.playerId === 'aleksandar-kovacevic' ||
+            player.playerId === 'sebastian-ofner' ||
+            player.playerId === 'christopher-o\'connell' ||
+            player.playerId === 'arthur-cazaux' ||
+            player.playerId === 'zizou-bergs' ||
+            player.playerId === 'alejandro-tabilo' ||
+            player.playerId === 'alejandro-moro-canas' ||
+            player.playerId === 'jacob-fearnley' ||
+            player.playerId === 'zhizhen-zhang' ||
+            player.playerId === 'francisco-comesana' ||
+            player.playerId === 'tomas-machac' ||
+            player.playerId === 'constant-lestienne' ||
+            player.playerId === 'jakub-mensik' ||
+            player.playerId === 'maxime-janvier' ||
+            player.playerId === 'alexander-shevchenko' ||
+            player.playerId === 'mattia-bellucci' ||
+            player.playerId === 'jan-choinski' ||
+            player.playerId === 'arthur-fery' ||
+            player.playerId === 'alex-michelsen' ||
+            player.playerId === 'felipe-meligeni-alves' ||
+            player.playerId === 'mark-lajal' ||
             player.playerId === 'thiago-seyboth-wild' ||
             player.playerId === 'giovanni-mpetshi-perricard' ||
             player.playerId === 'ben-shelton' ;
