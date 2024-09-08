@@ -21,6 +21,16 @@
           <input type='text'
           [(ngModel)]='listFilter' style="width:90%"/>    
         </div>
+        <div class='col-md-3 text-right' >
+          <div class='col-md-3 text-right' >
+              No time: <input type='checkbox'
+              [(ngModel)]='noTime' style="width:90%"/>    
+          </div>
+          <div class='col-md-3 text-right' >
+               No result: <input type='checkbox'
+              [(ngModel)]='noResult' style="width:90%"/>    
+           </div>   
+        </div>
       </div>
       <div class='row'>
         &nbsp;
@@ -47,8 +57,12 @@
       </div>
       <div class="col-sm-4">
           <button class="btn btn-block px-sm-3 px-md-5 btn-primary" 
-              (click)="onNextRoundStarted();" onclick="this.blur()">Crear equipos para ronda siguiente</button>
+              (click)="onNextRoundTeamsCreated();" onclick="this.blur()">Crear equipos para ronda siguiente</button>
       </div>
+      <div class="col-sm-4">
+        <button class="btn btn-block px-sm-3 px-md-5 btn-primary" 
+            (click)="onNextRoundTeamsCreated();" onclick="this.blur()">Mover el juego a la ronda siguiente</button>
+    </div>
     </div>
   </div>
 </div>

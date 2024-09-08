@@ -24,6 +24,8 @@ export class AdminComponent implements OnInit, OnDestroy {
   private _selectedRound : IRound = emptyRound();
   private _selectedLeague : ILeague = emptyLeague();
   private _listFilter = '';
+  private _noTime =  false;
+  private _noResult = false;
 
   errorMessage = '';
 
@@ -61,6 +63,24 @@ export class AdminComponent implements OnInit, OnDestroy {
   set listFilter(value: string) {
     this._listFilter = value;
     this.filteredMatches = this.performFilter();
+  }
+
+  get noTime(): boolean {
+    return this._noTime;
+  }
+
+  set noTime( value:boolean ){
+      this._noTime = value;
+      this.filteredMatches = this.performFilter();
+  }
+
+  get noResult(): boolean {
+    return this._noResult;
+  }
+
+  set noResult( value:boolean ){
+      this._noResult = value;
+      this.filteredMatches = this.performFilter();
   }
 
   ngOnInit(): void {
@@ -107,9 +127,22 @@ export class AdminComponent implements OnInit, OnDestroy {
   }
 
   performFilter() : IMatch[] {
-    let ret = this.getMatchesByPlayer(
-                this.getMatchesByLeague(
-                  this.getMatchesByRound(this.matches,this.selectedRound),this.selectedLeague),this.listFilter);
+    let ret = this.getMatchesWithNoTime(
+                this.getMatchesWithNoResult(
+                  this.getMatchesByPlayer(
+                    this.getMatchesByLeague(
+                      this.getMatchesByRound(this.matches,
+                  this.selectedRound),this.selectedLeague),this.listFilter), this.noResult), this.noTime);
+    return ret;
+  }
+
+  getMatchesWithNoTime( matches : IMatch[], noTime: boolean) : IMatch[] {
+    const ret = noTime? matches.filter((t: IMatch) => !t.matchStartTime ) : matches;
+    return ret;
+  }
+
+  getMatchesWithNoResult( matches : IMatch[], noResult: boolean) : IMatch[] {
+    const ret = noResult? matches.filter((t: IMatch) => !(t.a.won || t.b.won) ) : matches;
     return ret;
   }
 
@@ -157,11 +190,23 @@ export class AdminComponent implements OnInit, OnDestroy {
     return '' + roundId + ' - ' + (round?round.roundName:'');
   }
 
-  onNextRoundStarted(){
+  onNextRoundTeamsCreated(){
     this.alertService.clear();
-    this.adminService.startNextRound().subscribe(
+    this.adminService.createNextRoundTeams().subscribe(
     post => {
       this.alertService.info("Ronda iniciada");
+    },
+    err => {
+      console.log(err);
+      this.alertService.error("Error -> "+err);
+    });
+  }
+
+  onGameMovedToNextRound(){
+    this.alertService.clear();
+    this.adminService.moveGameToNextRound().subscribe(
+    post => {
+      this.alertService.info("Juego avanzado a la ronda siguiente");
     },
     err => {
       console.log(err);

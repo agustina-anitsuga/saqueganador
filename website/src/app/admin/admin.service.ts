@@ -23,8 +23,9 @@ export interface ITournamentResponse {
 export class AdminService {
 
     private matchesUrl = environment.matchesUrl;
-    private startRoundUrl = environment.roundUrl;
+    private createTeamsForRoundUrl = environment.createTeamsForRoundUrl;
     private tournamentUrl = environment.tournamentUrl;
+    private moveGameToNextRoundUrl = environment.moveGameToNextRoundUrl;
 
     constructor( private http : HttpClient ) {}
 
@@ -52,8 +53,16 @@ export class AdminService {
       );
     }
 
-    startNextRound( ): Observable<ITeam[]> {
-      return this.http.post<ITeam[]>(this.startRoundUrl,'').pipe(
+    createNextRoundTeams( ): Observable<ITeam[]> {
+      return this.http.post<ITeam[]>(this.createTeamsForRoundUrl,'').pipe(
+        //tap( data => console.log('All:', JSON.stringify(data)) ),
+        catchError( this.handleError )
+          //).subscribe(response => console.log('subscribe')
+        );
+    }
+
+    moveGameToNextRound( ): Observable<ITournament[] > {
+      return this.http.post<ITournament[]>(this.moveGameToNextRoundUrl,'').pipe(
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )
           //).subscribe(response => console.log('subscribe')
