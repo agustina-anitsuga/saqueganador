@@ -6,6 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxGoogleAnalyticsModule, NgxGoogleAnalyticsRouterModule } from 'ngx-google-analytics';
 
 import { AppComponent } from './app.component'; 
+import { TutorialComponent } from './home/tutorial.component';
 import { WelcomeComponent } from './home/welcome.component';
 import { RankingModule } from './ranking/ranking.module';
 import { BettingModule } from './betting/betting.module';
@@ -16,7 +17,8 @@ import { SharedModule } from './shared/shared.module';
 @NgModule({
   declarations: [
     AppComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    TutorialComponent
   ],
   imports: [
     NgxGoogleAnalyticsModule.forRoot('G-3SW2Z74M55'),
@@ -25,6 +27,7 @@ import { SharedModule } from './shared/shared.module';
     HttpClientModule,
     RouterModule.forRoot([
         { path: 'welcome', component: WelcomeComponent },
+        { path: 'tutorial', component: TutorialComponent },
         { path: '', redirectTo: 'welcome', pathMatch: 'full' },
         { path: '**', redirectTo: 'welcome', pathMatch: 'full' },
     ]),

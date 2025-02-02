@@ -1,0 +1,18 @@
+.anitsuga {
+    font-weight: bold;
+}
+
+.table-container {
+    display: grid;
+    grid-template-columns: auto;
+    justify-items: center;
+    justify-content: center;
+}
+
+.row-title{
+    color: #096A2E
+}
+
+.col-sm-12{
+    text-align: left;
+}

@@ -11,7 +11,8 @@ export const environment = {
   playersUrl: 'https://d5r2cwxhlgz4d5ycvt2ezch4fu0nbtbh.lambda-url.us-east-1.on.aws/',
   tournamentUrl: 'https://qfhejpype3xcl3lea3ohsqgyay0yqyxa.lambda-url.us-east-1.on.aws/',
   createTeamsForRoundUrl: 'https://2csqgfheoqffm6jrc6bgf3znsu0whffr.lambda-url.us-east-1.on.aws/',
-  moveGameToNextRoundUrl: 'https://z5kjnafwiv3lkqfpbos6efab5a0tudiw.lambda-url.us-east-1.on.aws/'
+  moveGameToNextRoundUrl: 'https://z5kjnafwiv3lkqfpbos6efab5a0tudiw.lambda-url.us-east-1.on.aws/',
+  raceUrl: 'https://p3zyhxrhycdzi4erbzosaagzgm0gjycq.lambda-url.us-east-1.on.aws/'
 };
 
 /*

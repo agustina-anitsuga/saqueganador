@@ -1,0 +1,66 @@
+﻿<div class="card">
+  <div class="card-header">
+    {{pageTitle}}
+  </div>
+  <div class="card-body">
+      <div class="table">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="row-title">RESUMEN DEL JUEGO</div>
+            - Formá tu equipo para el torneo {{tournament.tournamentName}}. <a routerLink='/bet'>Podés armar tu equipo acá</a><br>
+            - Ganá puntos según el desempeño de tus jugadores en el torneo y no olvides que, a veces, el riesgo vale la pena.<br/>
+          </div>
+            <div class="col-sm-12">
+              <div class="row-title">
+            SELECCIONA A TU EQUIPO PARA LA PRIMERA RONDA DE LA COMPETENCIA</div>
+Para cada ronda del torneo hasta los cuartos de final, podrás seleccionar, como máximo, a 8 miembros en tu equipo 
+(después, a 4 en las semifinales y a 2 en las finales).
+<ng-container *ngIf = 'tournament.activeLeagues > 1' >
+La igualdad es la regla en este concurso. Siempre que el torneo sea mixto, no podrás incluir a más de 4 hombres o mujeres en tu equipo en cada ronda.
+</ng-container>
+Por defecto, los miembros de tu equipo que ya se hayan clasificado en el torneo pasarán automáticamente a jugar en 
+la ronda siguiente (una marca especial te permitirá distinguir qué jugadores pasarán automáticamente 
+a jugar en las semifinales y finales).<br/>
+</div>
+<div class="col-sm-12">
+  <div class="row-title">¡GANA PUNTOS CON CADA VICTORIA!</div>
+Ganarás puntos con cada victoria de un miembro de tu equipo en la ronda de juego. El número de puntos en juego 
+dependerá de la relación favorito-outsider entre los adversarios en cada encuentro.
+Cuanto más apuestes por un outsider, más puntos ganarás. ¡Pensa tu estrategia!<br/>
+</div>
+<div class="col-sm-12">
+  <div class="row-title">APROVECHA LAS PELOTAS AMARILLAS PARA GANAR UN MÁXIMO DE PUNTOS EN LOS PARTIDOS</div>
+En cada ronda de {{tournament.tournamentName}} hasta los cuartos de final, tendrás a tu disposición 10 pelotas amarillas 
+que no podrás transferir de una ronda a otra (más 6 pelotas amarillas para las semifinales y 3 para las finales). 
+Estas pelotas amarillas te ofrecen dos posibilidades:
+1) Duplicar o triplicar el número de puntos en juego para determinados miembros de tu equipo en la ronda.
+3) Sustituir a un miembro de su equipo que ya se haya clasificado para la próxima ronda por otro jugador que ya compita en el torneo.<br/>
+</div>
+<div class="col-sm-12">
+  <div class="row-title">PODES MODIFICAR TU EQUIPO ENTRE RONDAS</div>
+Como se indica anteriormente, el uso de una pelota amarilla te permitirá sustituir a un miembro de tu equipo 
+ya clasificado en el torneo por otro que todavía no forme parte de él.
+La sustitución de un miembro de tu equipo que haya perdido su partido en la ronda anterior (incluyendo por retirada 
+o abandono) se efectúa gratuitamente sin tener que usar una pelota amarilla.
+Caso específico para las semifinales y finales del torneo: sólo los primeros 4 miembros de tu equipo 
+en los cuartos de final pasarán a las semifinales (y luego, los 2 primeros miembros de tu equipo de 
+semifinales pasarán a la final).<br/>
+
+          </div>
+          <div class="col-sm-12">
+            <div class="row-title">PODES VER QUE ELIGIERON TUS RIVALES</div>
+          Desde la sección "Equipos" podés ver qué jugadores están en los equipos de tus rivales. 
+          Pensá tu estrategia: harán cambios de jugadores de una ronda a la otra? O usarán sus pelotas amarillas para intentar sumar más puntos?<br/>
+          
+                    </div>
+          
+        </div>
+      </div>  
+  </div>
+  <div class="card-footer">
+    <div class="text-center">Desarrollado por:</div>
+    <div class="text-center">
+      <div class="anitsuga">anitsuga</div>
+    </div>
+  </div>
+</div>

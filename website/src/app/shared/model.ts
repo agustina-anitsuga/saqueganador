@@ -172,3 +172,11 @@ export function emptyMatch() : IMatch {
       matchStartTime : new Date(2024, 1, 14, 22, 0) 
     };
 }
+
+export interface IRace {
+  raceId : string;
+  points : number;
+  dPoints: number;
+  user : IUser;
+  position: number
+}

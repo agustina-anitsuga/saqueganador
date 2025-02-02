@@ -6,9 +6,11 @@ import { IUser } from "../shared/model";
 import { ITeam } from "../shared/model";
 import { ITournament } from "../shared/model";
 import { IMatch } from "../shared/model";
+import { IRace } from "../shared/model";
 import { IPlayerStatsPerRound } from "../shared/model";
 
 import { environment } from '../../environments/environment';
+
 
 
 export interface IMatchResponse {
@@ -44,6 +46,7 @@ export class BettingService {
     private usersUrl = environment.usersUrl;
     private tournamentUrl = environment.tournamentUrl;
     private matchesUrl = environment.matchesUrl;
+    private raceUrl = environment.raceUrl;
 
     constructor( private http : HttpClient ) {}
 
@@ -73,6 +76,13 @@ export class BettingService {
       let url = this.teamUrl + (user?user.userId:'') ;
       return this.http.get<ITeam[]>(url).pipe(
           //tap( data => console.log('All:', JSON.stringify(data)) ),
+          catchError( this.handleError ) 
+      );
+    }
+
+    getRace( ): Observable<IRace[]> {
+      let url = this.raceUrl ;
+      return this.http.get<IRace[]>(url).pipe(
           catchError( this.handleError ) 
       );
     }
