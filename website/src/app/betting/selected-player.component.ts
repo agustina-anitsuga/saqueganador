@@ -35,6 +35,7 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }
 
   shouldDisplayPlayer( selectedPlayer : ISelectedPlayer ) {
+    //return true;
     return  selectedPlayer.playerStats.player.playerId && (
                 this.mode === 'EDIT' ||
                 (this.mode === 'VIEW' && !!selectedPlayer.played) ||
@@ -49,8 +50,9 @@ export class SelectedPlayerComponent implements OnInit, OnDestroy {
   }  
 
   shouldDisplayPendingSelection( selectedPlayer : ISelectedPlayer ) {
-    return  !selectedPlayer.playerStats.player.playerId && 
-            this.mode === 'EDIT' ;
+    return !this.shouldDisplayPlayer(selectedPlayer);
+    //return  ( !selectedPlayer.playerStats.player.playerId && this.mode === 'EDIT' ) 
+    //        || (this.mode === 'VIEW' && !this.teamIsOwnedByLoggedInUser());
   }
 
   shouldDisplayAvailableMultipliers(){
