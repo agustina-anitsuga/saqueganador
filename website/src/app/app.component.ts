@@ -55,6 +55,16 @@ export class AppComponent implements OnInit, OnDestroy {
     return admins.includes(username);
   }
 
+  isRootAdminLoggedIn(){
+    let user = this.authService.currentUser();
+    let admins = this.tournament.root;
+    let username : string = '';
+    if( user ){
+      username = user.username ? user.username : '';
+    }
+    return admins.includes(username);
+  }
+
   logout() {
     this.authService.logout();
   } 

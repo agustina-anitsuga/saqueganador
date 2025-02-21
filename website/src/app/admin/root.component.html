@@ -1,0 +1,28 @@
+
+<div class='card'>
+  <div class='card-header'>
+    Controles de juego
+  </div>
+  <div class='card-body'>
+    <div class="row">
+      <div class="col-sm-2" style="text-align: left;">
+          Ronda actual: <br/> {{currentRound()}}
+      </div>
+      <div class="col-sm-4">
+          <button class="btn btn-block px-sm-3 px-md-5 btn-primary" 
+              (click)="onNextRoundTeamsCreated();" onclick="this.blur()">Crear equipos para ronda siguiente</button>
+      </div>
+      <div class="col-sm-1" style="text-align: left;">
+        &nbsp;
+    </div>
+      <div class="col-sm-4">
+        <button class="btn btn-block px-sm-3 px-md-5 btn-primary" 
+            (click)="onGameMovedToNextRound();" onclick="this.blur()">Mover el juego a la ronda siguiente</button>
+    </div>
+    </div>
+  </div>
+</div>
+<div *ngIf='errorMessage'
+      class='alert alert-danger'>
+  Error: {{ errorMessage }}
+</div>
