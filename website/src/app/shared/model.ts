@@ -182,3 +182,15 @@ export interface IRace {
   user : IUser;
   position: number
 }
+
+export interface ILuckyLoser {
+  matchPlayerId : string;
+  playerId : string;
+}
+
+export function emptyLuckyLoser(){
+  return {
+    matchPlayerId : '',
+    playerId : ''
+  };
+}

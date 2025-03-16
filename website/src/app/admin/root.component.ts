@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Subscription } from "rxjs";
 import { AdminService } from "./admin.service";
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
-import { IRound, ILeague, emptyLeague, emptyRound, ITournament, emptyTournament } from "../shared/model";
+import { IRound, ILeague, emptyLeague, emptyRound, ITournament, emptyTournament, ILuckyLoser, emptyLuckyLoser } from "../shared/model";
 import { AlertService } from "../shared/alert.service";
 
 @Component({
@@ -16,6 +16,8 @@ export class RootComponent implements OnInit, OnDestroy {
 
   tournament : ITournament = emptyTournament();
   
+  luckyLoser : ILuckyLoser = emptyLuckyLoser();
+
   private _selectedRound : IRound = emptyRound();
   private _selectedLeague : ILeague = emptyLeague();
   
@@ -75,4 +77,15 @@ export class RootComponent implements OnInit, OnDestroy {
     });
   }
 
+  onLuckyLoserAdded(){
+    this.alertService.clear();
+    this.adminService.addLuckyLoser(this.luckyLoser).subscribe(
+      post => {
+        this.alertService.info("Lucky loser agregado");
+      },
+      err => {
+        console.log(err);
+        this.alertService.error("Error -> "+err);
+      });
+  }
 }

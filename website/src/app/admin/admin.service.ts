@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, catchError, tap, throwError } from "rxjs";
-import { IMatch, ITeam, ITournament } from "../shared/model";
+import { IMatch, ITeam, ITournament, ILuckyLoser } from "../shared/model";
 
 import { environment } from '../../environments/environment';
 
@@ -26,6 +26,7 @@ export class AdminService {
     private createTeamsForRoundUrl = environment.createTeamsForRoundUrl;
     private tournamentUrl = environment.tournamentUrl;
     private moveGameToNextRoundUrl = environment.moveGameToNextRoundUrl;
+    private addLuckyLoserUrl = environment.addLuckyLoserUrl;
 
     constructor( private http : HttpClient ) {}
 
@@ -69,9 +70,18 @@ export class AdminService {
         );
     }
 
+    addLuckyLoser( luckyLoser: ILuckyLoser  ): Observable<ILuckyLoser[] > {
+      return this.http.post<ILuckyLoser[]>(this.addLuckyLoserUrl,luckyLoser).pipe(
+        //tap( data => console.log('All:', JSON.stringify(data)) ),
+        catchError( this.handleError )
+          //).subscribe(response => console.log('subscribe')
+        );
+    }
+
     private handleError(err: HttpErrorResponse): Observable<never> {
         // in a real world app, we may send the server to some remote logging infrastructure
         // instead of just logging it to the console
+        console.log('handleError: '+JSON.stringify(err));
         let errorMessage = '';
         if (err.error instanceof ErrorEvent) {
           // A client-side or network error occurred. Handle it accordingly.
@@ -79,7 +89,7 @@ export class AdminService {
         } else {
           // The backend returned an unsuccessful response code.
           // The response body may contain clues as to what went wrong,
-          errorMessage = `Server returned code: ${err.status}, error message is: ${err.message}`;
+          errorMessage = `Server returned code: ${err.status}, error message is: ${err.message} <br/> ${JSON.stringify(err.error)}`;
         }
         console.error(errorMessage);
         return throwError(() => errorMessage);

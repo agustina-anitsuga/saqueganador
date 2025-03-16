@@ -1,7 +1,7 @@
 
 <div class='card'>
   <div class='card-header'>
-    Controles de juego
+    Controlar ronda actual
   </div>
   <div class='card-body'>
     <div class="row">
@@ -14,14 +14,40 @@
       </div>
       <div class="col-sm-1" style="text-align: left;">
         &nbsp;
-    </div>
+      </div>
       <div class="col-sm-4">
         <button class="btn btn-block px-sm-3 px-md-5 btn-primary" 
             (click)="onGameMovedToNextRound();" onclick="this.blur()">Mover el juego a la ronda siguiente</button>
-    </div>
-    </div>
+      </div>
+   </div>
   </div>
 </div>
+
+<div class='card'>
+  <div class='card-header'>
+    Agregar lucky losers
+  </div>
+  <div class='card-body'>
+    <div class="row">
+      <div class="col-sm-2" style="text-align: right;">
+          Match Player Id: 
+      </div>
+      <div class="col-sm-3">
+        <input type='text' [(ngModel)]='luckyLoser.matchPlayerId' style="width:90%"/>    
+      </div>
+      <div class="col-sm-1" style="text-align: right;">
+        Player Id: 
+      </div>
+      <div class="col-sm-3" style="text-align: left;">
+          <input type='text' [(ngModel)]='luckyLoser.playerId' style="width:90%"/>    
+      </div>
+      <div class="col-sm-3">
+        <button class="btn btn-block px-sm-3 px-md-5 btn-primary" 
+            (click)="onLuckyLoserAdded();" onclick="this.blur()">Agregar</button>
+      </div>
+    </div>
+</div>
+
 <div *ngIf='errorMessage'
       class='alert alert-danger'>
   Error: {{ errorMessage }}
