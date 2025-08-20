@@ -16,6 +16,9 @@ export class WelcomeComponent {
     errorMessage : string = ''; 
     
     race : IRace[] = [];
+
+    showMore : boolean = false;
+    
       
     constructor(private bettingService: BettingService) {}
      
