@@ -1,0 +1,137 @@
+import { DynamoDB } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
+
+const dynamo = DynamoDBDocument.from(new DynamoDB());
+
+
+export const handler = async (event) => {
+    console.log('Received event:', JSON.stringify(event, null, 2));
+
+    try {
+        let response = await dynamo.put(
+            {
+                TableName: 'SaqueGanador-Users',
+                Item: {
+                    userId: event.request.userAttributes.sub,
+                    userName: event.request.userAttributes.preferred_username,
+                    creationTime: new Date().toISOString(),
+                },
+            }
+            );
+        console.log(response);
+        
+        let user = await getUser(event.request.userAttributes.sub);
+        let tournament = await getTournament();
+        let round = await getRound( tournament );
+        await createTeam( user, tournament, round);
+    
+    } catch (err) {
+        console.log(err.message);
+    } 
+
+    return event ;
+};
+
+export const getRound = (tournament) =>  {
+    let roundId = tournament.currentRound;
+    let round = tournament.rounds.find( (elem) => elem.roundId === roundId );
+    return round;
+};
+
+export const getTournament= async(key) => {
+    let ret = null;
+    let tournaments = await dynamo.scan({ TableName: 'SaqueGanador-Tournaments' });
+    if( tournaments.Items.length == 1 ){
+        ret = tournaments.Items[0];
+    }
+    return ret;
+};
+
+export const getUser = async (pUserId) =>  {
+    let user = await dynamo.get({
+              TableName: "SaqueGanador-Users",
+              Key: {userId: pUserId},
+            });
+    return user.Item;
+}
+
+export const createTeam = async (pUser , pTournament, pRound) =>  {
+    console.log('begin createTeam '+ JSON.stringify(pUser) );
+    let team = null;
+    
+    try {
+        // create the key for the new instances
+        let key = pTournament.tournamentId + '-' + pRound.roundId + '-' + pUser.userId;
+        console.log('key createTeam '+ key);
+    
+        // fetch team from db if exists
+        let teamResult = await getTeam(key);
+        team = teamResult.Item;
+        console.log('after get '+JSON.stringify(team));
+        
+        // if it does not, create a new one
+        if( !team ){
+            console.log('could not find team '+key);
+            team = {
+                teamId: key,
+                user: pUser,
+                tournament: pTournament, 
+                round: pRound, 
+                selection: [],
+                score: 0
+            } ;
+        } 
+        
+        // initialize selection
+        if( !team.selection.length ) {
+            for( let i=0; i < pRound.teamSize; i++){
+                team.selection.push(JSON.parse(JSON.stringify((emptySelection))));
+                team.selection[i].position = i+1;
+            }
+        }
+        
+        await saveTeam( team );  
+        
+    } catch ( err ){
+        console.log('error createTeam '+ err);
+    }
+    
+    console.log('end createTeam' );
+    return team;
+};
+
+export const emptySelection = {
+        "position" : 0, 
+        "playerStats" : {
+            "player": {}, 
+            "pointsToAward": null
+        },
+        "playerMultiplier" : 0,
+        "playerScore": 0,
+        "played": false
+    };
+
+export const saveTeam = async (team) =>  {
+    let ret = null;
+    console.log('begin saveTeam '+JSON.stringify(team));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Teams',
+          Item: team
+        };
+        ret = await dynamo.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveTeam '+JSON.stringify(ret));
+    return ret;
+};
+
+export const getTeam = async(key) => {
+    let team = await dynamo.get({
+              TableName: "SaqueGanador-Teams",
+              Key: {teamId: key},
+            });
+    return team;
+};
+
