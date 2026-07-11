@@ -1,7 +1,7 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { requireUser, AuthError } from './auth.mjs';
+import { requireUser, AuthError } from '../shared/auth.mjs';
 
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION,

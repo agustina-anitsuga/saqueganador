@@ -1,5 +1,5 @@
-import {saveMatch,getTournament,getMatch,getPlayer,getLeague} from './repository.mjs';
-import {getRoundId,getStem,getPlayerPosition} from './keyManager.mjs';
+import {saveMatch,getTournament,getMatch,getPlayer,getLeague} from '../shared/repository.mjs';
+import {getRoundId,getStem,getPlayerPosition} from '../shared/keyManager.mjs';
 
 
 export const draw = [

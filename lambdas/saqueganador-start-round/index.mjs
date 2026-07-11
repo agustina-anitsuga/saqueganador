@@ -1,6 +1,6 @@
-import { saveTeam, getTournament, getUsers, getTeam, getMatch } from './repository.mjs';
-import { getStem, getTeamKey, getNextRoundMatchKey } from './keyManager.mjs';
-import { requireAdmin } from './auth.mjs';
+import { saveTeam, getTournament, getUsers, getTeam, getMatch } from '../shared/repository.mjs';
+import { getStem, getTeamKey, getNextRoundMatchKey } from '../shared/keyManager.mjs';
+import { requireAdmin } from '../shared/auth.mjs';
 
 
 export const handler = async (event) => {

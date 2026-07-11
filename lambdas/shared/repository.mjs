@@ -1,3 +1,4 @@
+
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 
@@ -250,5 +251,79 @@ export const saveRaceItem = async (ranking) =>  {
         console.log('Error saving to dynamo '+err);
     }
     console.log('end saveRaceUpdate '+JSON.stringify(ret));
+    return ret;
+};
+
+
+export const getTeamsInRound = async ( tournament, round ) => {
+    const partialKey = tournament.tournamentId + '-' + round.roundId + '-';
+    console.log('begin getTeamsInRound '+ partialKey );
+    const params = {
+        TableName: 'SaqueGanador-Teams',
+        ScanFilter: {
+           "teamId": {
+                ComparisonOperator: "BEGINS_WITH",
+                AttributeValueList: [partialKey]
+           }
+        }
+    };
+    let teams = await documentClient.scan(params);
+    console.log('end getTeamsInRound -> ' + JSON.stringify(teams) );
+    return teams.Items;
+};
+
+
+export const getImpactedTeams = async (match) => {
+    let partialKey = match.tournament.tournamentId + '-' + match.round.roundId + '-' ;
+    console.log( 'partialKey -> ' + partialKey);
+    let teams = [];
+    try {
+        const params = {
+              TableName: 'SaqueGanador-Teams',
+              ScanFilter: {
+                 "teamId": {
+                      ComparisonOperator: "BEGINS_WITH",
+                      AttributeValueList: [partialKey]
+                 }
+              }
+          };
+        let result = await documentClient.scan(params);
+        teams = result.Items;
+    } catch (err){
+      console.log(err);
+    }
+    return teams;
+  };
+
+export const savePlayer = async (player) =>  {
+    let ret = null;
+    console.log('begin savePlayer '+JSON.stringify(player));
+    try {
+        var params = {
+              TableName: 'SaqueGanador-Players',
+              Item: player
+            };
+        ret = await documentClient.put(params);
+    } catch ( err ){
+        console.log( 'error in savePlayer' + err );
+    }
+    console.log('end savePlayer '+JSON.stringify(ret));
+    return ret;
+};
+
+
+export const saveTournament = async (tournament) =>  {
+    let ret = null;
+    console.log('begin saveTournament '+JSON.stringify(tournament));
+    try {
+        var params = {
+          TableName: 'SaqueGanador-Tournaments',
+          Item: tournament
+        };
+        ret = await documentClient.put(params);
+    } catch (err) {
+        console.log('Error saving to dynamo '+err);
+    }
+    console.log('end saveTournament '+JSON.stringify(ret));
     return ret;
 };

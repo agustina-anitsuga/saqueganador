@@ -1,5 +1,5 @@
-import { savePlayer, getPlayer } from './repository.mjs';
-import { getPlayerPosition, getStem } from './keyManager.mjs' ;
+import { savePlayer, getPlayer } from '../shared/repository.mjs';
+import { getPlayerPosition, getStem } from '../shared/keyManager.mjs' ;
 
 
 let replacements = [

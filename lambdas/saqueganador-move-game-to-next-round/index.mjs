@@ -1,5 +1,5 @@
-import { saveTournament, getTournament } from './repository.mjs';
-import { requireAdmin } from './auth.mjs';
+import { saveTournament, getTournament } from '../shared/repository.mjs';
+import { requireAdmin } from '../shared/auth.mjs';
 
 export const handler = async (event) => {
     let body;

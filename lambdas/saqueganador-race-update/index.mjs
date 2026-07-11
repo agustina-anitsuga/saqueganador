@@ -1,4 +1,4 @@
-import { getTournament, getTournamentRanking, getUsers, getRaceItems, getRaceDItems, getRaceItemsForUser, saveRaceItem } from './repository.mjs';
+import { getTournament, getTournamentRanking, getUsers, getRaceItems, getRaceDItems, getRaceItemsForUser, saveRaceItem } from '../shared/repository.mjs';
 
 export const handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));

@@ -1,7 +1,7 @@
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
-import { getStem, getPlayerPosition } from './keyManager.mjs';
-import { getMatch, saveMatch, getPlayer, getTeams, getTournament } from './repository.mjs';
-import { requireAdmin } from './auth.mjs';
+import { getStem, getPlayerPosition } from '../shared/keyManager.mjs';
+import { getMatch, saveMatch, getPlayer, getTeams, getTournament } from '../shared/repository.mjs';
+import { requireAdmin } from '../shared/auth.mjs';
 
 const snsClient = new SNSClient({});
 

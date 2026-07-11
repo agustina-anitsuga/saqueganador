@@ -1,5 +1,5 @@
 
-import { getMatch, saveMatch } from './repository.mjs';
+import { getMatch, saveMatch } from '../shared/repository.mjs';
 
 export const handler = async (event, context, callback) => {
     

@@ -1,6 +1,6 @@
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
-import { getTournament, getMatch, saveMatch, getMatches } from './repository.mjs';
-import { getStem, getRoundId, getNextRoundMatchKey, getPlayerPosition } from './keyManager.mjs';
+import { getTournament, getMatch, saveMatch, getMatches } from '../shared/repository.mjs';
+import { getStem, getRoundId, getNextRoundMatchKey, getPlayerPosition } from '../shared/keyManager.mjs';
 
 const snsClient = new SNSClient({});
 
@@ -22,7 +22,9 @@ export const handler = async (event) => {
         switch (httpMethod) {
             case 'GET':
                 if( httpPath === "/" ){
-                    body = await getMatches();
+                    // shared getMatches() returns the array; the client expects
+                    // the raw scan shape { Items: [...] }, so wrap it back.
+                    body = { Items: await getMatches() };
                 } else {
                     throw new Error(`Get not supported on "${httpPath}"`);
                 }

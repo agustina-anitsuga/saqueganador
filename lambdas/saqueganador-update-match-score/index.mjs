@@ -1,5 +1,5 @@
-import { saveTeam, getTournament, getMatch, getTeam, getTeamsInRound, getImpactedTeams } from './repository.mjs';
-import { getStem, getNextRoundMatchKey } from './keyManager.mjs';
+import { saveTeam, getTournament, getMatch, getTeam, getTeamsInRound, getImpactedTeams } from '../shared/repository.mjs';
+import { getStem, getNextRoundMatchKey } from '../shared/keyManager.mjs';
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 
 const snsClient = new SNSClient({});

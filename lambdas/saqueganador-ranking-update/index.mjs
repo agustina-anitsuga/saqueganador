@@ -1,5 +1,5 @@
-import {getTeam, getRanking, getUsers, getTournament, getGlobalRankings, getRankingsPerRound, saveTeam, saveRanking } from './repository.mjs'
-import {getGlobalRankingKey, getRoundRankingKey} from './keyManager.mjs';
+import {getTeam, getRanking, getUsers, getTournament, getGlobalRankings, getRankingsPerRound, saveTeam, saveRanking } from '../shared/repository.mjs'
+import {getGlobalRankingKey, getRoundRankingKey} from '../shared/keyManager.mjs';
 
 export const handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
