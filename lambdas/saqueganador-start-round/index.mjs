@@ -4,8 +4,6 @@ import { requireAdmin } from './auth.mjs';
 
 
 export const handler = async (event) => {
-    console.log('Received event:', JSON.stringify(event, null, 2));
-
     let teams = [];
     let body;
     let users;

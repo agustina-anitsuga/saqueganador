@@ -7,10 +7,21 @@ const snsClient = new SNSClient({});
 
 let replacements = [];
 
+// Parse a request body safely: bounded size, clear error, no raw-event logging
+// (the event carries the caller's Authorization token, which must not be logged).
+function parseBody(event, maxBytes = 64 * 1024) {
+    const raw = event.body || '';
+    if (raw.length > maxBytes) {
+        const e = new Error('Payload too large'); e.statusCode = 413; throw e;
+    }
+    try {
+        return JSON.parse(raw);
+    } catch {
+        const e = new Error('Invalid JSON body'); e.statusCode = 400; throw e;
+    }
+}
 
 export const handler = async (event) => {
-    console.log('Received event:', JSON.stringify(event, null, 2));
-
     let body;
     let statusCode = '200';
     const headers = {
@@ -28,7 +39,11 @@ export const handler = async (event) => {
             case 'POST':
                 let tournament = await getTournament();
                 await requireAdmin(event, tournament.admins);
-                let postLuckyLoser = JSON.parse(event.body);
+                let postLuckyLoser = parseBody(event);
+                if( !postLuckyLoser || typeof postLuckyLoser.matchPlayerId !== 'string'
+                    || typeof postLuckyLoser.playerId !== 'string' ){
+                    const e = new Error('Invalid lucky-loser payload'); e.statusCode = 400; throw e;
+                }
 
                 replacements = [
                     { matchId: postLuckyLoser.matchPlayerId , playerId: postLuckyLoser.playerId }

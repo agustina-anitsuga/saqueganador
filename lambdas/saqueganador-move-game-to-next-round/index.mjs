@@ -2,8 +2,6 @@ import { saveTournament, getTournament } from './repository.mjs';
 import { requireAdmin } from './auth.mjs';
 
 export const handler = async (event) => {
-    console.log('Received event:', JSON.stringify(event, null, 2));
-
     let body;
     let statusCode = '200';
     const headers = {

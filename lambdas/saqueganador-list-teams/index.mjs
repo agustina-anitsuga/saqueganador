@@ -8,10 +8,21 @@ const client = new DynamoDBClient({
 });
 const dynamo = DynamoDBDocument.from(client);
 
+// Parse a request body safely: bounded size, clear error, no raw-event logging
+// (the event carries the caller's Authorization token, which must not be logged).
+function parseBody(event, maxBytes = 64 * 1024) {
+    const raw = event.body || '';
+    if (raw.length > maxBytes) {
+        const e = new Error('Payload too large'); e.statusCode = 413; throw e;
+    }
+    try {
+        return JSON.parse(raw);
+    } catch {
+        const e = new Error('Invalid JSON body'); e.statusCode = 400; throw e;
+    }
+}
 
 export const handler = async (event) => {
-    console.log('Received event:', JSON.stringify(event, null, 2));
-
     let body;
     let statusCode = '200';
     const headers = {
@@ -53,7 +64,10 @@ export const handler = async (event) => {
                 // `${tournamentId}-${roundId}-${userId}`, where userId is the
                 // caller's Cognito sub, so the token's sub must be its suffix.
                 let callerSub = await requireUser(event);
-                let team = JSON.parse(event.body);
+                let team = parseBody(event);
+                if( !team || typeof team.teamId !== 'string' ){
+                    const e = new Error('Invalid team payload'); e.statusCode = 400; throw e;
+                }
                 let teamId = team.teamId;
                 if( httpPath !== ("/"+teamId) ){
                     throw new Error(`Inconsistent teamId in POST "${httpPath}" "${teamId}"`);
