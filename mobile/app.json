@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Saqueganador",
+    "slug": "saqueganador",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "saqueganador",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-logo.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#096A2E"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ar.com.saqueganador"
+    },
+    "android": {
+      "package": "ar.com.saqueganador",
+      "adaptiveIcon": {
+        "backgroundColor": "#096A2E",
+        "foregroundImage": "./assets/android-icon-foreground.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "@react-native-community/datetimepicker"
+    ]
+  }
+}
