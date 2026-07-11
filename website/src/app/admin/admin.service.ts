@@ -1,7 +1,8 @@
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, tap, throwError } from "rxjs";
+import { Observable, catchError, from, switchMap, tap, throwError } from "rxjs";
 import { IMatch, ITeam, ITournament, ILuckyLoser } from "../shared/model";
+import { authHeaders } from "../shared/auth-headers";
 
 import { environment } from '../../environments/environment';
 
@@ -55,26 +56,26 @@ export class AdminService {
     }
 
     createNextRoundTeams( ): Observable<ITeam[]> {
-      return this.http.post<ITeam[]>(this.createTeamsForRoundUrl,'').pipe(
+      return from( authHeaders() ).pipe(
+        switchMap( headers => this.http.post<ITeam[]>(this.createTeamsForRoundUrl,'',{ headers }) ),
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )
-          //).subscribe(response => console.log('subscribe')
         );
     }
 
     moveGameToNextRound( ): Observable<ITournament[] > {
-      return this.http.post<ITournament[]>(this.moveGameToNextRoundUrl,'').pipe(
+      return from( authHeaders() ).pipe(
+        switchMap( headers => this.http.post<ITournament[]>(this.moveGameToNextRoundUrl,'',{ headers }) ),
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )
-          //).subscribe(response => console.log('subscribe')
         );
     }
 
     addLuckyLoser( luckyLoser: ILuckyLoser  ): Observable<ILuckyLoser[] > {
-      return this.http.post<ILuckyLoser[]>(this.addLuckyLoserUrl,luckyLoser).pipe(
+      return from( authHeaders() ).pipe(
+        switchMap( headers => this.http.post<ILuckyLoser[]>(this.addLuckyLoserUrl,luckyLoser,{ headers }) ),
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )
-          //).subscribe(response => console.log('subscribe')
         );
     }
 

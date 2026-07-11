@@ -1,4 +1,5 @@
 import { saveTournament, getTournament } from './repository.mjs';
+import { requireAdmin } from './auth.mjs';
 
 export const handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
@@ -15,9 +16,10 @@ export const handler = async (event) => {
     try {
         switch (httpMethod) {
             case 'POST':
-                            
+
                 let tournament = await getTournament();
-                
+                await requireAdmin(event, tournament.admins);
+
                 let roundId = tournament.currentRound;
                 console.log('current round '+roundId);
                 let nextRoundId = roundId < tournament.finalRound ? roundId + 1 : roundId;
@@ -32,7 +34,7 @@ export const handler = async (event) => {
                 throw new Error(`Unsupported method "${httpMethod}"`);
         }
     } catch (err) {
-        statusCode = '400';
+        statusCode = err.statusCode ? String(err.statusCode) : '400';
         body = err.message;
     } finally {
         body = JSON.stringify(body);

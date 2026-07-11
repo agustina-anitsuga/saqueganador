@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, catchError, tap, throwError } from "rxjs";
+import { Observable, catchError, from, switchMap, tap, throwError } from "rxjs";
+import { authHeaders } from "../shared/auth-headers";
 
 import { IUser } from "../shared/model";
 import { ITeam } from "../shared/model";
@@ -107,8 +108,8 @@ export class BettingService {
     saveTeam( team : ITeam ) { //: Observable<ITeam> {
       let saveTeamUrl = this.teamUrl + team.teamId;
       //console.log(saveTeamUrl)
-      let ret = this.http.post<ITeam>(saveTeamUrl, team)
-      .pipe(
+      let ret = from( authHeaders() ).pipe(
+        switchMap( headers => this.http.post<ITeam>(saveTeamUrl, team, { headers }) ),
         //tap( data => console.log('All:', JSON.stringify(data)) ),
         catchError( this.handleError )).subscribe(response => console.log('subscribe'));
       //console.log('savedTeam');

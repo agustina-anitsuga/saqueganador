@@ -1,6 +1,7 @@
 import { DynamoDB } from '@aws-sdk/client-dynamodb';
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb';
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { requireUser, AuthError } from './auth.mjs';
 
 const client = new DynamoDBClient({
   region: process.env.AWS_REGION,
@@ -47,22 +48,28 @@ export const handler = async (event) => {
                     throw new Error(`GET not supported`);
                 }
                 break;
-            case 'POST': // this should probably do some security check - I should not be allowed to change someone else's team
+            case 'POST':
+                // Only the authenticated owner may modify a team. teamId is
+                // `${tournamentId}-${roundId}-${userId}`, where userId is the
+                // caller's Cognito sub, so the token's sub must be its suffix.
+                let callerSub = await requireUser(event);
                 let team = JSON.parse(event.body);
                 let teamId = team.teamId;
-                if( httpPath === ("/"+teamId) ){
-                    console.log(`Update team "${httpPath}"`);
-                    await saveTeam(team);
-                    body = JSON.stringify(team);
-                } else {
+                if( httpPath !== ("/"+teamId) ){
                     throw new Error(`Inconsistent teamId in POST "${httpPath}" "${teamId}"`);
                 }
+                if( !teamId || !teamId.endsWith('-' + callerSub) ){
+                    throw new AuthError('You may only modify your own team', 403);
+                }
+                console.log(`Update team "${httpPath}"`);
+                await saveTeam(team);
+                body = JSON.stringify(team);
                 break;
             default:
                 throw new Error(`Unsupported method "${httpMethod}"`);
         }
     } catch (err) {
-        statusCode = '400';
+        statusCode = err.statusCode ? String(err.statusCode) : '400';
         body = err.message;
     } finally {
         body = JSON.stringify(body);

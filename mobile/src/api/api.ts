@@ -1,4 +1,5 @@
 import { environment } from '@/config/env';
+import { getIdToken } from '@/context/AuthContext';
 import {
   IMatch,
   IRace,
@@ -23,10 +24,22 @@ async function getJson<T>(url: string): Promise<T> {
   return (await res.json()) as T;
 }
 
-async function postJson<T>(url: string, body: unknown): Promise<T> {
+async function postJson<T>(
+  url: string,
+  body: unknown,
+  opts?: { authed?: boolean },
+): Promise<T> {
+  const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+  if (opts?.authed) {
+    const token = await getIdToken();
+    if (!token) {
+      throw new Error('Debés iniciar sesión para realizar esta acción.');
+    }
+    headers.Authorization = `Bearer ${token}`;
+  }
   const res = await fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(body),
   });
   if (!res.ok) {
@@ -66,7 +79,7 @@ export async function getTeamsByUser(user: IUser): Promise<ITeam[]> {
 
 export async function saveTeam(team: ITeam): Promise<void> {
   const url = environment.teamUrl + team.teamId;
-  await postJson<ITeam>(url, team);
+  await postJson<ITeam>(url, team, { authed: true });
 }
 
 // ---- Users ----
@@ -94,13 +107,13 @@ export async function getPlayers(roundId: number): Promise<IPlayerStatsPerRound[
 
 // ---- Admin / Root actions ----
 export async function createNextRoundTeams(): Promise<ITeam[]> {
-  return postJson<ITeam[]>(environment.createTeamsForRoundUrl, '');
+  return postJson<ITeam[]>(environment.createTeamsForRoundUrl, '', { authed: true });
 }
 
 export async function moveGameToNextRound(): Promise<ITournament[]> {
-  return postJson<ITournament[]>(environment.moveGameToNextRoundUrl, '');
+  return postJson<ITournament[]>(environment.moveGameToNextRoundUrl, '', { authed: true });
 }
 
 export async function addLuckyLoser(luckyLoser: ILuckyLoser): Promise<ILuckyLoser[]> {
-  return postJson<ILuckyLoser[]>(environment.addLuckyLoserUrl, luckyLoser);
+  return postJson<ILuckyLoser[]>(environment.addLuckyLoserUrl, luckyLoser, { authed: true });
 }

@@ -1,6 +1,7 @@
 import { SNSClient, PublishCommand } from "@aws-sdk/client-sns";
 import { getStem, getPlayerPosition } from './keyManager.mjs';
-import { getMatch, saveMatch, getPlayer, getTeams } from './repository.mjs';
+import { getMatch, saveMatch, getPlayer, getTeams, getTournament } from './repository.mjs';
+import { requireAdmin } from './auth.mjs';
 
 const snsClient = new SNSClient({});
 
@@ -25,6 +26,8 @@ export const handler = async (event) => {
     try {
         switch (httpMethod) {
             case 'POST':
+                let tournament = await getTournament();
+                await requireAdmin(event, tournament.admins);
                 let postLuckyLoser = JSON.parse(event.body);
 
                 replacements = [
@@ -105,9 +108,9 @@ export const handler = async (event) => {
         }
         
     } catch (err) {
-        statusCode = '500';
+        statusCode = err.statusCode ? String(err.statusCode) : '500';
         console.log('error caught '+err);
-        body = err;
+        body = err.message || err;
     } finally {
         body = JSON.stringify(body);
     }

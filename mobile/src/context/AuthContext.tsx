@@ -82,6 +82,26 @@ function currentSession(): Promise<AuthUser | null> {
   });
 }
 
+// Non-React accessor for the current ID token's JWT, used by the API layer to
+// attach `Authorization: Bearer <token>` on authenticated calls. Resolves null
+// when there is no valid session.
+export function getIdToken(): Promise<string | null> {
+  return new Promise((resolve) => {
+    const cu = userPool.getCurrentUser();
+    if (!cu) {
+      resolve(null);
+      return;
+    }
+    cu.getSession((err: Error | null, session: CognitoUserSession | null) => {
+      if (err || !session || !session.isValid()) {
+        resolve(null);
+      } else {
+        resolve(session.getIdToken().getJwtToken());
+      }
+    });
+  });
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
