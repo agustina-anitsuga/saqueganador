@@ -10,6 +10,7 @@ const documentClient = DynamoDBDocument.from(client);
 let tournament = {
     "tournamentId": '3',
     "tournamentName": "Indian Wells",
+    "tournamentType": 0,
     "activeLeagues":1,
     "rounds": [
         { 

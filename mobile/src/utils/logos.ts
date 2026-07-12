@@ -17,16 +17,17 @@ export interface Winner {
 }
 
 export const pastWinners: Winner[] = [
+  { logo: 'w1', tournament: 'Wimbledon 2026', winner: 'Santi' },
   { logo: 'rg', tournament: 'Roland Garros 2026', winner: 'anitsuga' },
   { logo: 'iw', tournament: 'Indian Wells 2026', winner: 'MartinPV' },
   { logo: 'arg', tournament: 'Argentina Open 2026', winner: 'anitsuga' },
   { logo: 'ao', tournament: 'Australian Open 2026', winner: 'anitsuga' },
-  { logo: 'us', tournament: 'US Open 2025', winner: 'anitsuga' },
-  { logo: 't1', tournament: 'Toronto & Montreal 2025', winner: 'marcelofioren77' },
-  { logo: 'w1', tournament: 'Wimbledon 2025', winner: 'marcelofioren77' },
 ];
 
 export const morePastWinners: Winner[] = [
+  { logo: 'us', tournament: 'US Open 2025', winner: 'anitsuga' },
+  { logo: 't1', tournament: 'Toronto & Montreal 2025', winner: 'marcelofioren77' },
+  { logo: 'w1', tournament: 'Wimbledon 2025', winner: 'marcelofioren77' },
   { logo: 'rg', tournament: 'Roland Garros 2025', winner: 'anitsuga' },
   { logo: 'iw', tournament: 'Indian Wells 2025', winner: 'marcelofioren77' },
   { logo: 'arg', tournament: 'Argentina Open 2025', winner: 'Andre' },

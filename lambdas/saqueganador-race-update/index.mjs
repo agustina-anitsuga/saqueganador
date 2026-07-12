@@ -165,8 +165,8 @@ export const addRankingUpdateToRace = async ( pTournament ) =>  {
               user: ranking.user,
               score: ranking.score,
               position: ranking.position,
-              points: getPointsForPosition(ranking.position,ranking.score),
-              dPoints: getDPointsForPosition(ranking.position,ranking.score)
+              points: getPointsForPosition(ranking.position,ranking.score,pTournament.tournamentType),
+              dPoints: getDPointsForPosition(ranking.position,ranking.score,pTournament.tournamentType)
             };
             // generate entry for race
             await saveRaceItem(race);
@@ -194,18 +194,25 @@ let dPointsPerPosition = [
   [ 20, 16, 14, 12, 10,  8,  6, 4  ], //250
 ]
 
-let tournamentType = 0;
-
-export const getPointsForPosition = ( position, score ) => {
-  if( position > 8 || score <= 0 )
-    return 0;
-  return pointsPerPosition[tournamentType][position-1];
+export const normalizeTournamentType = ( tournamentType ) => {
+  let type = Number(tournamentType);
+  if( !Number.isInteger(type) || type < 0 || type > 3 ){
+    console.log('Invalid tournamentType "'+ tournamentType +'", defaulting to 0 (GS)');
+    type = 0;
+  }
+  return type;
 };
 
-export const getDPointsForPosition = ( position, score ) => {
+export const getPointsForPosition = ( position, score, tournamentType = 0 ) => {
   if( position > 8 || score <= 0 )
     return 0;
-  return dPointsPerPosition[tournamentType][position-1];
+  return pointsPerPosition[normalizeTournamentType(tournamentType)][position-1];
+};
+
+export const getDPointsForPosition = ( position, score, tournamentType = 0 ) => {
+  if( position > 8 || score <= 0 )
+    return 0;
+  return dPointsPerPosition[normalizeTournamentType(tournamentType)][position-1];
 };
 
 

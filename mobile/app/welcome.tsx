@@ -61,8 +61,8 @@ export default function Welcome() {
         <CardHeader title="Bienvenidos" />
         <CardBody>
           <View style={styles.banner}>
-            <Text style={styles.dates}>Del 29 de Junio al 12 de Julio</Text>
-            <Image source={logos.w1} style={styles.bannerLogo} resizeMode="contain" />
+            <Text style={styles.dates}>Del 30 de Agosto al 13 de Septiembre</Text>
+            <Image source={logos.us} style={styles.bannerLogo} resizeMode="contain" />
           </View>
 
           <Text style={styles.sectionTitle}>Ganadores de Torneos Pasados</Text>
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   bannerLogo: {
-    width: 150,
+    width: 200,
     height: 110,
   },
   sectionTitle: {
