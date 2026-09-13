@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header">
+    {{pageTitle}}
+  </div>
+  <div class="card-body">
+    <div class="mb-4">
+      <label class="fw-bold d-block">Usuario</label>
+      <span>{{username}}</span>
+    </div>
+
+    <div class="card border-danger">
+      <div class="card-header text-danger fw-bold">Eliminar cuenta</div>
+      <div class="card-body">
+        <p>
+          Al eliminar tu cuenta se borran permanentemente tus datos de acceso.
+          Esta acción no se puede deshacer.
+        </p>
+        <button class="btn btn-danger" [disabled]="busy" (click)="deleteAccount()">
+          {{ busy ? 'Eliminando...' : 'Eliminar mi cuenta' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

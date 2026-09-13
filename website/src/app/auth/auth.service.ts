@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticatorService } from '@aws-amplify/ui-angular'
 
-import { Amplify } from 'aws-amplify';
+import { Amplify, Auth } from 'aws-amplify';
 import awsconfig from '../../aws-exports.js';
 Amplify.configure(awsconfig);
 
@@ -38,6 +38,15 @@ export class AuthService {
     logout() {
         this.authenticator.signOut();
         this.router.navigate(['/login']);
+    }
+
+    // Permanently delete the signed-in user from Cognito, then clear local
+    // state and send them back to the home page.
+    async deleteAccount() {
+        await Auth.deleteUser();
+        localStorage.removeItem('user');
+        this.authenticator.signOut();
+        this.router.navigate(['/welcome']);
     }
 
 }

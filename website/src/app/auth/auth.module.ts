@@ -6,18 +6,22 @@ import { AmplifyAuthenticatorModule } from '@aws-amplify/ui-angular';
 
 import { AuthComponent } from './auth.component';
 import { UseAuthenticatorComponent } from './authenticator.component';
+import { AccountComponent } from './account.component';
+import { AuthGuard } from './auth.guard';
 
 
 @NgModule({
   declarations: [
     AuthComponent,
-    UseAuthenticatorComponent
+    UseAuthenticatorComponent,
+    AccountComponent
   ],
   imports: [
     CommonModule,
     AmplifyAuthenticatorModule,
     RouterModule.forChild([
-      { path: 'login', component: AuthComponent }
+      { path: 'login', component: AuthComponent },
+      { path: 'account', canActivate: [AuthGuard], component: AccountComponent }
   ]),
   ]
 })

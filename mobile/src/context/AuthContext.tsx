@@ -44,6 +44,7 @@ interface AuthContextValue {
   signUp: (email: string, username: string, password: string) => Promise<boolean>;
   confirmSignUp: (email: string, code: string) => Promise<void>;
   signOut: () => Promise<void>;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
@@ -169,9 +170,38 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  // Permanently delete the signed-in user from Cognito. Requires a valid
+  // session, so we hydrate it first, then clear local state on success.
+  const deleteAccount = useCallback(
+    () =>
+      new Promise<void>((resolve, reject) => {
+        const cu = userPool.getCurrentUser();
+        if (!cu) {
+          reject(new Error('No hay una sesión activa.'));
+          return;
+        }
+        cu.getSession((err: Error | null, session: CognitoUserSession | null) => {
+          if (err || !session || !session.isValid()) {
+            reject(err ?? new Error('La sesión expiró. Volvé a ingresar.'));
+            return;
+          }
+          cu.deleteUser((delErr) => {
+            if (delErr) {
+              reject(delErr);
+              return;
+            }
+            cu.signOut();
+            setUser(null);
+            resolve();
+          });
+        });
+      }),
+    [],
+  );
+
   const value = useMemo(
-    () => ({ user, loading, refresh, signIn, signUp, confirmSignUp, signOut }),
-    [user, loading, refresh, signIn, signUp, confirmSignUp, signOut],
+    () => ({ user, loading, refresh, signIn, signUp, confirmSignUp, signOut, deleteAccount }),
+    [user, loading, refresh, signIn, signUp, confirmSignUp, signOut, deleteAccount],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

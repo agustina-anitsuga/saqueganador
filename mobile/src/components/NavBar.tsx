@@ -40,6 +40,7 @@ export function NavBar() {
   items.push({ label: 'Cómo jugar', path: '/tutorial' });
   if (isAdmin) items.push({ label: 'Admin', path: '/admin' });
   if (isRoot) items.push({ label: 'Root', path: '/root' });
+  if (user) items.push({ label: 'Mi cuenta', path: '/account' });
 
   const go = (path: string) => {
     setOpen(false);

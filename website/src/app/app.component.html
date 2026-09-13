@@ -24,8 +24,11 @@
             <li class="nav-item"><a class="navlink" routerLink='/root'>Root</a></li>
           </ng-container>
           <ng-container *ngIf = 'isUserLoggedIn()' >
+            <li class="nav-item"><a class="navlink" routerLink='/account'>Mi cuenta</a></li>
+          </ng-container>
+          <ng-container *ngIf = 'isUserLoggedIn()' >
             <button class="nav-item nav-link logout btn-primary" style="border-color: white !important;" (click)="logout()">Salir</button>
-          </ng-container>     
+          </ng-container>
         </ul>
       </div>
     </div>
